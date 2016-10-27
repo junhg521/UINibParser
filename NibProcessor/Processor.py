@@ -240,6 +240,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		className = self.objcClassNameType(viewName)
 		if len(className) > 0:
 			viewObject = self.viewObjectType(viewName)
+			writeFileHandle.write("\n#pragma mark - lifeCycle\n")
 			writeFileHandle.write(viewObject.addSubview(attribView,True))
 			pass
 		pass

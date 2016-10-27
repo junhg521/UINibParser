@@ -21,10 +21,19 @@ class JHViewObject(JHBasicObject):
 	def addSubview(self, attribView, isLoadView):
 		frame = self.objcClassFrame(attribView.get('rect', {}))
 		classViewName = self.attribViewTag(attribView)
-		clearsContextBeforeDrawing = attribView.get('clearsContextBeforeDrawing', 'NO')
 
-		describle = "\n#pragma mark - lifeCycle\n"
-		describle += JHBasicObject.addSubview(self, attribView, isLoadView)
-		describle +="	self."+classViewName+".clearsContextBeforeDrawing = "+clearsContextBeforeDrawing+";\n"
+		describle = JHBasicObject.addSubview(self, attribView, isLoadView)
+
+		if isLoadView:
+			if attribView.get('clearsContextBeforeDrawing', 'YES') != 'YES':
+				describle +="	self."+classViewName+".clearsContextBeforeDrawing = "+attribView.get('clearsContextBeforeDrawing', 'YES')+";\n"
+				pass
+			pass
+		else :
+			if attribView.get('clearsContextBeforeDrawing', 'YES') != 'YES':
+				describle +="	"+classViewName+".clearsContextBeforeDrawing = "+attribView.get('clearsContextBeforeDrawing', 'YES')+";\n"
+				pass
+			pass
+		
 		describle += "}\n"
 		return describle

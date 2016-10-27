@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BFFB2F621DC18D0C008EA8A3 /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFFB2F611DC18D0C008EA8A3 /* TestViewController.xib */; };
+		BFD5422F1DC1D7780080614D /* TestUIViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFD5422D1DC1D7780080614D /* TestUIViewViewController.m */; };
+		BFD542301DC1D7780080614D /* TestUIViewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFD5422E1DC1D7780080614D /* TestUIViewViewController.xib */; };
+		BFD542331DC1DE7F0080614D /* TCustomSegmentScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = BFD542321DC1DE7F0080614D /* TCustomSegmentScroll.m */; };
+		BFFB2F621DC18D0C008EA8A3 /* TestUILabelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BFFB2F611DC18D0C008EA8A3 /* TestUILabelViewController.xib */; };
 		BFFCE2AD1DAF84B4004D3542 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BFFCE2AC1DAF84B4004D3542 /* main.m */; };
 		BFFCE2B01DAF84B4004D3542 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BFFCE2AF1DAF84B4004D3542 /* AppDelegate.m */; };
 		BFFCE2B31DAF84B4004D3542 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFFCE2B21DAF84B4004D3542 /* ViewController.m */; };
@@ -15,7 +18,7 @@
 		BFFCE2B81DAF84B4004D3542 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BFFCE2B71DAF84B4004D3542 /* Assets.xcassets */; };
 		BFFCE2BB1DAF84B4004D3542 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BFFCE2B91DAF84B4004D3542 /* LaunchScreen.storyboard */; };
 		BFFCE2C61DAF84B4004D3542 /* demoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BFFCE2C51DAF84B4004D3542 /* demoTests.m */; };
-		BFFCE2D31DAF84D7004D3542 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFFCE2D11DAF84D7004D3542 /* TestViewController.m */; };
+		BFFCE2D31DAF84D7004D3542 /* TestUILabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFFCE2D11DAF84D7004D3542 /* TestUILabelViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,7 +32,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		BFFB2F611DC18D0C008EA8A3 /* TestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
+		BFD5422C1DC1D7780080614D /* TestUIViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUIViewViewController.h; sourceTree = "<group>"; };
+		BFD5422D1DC1D7780080614D /* TestUIViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUIViewViewController.m; sourceTree = "<group>"; };
+		BFD5422E1DC1D7780080614D /* TestUIViewViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestUIViewViewController.xib; sourceTree = "<group>"; };
+		BFD542311DC1DE7F0080614D /* TCustomSegmentScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCustomSegmentScroll.h; sourceTree = "<group>"; };
+		BFD542321DC1DE7F0080614D /* TCustomSegmentScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCustomSegmentScroll.m; sourceTree = "<group>"; };
+		BFFB2F611DC18D0C008EA8A3 /* TestUILabelViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestUILabelViewController.xib; sourceTree = "<group>"; };
 		BFFCE2A81DAF84B4004D3542 /* demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFCE2AC1DAF84B4004D3542 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BFFCE2AE1DAF84B4004D3542 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -43,8 +51,8 @@
 		BFFCE2C11DAF84B4004D3542 /* demoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = demoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFFCE2C51DAF84B4004D3542 /* demoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = demoTests.m; sourceTree = "<group>"; };
 		BFFCE2C71DAF84B4004D3542 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BFFCE2D01DAF84D7004D3542 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
-		BFFCE2D11DAF84D7004D3542 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
+		BFFCE2D01DAF84D7004D3542 /* TestUILabelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUILabelViewController.h; sourceTree = "<group>"; };
+		BFFCE2D11DAF84D7004D3542 /* TestUILabelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUILabelViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,15 +97,20 @@
 			children = (
 				BFFCE2AE1DAF84B4004D3542 /* AppDelegate.h */,
 				BFFCE2AF1DAF84B4004D3542 /* AppDelegate.m */,
+				BFD542311DC1DE7F0080614D /* TCustomSegmentScroll.h */,
+				BFD542321DC1DE7F0080614D /* TCustomSegmentScroll.m */,
 				BFFCE2B11DAF84B4004D3542 /* ViewController.h */,
 				BFFCE2B21DAF84B4004D3542 /* ViewController.m */,
 				BFFCE2B71DAF84B4004D3542 /* Assets.xcassets */,
 				BFFCE2B91DAF84B4004D3542 /* LaunchScreen.storyboard */,
 				BFFCE2BC1DAF84B4004D3542 /* Info.plist */,
 				BFFCE2AB1DAF84B4004D3542 /* Supporting Files */,
-				BFFCE2D01DAF84D7004D3542 /* TestViewController.h */,
-				BFFCE2D11DAF84D7004D3542 /* TestViewController.m */,
-				BFFB2F611DC18D0C008EA8A3 /* TestViewController.xib */,
+				BFFCE2D01DAF84D7004D3542 /* TestUILabelViewController.h */,
+				BFFCE2D11DAF84D7004D3542 /* TestUILabelViewController.m */,
+				BFFB2F611DC18D0C008EA8A3 /* TestUILabelViewController.xib */,
+				BFD5422C1DC1D7780080614D /* TestUIViewViewController.h */,
+				BFD5422D1DC1D7780080614D /* TestUIViewViewController.m */,
+				BFD5422E1DC1D7780080614D /* TestUIViewViewController.xib */,
 			);
 			path = demo;
 			sourceTree = "<group>";
@@ -202,9 +215,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFD542301DC1D7780080614D /* TestUIViewViewController.xib in Resources */,
 				BFFCE2BB1DAF84B4004D3542 /* LaunchScreen.storyboard in Resources */,
 				BFFCE2B81DAF84B4004D3542 /* Assets.xcassets in Resources */,
-				BFFB2F621DC18D0C008EA8A3 /* TestViewController.xib in Resources */,
+				BFFB2F621DC18D0C008EA8A3 /* TestUILabelViewController.xib in Resources */,
 				BFFCE2B61DAF84B4004D3542 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -223,9 +237,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFD5422F1DC1D7780080614D /* TestUIViewViewController.m in Sources */,
+				BFD542331DC1DE7F0080614D /* TCustomSegmentScroll.m in Sources */,
 				BFFCE2B31DAF84B4004D3542 /* ViewController.m in Sources */,
 				BFFCE2B01DAF84B4004D3542 /* AppDelegate.m in Sources */,
-				BFFCE2D31DAF84D7004D3542 /* TestViewController.m in Sources */,
+				BFFCE2D31DAF84D7004D3542 /* TestUILabelViewController.m in Sources */,
 				BFFCE2AD1DAF84B4004D3542 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

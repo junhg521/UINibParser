@@ -7,32 +7,43 @@
 //
 
 #import "ViewController.h"
-#import "TestViewController.h"
+#import "TCustomSegmentScroll.h"
+#import "TestUILabelViewController.h"
+#import "TestUIViewViewController.h"
 
-@interface ViewController ()
-@property (nonatomic, strong) TestViewController *controller;
+@interface ViewController ()<TCustomSegmentScrollDelegate>
+
+@property (nonatomic, strong) TCustomSegmentScroll *scrollSegmentControl;
+@property (nonatomic, strong) NSMutableArray *controllers;
 
 @end
 
 @implementation ViewController
 
+#pragma mark - lifeCycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-//    TestViewController *controller = [[TestViewController alloc] initWithNibName:nil bundle:nil];
-    TestViewController *controller = [[TestViewController alloc] init];
-    self.controller = controller;
-    [self addChildViewController:controller];
-    [self.view addSubview:controller.view];
+    
+    [self.view addSubview:self.scrollSegmentControl];
+    
+    BOOL isNibFile = NO;
+    [self.controllers addObject:[self loadTestViewController:@"TestUILabelViewController" isNibFile:isNibFile]];
+    [self.controllers addObject:[self loadTestViewController:@"TestUIViewViewController" isNibFile:isNibFile]];
+    
+    [self addTestController:[self.controllers objectAtIndex:0]];
 }
 
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
     
-    [self.controller.view setFrame:self.view.frame];
-    [self.controller.view layoutSubviews];
+    for (UIViewController *controller in self.controllers) {
+        [controller.view setFrame:CGRectMake(0, 65, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 65)];
+        [controller.view layoutSubviews];
+    }
 
     [self.view layoutSubviews];
 }
@@ -42,5 +53,65 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Property
+
+- (TCustomSegmentScroll *)scrollSegmentControl
+{
+    if (!_scrollSegmentControl) {
+        _scrollSegmentControl = [[TCustomSegmentScroll alloc] initWithTitles:@[@"UILabel测试实例",@"UIView测试实例"]
+                                                                     delegate:self
+                                                                displaySeparator:NO];
+        [_scrollSegmentControl setBottomLineColor: [UIColor greenColor]];
+//        _scrollSegmentControl.backgroundColor = [UIColor blueColor];
+//        [_scrollSegmentControl setSegmentScrollTitleNormalColor:[UIColor whiteColor]];
+        [_scrollSegmentControl setTitleFontSize:16];
+    }
+    return _scrollSegmentControl;
+}
+
+- (NSMutableArray *)controllers
+{
+    if (!_controllers) {
+        _controllers = [NSMutableArray array];
+    }
+    return _controllers;
+}
+
+#pragma mark - TCustomSegmentScrollDelegate
+
+- (void)didCustomSegmentScrollChangeValue:(NSInteger)index oldIndex:(NSInteger)oldIndex
+{
+    [self removeTestController:[self.controllers objectAtIndex:oldIndex]];
+    [self addTestController:[self.controllers objectAtIndex:index]];
+}
+
+#pragma mark - private
+
+- (void)addTestController:(UIViewController *)controller
+{
+    [self addChildViewController:controller];
+    [controller didMoveToParentViewController:self];
+    [self.view addSubview:controller.view];
+}
+
+- (void)removeTestController:(UIViewController *)controller
+{
+    [controller willMoveToParentViewController:nil];
+    [controller.view removeFromSuperview];
+    [controller removeFromParentViewController];
+}
+
+- (UIViewController *)loadTestViewController:(NSString *)className isNibFile:(BOOL)isNibFile
+{
+    if (isNibFile) {
+        UIViewController *controller = [[NSClassFromString(className) alloc] initWithNibName:nil bundle:nil];
+        return controller;
+    }
+    else {
+        UIViewController *controller = [[NSClassFromString(className) alloc] init];
+        return controller;
+    }
+}
 
 @end
+

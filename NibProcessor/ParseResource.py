@@ -27,7 +27,7 @@ class JHBaseParser():
 	# 描述: 采用构造函数初始化解析器属性
 	# propety:
 	#	__resourceFileName: 私有变量，解析的文件名
-	#	className: 实现类名,字符换类型（如"TestViewController"
+	#	className: 实现类名,字符换类型（如"TestUIViewViewController"
 	def __init__(self,resource_file_name):
 		self.resourceFileName = resource_file_name
 		self.className = ""

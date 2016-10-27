@@ -1,17 +1,19 @@
 //
-
-//  TestViewController.m
-
+//  TestUILabelViewController.m
 //  demo
+//
+//  Created by Jun on 16/10/13.
+//  Copyright © 2016年 JunHg. All rights reserved.
+//
 
-#import "TestViewController.h"
+#import "TestUILabelViewController.h"
 
-@interface TestViewController ()
+@interface TestUILabelViewController ()
 @property (nonatomic, weak) IBOutlet UILabel *bottomView;
 
 @end
 
-@implementation TestViewController
+@implementation TestUILabelViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
