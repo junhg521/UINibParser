@@ -10,6 +10,7 @@
 #import "TCustomSegmentScroll.h"
 #import "TestUILabelViewController.h"
 #import "TestUIViewViewController.h"
+#import "TestUIButtonViewController.h"
 
 @interface ViewController ()<TCustomSegmentScrollDelegate>
 
@@ -32,6 +33,7 @@
     BOOL isNibFile = NO;
     [self.controllers addObject:[self loadTestViewController:@"TestUILabelViewController" isNibFile:isNibFile]];
     [self.controllers addObject:[self loadTestViewController:@"TestUIViewViewController" isNibFile:isNibFile]];
+    [self.controllers addObject:[self loadTestViewController:@"TestUIButtonViewController" isNibFile:isNibFile]];
     
     [self addTestController:[self.controllers objectAtIndex:0]];
 }
@@ -58,12 +60,10 @@
 - (TCustomSegmentScroll *)scrollSegmentControl
 {
     if (!_scrollSegmentControl) {
-        _scrollSegmentControl = [[TCustomSegmentScroll alloc] initWithTitles:@[@"UILabel测试实例",@"UIView测试实例"]
+        _scrollSegmentControl = [[TCustomSegmentScroll alloc] initWithTitles:@[@"UILabel脚本测试",@"UIButton脚本测试",@"UIView脚本测试"]
                                                                      delegate:self
                                                                 displaySeparator:NO];
         [_scrollSegmentControl setBottomLineColor: [UIColor greenColor]];
-//        _scrollSegmentControl.backgroundColor = [UIColor blueColor];
-//        [_scrollSegmentControl setSegmentScrollTitleNormalColor:[UIColor whiteColor]];
         [_scrollSegmentControl setTitleFontSize:16];
     }
     return _scrollSegmentControl;
@@ -90,8 +90,8 @@
 - (void)addTestController:(UIViewController *)controller
 {
     [self addChildViewController:controller];
-    [controller didMoveToParentViewController:self];
     [self.view addSubview:controller.view];
+    [controller didMoveToParentViewController:self];
 }
 
 - (void)removeTestController:(UIViewController *)controller
