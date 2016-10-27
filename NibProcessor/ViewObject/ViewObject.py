@@ -19,8 +19,10 @@ class JHViewObject(JHBasicObject):
 			pass
 
 	def addSubview(self, attribView, isLoadView):
+		print 'attribView=', attribView
 		frame = self.objcClassFrame(attribView.get('rect', {}))
 		classViewName = self.attribViewTag(attribView)
+		classViewAttrib = self.attribViewTagProperty(attribView)
 
 		describle = JHBasicObject.addSubview(self, attribView, isLoadView)
 
@@ -37,8 +39,8 @@ class JHViewObject(JHBasicObject):
 				pass
 			pass
 
-		if attribView.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
-			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+attribView.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
+		if classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
+			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
 			pass
-			
+
 		return describle
