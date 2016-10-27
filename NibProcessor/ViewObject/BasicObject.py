@@ -72,7 +72,6 @@ class JHBasicObject(JHCommomObject):
 		if len(frame) == 0:
 			pass
 		else :
-			print 'frame=',frame.get('key','frameInset')
 			if frame.get('key','frameInset') == 'frameInset':
 				classFrame = "CGRectMake("+str(frame.get('minX', 0))+","+str(frame.get('minY', 0))+","+str(frame.get('width', 320))+","+str(frame.get('height', 480))+")"
 				pass
