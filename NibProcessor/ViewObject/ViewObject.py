@@ -36,5 +36,9 @@ class JHViewObject(JHBasicObject):
 				describle +="	"+classViewName+".clearsContextBeforeDrawing = "+attribView.get('clearsContextBeforeDrawing', 'YES')+";\n"
 				pass
 			pass
-		
+
+		if classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
+			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
+			pass
+			
 		return describle
