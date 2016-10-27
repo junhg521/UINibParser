@@ -29,11 +29,12 @@ class JHViewObject(JHBasicObject):
 				describle +="	self."+classViewName+".clearsContextBeforeDrawing = "+attribView.get('clearsContextBeforeDrawing', 'YES')+";\n"
 				pass
 			pass
+
+			describle += "}\n"
 		else :
 			if attribView.get('clearsContextBeforeDrawing', 'YES') != 'YES':
 				describle +="	"+classViewName+".clearsContextBeforeDrawing = "+attribView.get('clearsContextBeforeDrawing', 'YES')+";\n"
 				pass
 			pass
 		
-		describle += "}\n"
 		return describle

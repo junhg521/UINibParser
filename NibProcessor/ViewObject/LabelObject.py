@@ -60,6 +60,7 @@ class JHLabelObject(JHBasicObject):
 				describle +="	[attributeContent appendAttributedString:"+attributeName+"];\n"
 				i = i + 1
 				pass
+			describle += "\n"
 			describle +="	[attributeContent endEditing];\n"
 			describle +="	"+classViewName+".attributedText = attributeContent;\n"
 			pass
@@ -82,7 +83,6 @@ class JHLabelObject(JHBasicObject):
 		if classViewAttrib.get('userInteractionEnabled', 'NO') != 'NO':
 			describle +="	"+classViewName+".userInteractionEnabled = "+classViewAttrib.get('userInteractionEnabled', 'NO')+';\n'
 			pass
-		
 		
 		return describle
 
