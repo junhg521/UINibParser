@@ -19,7 +19,6 @@ class JHViewObject(JHBasicObject):
 			pass
 
 	def addSubview(self, attribView, isLoadView):
-		print 'attribView=', attribView
 		frame = self.objcClassFrame(attribView.get('rect', {}))
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
