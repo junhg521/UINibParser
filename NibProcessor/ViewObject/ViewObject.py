@@ -37,8 +37,8 @@ class JHViewObject(JHBasicObject):
 				pass
 			pass
 
-		if classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
-			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
+		if attribView.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
+			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+attribView.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
 			pass
 			
 		return describle
