@@ -22,7 +22,6 @@ class JHBasicObject(JHCommomObject):
 		classType = self.objcClassNameType(classViewName)
 		classMethodName = self.attribViewViewMethod(attribView)
 		backgroundColor = self.objcClassColor(attribView.get('backgroundColor', {}))
-		frame = self.objcClassFrame(attribView.get('frame', {}))
 		autoresizingMask = self.loadAutoresizingMask(attribView.get('autoresizingMask', {}))
 		contentModel = self.loadViewContentModel(attribView.get('contentMode', 'scaleToFill'))
 		
@@ -32,6 +31,8 @@ class JHBasicObject(JHCommomObject):
 		if isLoadView:
 			classViewName = "self.view"
 			describle += "- (void)loadView\n{\n"
+
+			frame = self.objcClassFrame(attribView.get('rect', {}))
 			if len(frame) > 0:
 				describle +="	self.view = [["+classType+" alloc] initWithFrame:"+frame+"];\n"
 				pass
@@ -41,6 +42,7 @@ class JHBasicObject(JHCommomObject):
 			pass
 		else:
 			describle += "- ("+classType+" *"+")"+classMethodName+"\n{\n"
+			frame = self.objcClassFrame(attribView.get('frame', {}))
 			if len(frame) > 0:
 				describle +="	"+classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+frame+"];\n"
 				pass
@@ -70,6 +72,7 @@ class JHBasicObject(JHCommomObject):
 		if len(frame) == 0:
 			pass
 		else :
+			print 'frame=',frame.get('key','frameInset')
 			if frame.get('key','frameInset') == 'frameInset':
 				classFrame = "CGRectMake("+str(frame.get('minX', 0))+","+str(frame.get('minY', 0))+","+str(frame.get('width', 320))+","+str(frame.get('height', 480))+")"
 				pass
