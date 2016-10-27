@@ -66,15 +66,17 @@ class JHBasicObject(JHCommomObject):
 		return describle
 		
 	def objcClassFrame(self, frame):
+		classFrame = ""
 		if len(frame) == 0:
-			return ""
-		else:
-			x = str(frame.get('x', 0))
-			y = str(frame.get('y', 0))
-			width = str(frame.get('width', 320))
-			height = str(frame.get('height', 480))
-			return "CGRectMake("+x+","+y+","+width+","+height+")"
-		pass
+			pass
+		else :
+			if frame.get('key','frameInset') == 'frameInset':
+				classFrame = "CGRectMake("+str(frame.get('minX', 0))+","+str(frame.get('minY', 0))+","+str(frame.get('width', 320))+","+str(frame.get('height', 480))+")"
+				pass
+			else :
+				classFrame = "CGRectMake("+str(frame.get('x', 0))+","+str(frame.get('y', 0))+","+str(frame.get('width', 320))+","+str(frame.get('height', 480))+")"
+				pass
+		return classFrame
 
 	def objcClassColor(self, color):
 		if len(color) > 0:
