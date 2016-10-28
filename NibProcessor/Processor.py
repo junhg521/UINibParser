@@ -194,30 +194,30 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			writeFileHandle = self.readTempClassFile()
 			line = readFileHandle.readline()
 			while line !='':
-			writeFileHandle.write(line)
-			if line.find("@interface") != -1:
-				self.loadIBOutletProperty(self.outletViews,writeFileHandle)
-				pass
-			elif line.find("@implementation") != -1:
-				self.loadView(attribView, writeFileHandle)
-				if len(subView) > 0:
-					writeFileHandle.write("\n\
+				writeFileHandle.write(line)
+				if line.find("@interface") != -1:
+					self.loadIBOutletProperty(self.outletViews,writeFileHandle)
+					pass
+				elif line.find("@implementation") != -1:
+					self.loadView(attribView, writeFileHandle)
+					if len(subView) > 0:
+						writeFileHandle.write("\n\
 #pragma mark - loadAllSubViews\n")
-					subMethodNames = self.loadAllSubView(subView, writeFileHandle)
+						subMethodNames = self.loadAllSubView(subView, writeFileHandle)
+						pass
 					pass
-				pass
-			elif line.find("[super viewDidLoad]") != -1:
-				if len(subMethodNames) > 0:
-					self.loadAllSubViewOfView('self.view',subMethodNames,writeFileHandle)
-					view = self.attribViewTagProperty(attribView)
-					self.loadViewConstranit('self.view',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
+				elif line.find("[super viewDidLoad]") != -1:
+					if len(subMethodNames) > 0:
+						self.loadAllSubViewOfView('self.view',subMethodNames,writeFileHandle)
+						view = self.attribViewTagProperty(attribView)
+						self.loadViewConstranit('self.view',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
+						pass
 					pass
-				pass
-			else:
-				pass
+				else:
+					pass
 
-			line = readFileHandle.readline()
-			pass
+				line = readFileHandle.readline()
+				pass
 		except Exception as e:
 			readFileHandle.close()
 			writeFileHandle.close()
