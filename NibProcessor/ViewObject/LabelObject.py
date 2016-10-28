@@ -26,6 +26,7 @@ class JHLabelObject(JHViewObject):
 		lineAdjustment = self.getBaselineAdjustment(classViewAttrib.get('baselineAdjustment', 'UIBaselineAdjustmentAlignBaselines'))
 		font = self.getTextFont(attribView.get('fontDescription', {}))
 		attributedStrings = attribView.get('attributedString',{})
+		classColors = attribView.get('color', {})
 
 		describle = JHViewObject.addSubview(self,attribView,False)
 
@@ -67,10 +68,10 @@ class JHLabelObject(JHViewObject):
 			describle +="	"+classViewName+".text = "+"@\""+classViewAttrib.get('text', '')+"\""+';\n'
 			describle +="	"+classViewName+".font = "+font+'\n'
 			for color in classColors:
-			if len(color.get('key','')) > 0 and color.get('key','') == 'textColor':
-				describle +="	"+classViewName+"."+color.get('key','')+" = "+self.getClassColor(color)+";\n"
+				if len(color.get('key','')) > 0 and color.get('key','') == 'textColor':
+					describle +="	"+classViewName+"."+color.get('key','')+" = "+self.getClassColor(color)+";\n"
+					pass
 				pass
-			pass
 			pass
 
 		if textAligment != 'NSTextAlignmentNatural':
