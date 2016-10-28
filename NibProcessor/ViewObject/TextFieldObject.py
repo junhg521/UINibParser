@@ -19,7 +19,7 @@ class JHTextFieldObject(JHViewObject):
 		pass
 
 	def addSubview(self, attribView, isLoadView):
-		print 'attribView=', attribView
+		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
 		describle = JHViewObject.addSubview(self,attribView,False)
@@ -42,29 +42,29 @@ class JHTextFieldObject(JHViewObject):
 			pass
 
 		if attribView.has_key('fontDescription'):
-			describle +="	"+classViewName+".font = "+self.getTextFont(attribView.get('fontDescription'))+'\n'
+			describle +="	"+classViewName+".font = "+self.getTextFont(attribView.get('fontDescription'))+';\n'
 			pass
 
 		if attribView.has_key('clipsSubviews'):
 			if attribView.get('clipsSubviews') == 'YES':
-				describle +="	"+classViewName+".clipsSubviews = "+attribView.get('clipsSubviews')+'\n'
+				describle +="	"+classViewName+".clipsSubviews = "+attribView.get('clipsSubviews')+';\n'
 				pass
 			pass
 
 		if classViewAttrib.has_key('borderStyle'):
-			describle +="	"+classViewName+".borderStyle = "+self.getTextBorderStyle(classViewAttrib.get('borderStyle'))+'\n'
+			describle +="	"+classViewName+".borderStyle = "+self.getTextBorderStyle(classViewAttrib.get('borderStyle'))+';\n'
 			pass
 
 		if classViewAttrib.has_key('clearButtonMode'):
-			describle +="	"+classViewName+".clearButtonMode = "+self.getTextFieldViewMode(classViewAttrib.get('clearButtonMode'))+'\n'
+			describle +="	"+classViewName+".clearButtonMode = "+self.getTextFieldViewMode(classViewAttrib.get('clearButtonMode'))+';\n'
 			pass
 		
 		if classViewAttrib.has_key('leftViewMode'):
-			describle +="	"+classViewName+".leftViewMode = "+self.getTextFieldViewMode(classViewAttrib.get('leftViewMode'))+'\n'
+			describle +="	"+classViewName+".leftViewMode = "+self.getTextFieldViewMode(classViewAttrib.get('leftViewMode'))+';\n'
 			pass
-			
+
 		if classViewAttrib.has_key('rightViewMode'):
-			describle +="	"+classViewName+".rightViewMode = "+self.getTextFieldViewMode(classViewAttrib.get('rightViewMode'))+'\n'
+			describle +="	"+classViewName+".rightViewMode = "+self.getTextFieldViewMode(classViewAttrib.get('rightViewMode'))+';\n'
 			pass
 		
 		for connection in connections:
