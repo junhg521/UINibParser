@@ -52,6 +52,11 @@ class JHButtonObject(JHViewObject):
 			action = connection.get('action', {})
 			if len(action) > 0:
 				describle +="	["+classViewName+" addTarget:self action:@selector("+action.get('selector','')+") forControlEvents:+"+self.getControlEvent(action.get('eventType', 'touchUpInside'))+"];\n"
+				if len(action.get('backgroundImage','')) > 0:
+					describle +="	["+classViewName+" setBackgroundImage:@"+"\""+action.get('backgroundImage', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
+					pass
+				elif len(action.get('image', '')) > 0:
+					describle +="	["+classViewName+" setImage:@"+"\""+action.get('image', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
 				pass
 			pass
 		return describle

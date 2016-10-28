@@ -9,14 +9,15 @@
 #import "TestUIImageViewController.h"
 
 @interface TestUIImageViewController ()
-@property (nonatomic, strong) IBOutlet UIImageView *headerImageView;
 
 @end
 
 @implementation TestUIImageViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     // Do any additional setup after loading the view from its nib.
 }
 

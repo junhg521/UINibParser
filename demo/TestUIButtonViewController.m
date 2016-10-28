@@ -9,8 +9,6 @@
 #import "TestUIButtonViewController.h"
 
 @interface TestUIButtonViewController ()
-@property (nonatomic, strong) UIButton *button;
-
 
 @end
 
@@ -18,7 +16,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     // Do any additional setup after loading the view from its nib.
 }
 

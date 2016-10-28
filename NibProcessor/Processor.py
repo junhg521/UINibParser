@@ -293,7 +293,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 	// add subviews\n")
 		for subMethod in subMethodNames:
 			writeFileHandle.write("\
-	["+parentView+" addSubview:[self "+subMethod+"]];\n\n")
+	["+parentView+" addSubview:[self "+subMethod+"]];\n")
 			pass
 		pass
 
