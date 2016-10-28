@@ -219,14 +219,14 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				line = readFileHandle.readline()
 				pass
 		except Exception as e:
-			print 'crashed when parser ',self.resouce_file_dir,self.className,'.xib file'
+			print "crashed when parser "+self.resouce_file_dir+self.className+".xib"
 			os.remove(self.classTempFileDir())
 			raise
 		else:
 			os.remove(self.classFileDir())
 			os.rename(self.classTempFileDir(),self.classFileDir())
 		finally:
-			print 'finish parsor ',self.resouce_file_dir,self.className,'.xib file'
+			print "finish parsor "+self.resouce_file_dir+self.className+".xib"
 			readFileHandle.close()
 			writeFileHandle.close()
 			pass
