@@ -52,10 +52,10 @@ class JHButtonObject(JHViewObject):
 			if controlState.has_key('title'):
 				describle +="	["+classViewName+" setTitle:@"+"\""+controlState.get('title', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
 				pass
-			elif controlState.has_key('backgroundImage'):
+			if controlState.has_key('backgroundImage'):
 				describle +="	["+classViewName+" setBackgroundImage:@"+"\""+controlState.get('backgroundImage', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
 				pass
-			elif controlState.has_key('image'):
+			if controlState.has_key('image'):
 				describle +="	["+classViewName+" setImage:@"+"\""+controlState.get('image', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
 				pass
 			pass
