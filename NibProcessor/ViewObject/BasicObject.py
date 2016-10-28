@@ -387,3 +387,42 @@ class JHBasicObject(JHCommomObject):
 			pass
 
 		return controlEvent
+
+	def getTextBorderStyle(self, borderStyle):
+		textBorderStyle = ''
+
+		if borderStyle == 'none':
+			textBorderStyle = 'UITextBorderStyleNone'
+			pass
+		elif borderStyle == 'line':
+			textBorderStyle = 'UITextBorderStyleLine'
+			pass
+		elif borderStyle == 'bezel':
+			textBorderStyle = 'UITextBorderStyleBezel'
+			pass
+		elif borderStyle == 'roundedRect':
+			textBorderStyle = 'UITextBorderStyleRoundedRect'
+			pass
+		else:
+			pass
+		return textBorderStyle
+
+	def getTextFieldViewMode(self, mode):
+		textFieldViewMode = ''
+
+		if mode == 'never':
+			textFieldViewMode = 'UITextFieldViewModeNever'
+			pass
+		elif mode == 'whileEditing':
+			textFieldViewMode = 'UITextFieldViewModeWhileEditing'
+			pass
+		elif mode == 'unlessEditing':
+			textFieldViewMode = 'UITextFieldViewModeUnlessEditing'
+			pass
+		elif mode == 'always':
+			textFieldViewMode = 'UITextFieldViewModeAlways'
+			pass
+		else:
+			pass
+		return textFieldViewMode
+		

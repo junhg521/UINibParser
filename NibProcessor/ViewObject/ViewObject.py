@@ -31,7 +31,7 @@ class JHViewObject(JHBasicObject):
 			pass
 
 			describle += "}\n"
-		else :
+		else:
 			if attribView.get('clearsContextBeforeDrawing', 'YES') != 'YES':
 				describle +="	"+classViewName+".clearsContextBeforeDrawing = "+attribView.get('clearsContextBeforeDrawing', 'YES')+";\n"
 				pass
@@ -39,6 +39,18 @@ class JHViewObject(JHBasicObject):
 
 		if classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
 			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
+			pass
+
+		if attribView.has_key('contentVerticalAlignment'):
+			if attribView.get('contentVerticalAlignment', 'center') != 'center':
+				describle +="	"+classViewName+".contentVerticalAlignment = "+self.getControlContentVerticalAlignment(attribView.get('contentVerticalAlignment', 'center'))+";\n"
+				pass
+			pass
+
+		if attribView.has_key('contentHorizontalAlignment'):
+			if attribView.get('contentHorizontalAlignment', 'center') != 'center':
+				describle +="	"+classViewName+".contentHorizontalAlignment = "+self.getControlContentHorizontalAlignment(attribView.get('contentHorizontalAlignment', 'center'))+";\n"
+				pass
 			pass
 
 		return describle

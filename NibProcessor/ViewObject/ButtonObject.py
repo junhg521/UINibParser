@@ -35,18 +35,6 @@ class JHButtonObject(JHViewObject):
 		if len(frame) > 0:
 			describle +="	"+classViewName+".frame = "+frame+";\n"
 			pass
-		
-		if attribView.has_key('contentVerticalAlignment'):
-			if attribView.get('contentVerticalAlignment', 'center') != 'center':
-				describle +="	"+classViewName+".contentVerticalAlignment = "+self.getControlContentVerticalAlignment(attribView.get('contentVerticalAlignment', 'center'))+";\n"
-				pass
-			pass
-
-		if attribView.has_key('contentHorizontalAlignment'):
-			if attribView.get('contentHorizontalAlignment', 'center') != 'center':
-				describle +="	"+classViewName+".contentHorizontalAlignment = "+self.getControlContentHorizontalAlignment(attribView.get('contentHorizontalAlignment', 'center'))+";\n"
-				pass
-			pass
 
 		for controlState in controlStates:
 			if controlState.has_key('title'):
