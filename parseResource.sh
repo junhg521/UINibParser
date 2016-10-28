@@ -21,7 +21,7 @@ function deleteImplementOriginProperty()
 	File_Property=`grep -n "IBOutlet" $1 | awk '{print $1}' | cut -d ':' -f 1`
 	if [ ${#File_Property} != 0 ]
 	then
-		echo "You has delete ${1}'s property:${File_Property}"
+		# echo "You has delete ${1}'s property:${File_Property}"
 		sed -i "" "${File_Property}d" $1
 	fi
 }
