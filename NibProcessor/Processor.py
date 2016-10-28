@@ -219,14 +219,14 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				line = readFileHandle.readline()
 				pass
 		except Exception as e:
-			print 'you has a Exception when read ', self.classFileDir(), 'file'
+			print 'crashed when parser ', self.className, '.xib file'
 			os.remove(self.classTempFileDir())
 			raise
 		else:
 			os.remove(self.classFileDir())
 			os.rename(self.classTempFileDir(),self.classFileDir())
 		finally:
-			print 'finish parsor ',self.classFileDir(), 'file'
+			print 'finish parsor ',self.className, '.xib file'
 			readFileHandle.close()
 			writeFileHandle.close()
 			pass
@@ -242,6 +242,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					writeFileHandle.write("@property (nonatomic, strong) "+className+" *"+tag+";\n")
 					pass
 				pass
+			pass
 		pass
 
 	def loadView(self, attribView, writeFileHandle):
