@@ -187,12 +187,13 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		attribView = analyseAttrib[0]
 		subView = analyseAttrib[1]
 		# print 'attribView=', attribView, 'subView=',subView
-
-		subMethodNames = []
-		readFileHandle = self.readClassFile()
-		writeFileHandle = self.readTempClassFile()
-		line = readFileHandle.readline()
-		while line !='':
+		
+		try:
+			subMethodNames = []
+			readFileHandle = self.readClassFile()
+			writeFileHandle = self.readTempClassFile()
+			line = readFileHandle.readline()
+			while line !='':
 			writeFileHandle.write(line)
 			if line.find("@interface") != -1:
 				self.loadIBOutletProperty(self.outletViews,writeFileHandle)
@@ -216,11 +217,21 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				pass
 
 			line = readFileHandle.readline()
-		pass
-		readFileHandle.close()
-		writeFileHandle.close()
-		os.remove(self.classFileDir())
-		os.rename(self.classTempFileDir(),self.classFileDir())
+			pass
+		except Exception as e:
+			readFileHandle.close()
+			writeFileHandle.close()
+			os.remove(self.classFileDir())
+			os.rename(self.classTempFileDir(),self.classFileDir())
+			raise
+		else:
+			pass
+		finally:
+			readFileHandle.close()
+			writeFileHandle.close()
+			os.remove(self.classFileDir())
+			os.rename(self.classTempFileDir(),self.classFileDir())
+			pass
 
 	def loadIBOutletProperty(self, attribView, writeFileHandle):
 		for attrib in attribView:
