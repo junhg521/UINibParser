@@ -12,6 +12,7 @@
 #import "TestUIViewViewController.h"
 #import "TestUIButtonViewController.h"
 #import "TestUIImageViewController.h"
+#import "TestTestFieldViewController.h"
 
 @interface ViewController ()<TCustomSegmentScrollDelegate>
 
@@ -36,6 +37,8 @@
     [self.controllers addObject:[self loadTestViewController:@"TestUIViewViewController" isNibFile:isNibFile]];
     [self.controllers addObject:[self loadTestViewController:@"TestUIButtonViewController" isNibFile:isNibFile]];
     [self.controllers addObject:[self loadTestViewController:@"TestUIImageViewController" isNibFile:isNibFile]];
+    [self.controllers addObject:[self loadTestViewController:@"TestTestFieldViewController" isNibFile:isNibFile]];
+    
     
     
     [self addTestController:[self.controllers objectAtIndex:0]];
@@ -63,7 +66,7 @@
 - (TCustomSegmentScroll *)scrollSegmentControl
 {
     if (!_scrollSegmentControl) {
-        _scrollSegmentControl = [[TCustomSegmentScroll alloc] initWithTitles:@[@"UILabel脚本测试",@"UIView脚本测试",@"UIButton脚本测试",@"UIImage脚本测试"]
+        _scrollSegmentControl = [[TCustomSegmentScroll alloc] initWithTitles:@[@"UILabel脚本测试",@"UIView脚本测试",@"UIButton脚本测试",@"UIImage脚本测试",@"UITestField脚本测试"]
                                                                      delegate:self
                                                                 displaySeparator:NO];
         [_scrollSegmentControl setBottomLineColor: [UIColor greenColor]];

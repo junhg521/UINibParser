@@ -1,25 +1,23 @@
 //
-//  TestUIImageViewController.m
+//  TestTestFieldViewController.m
 //  demo
 //
 //  Created by Jun on 2016/10/28.
 //  Copyright © 2016年 JunHg. All rights reserved.
 //
 
-#import "TestUIImageViewController.h"
+#import "TestTestFieldViewController.h"
 
-@interface TestUIImageViewController ()
+@interface TestTestFieldViewController ()
 
-@property (nonatomic, weak) IBOutlet UIImageView *headerImageView;
+@property (nonatomic, weak) IBOutlet UITextField *textField;
 
 @end
 
-@implementation TestUIImageViewController
-
+@implementation TestTestFieldViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -37,5 +35,10 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+- (IBAction)buttonTapped:(id)sender
+{
+    
+}
 
 @end

@@ -10,6 +10,8 @@
 
 @interface TestUIButtonViewController ()
 
+@property (nonatomic, weak) IBOutlet UIButton *botton;
+
 @end
 
 @implementation TestUIButtonViewController

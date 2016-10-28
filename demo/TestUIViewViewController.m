@@ -10,6 +10,8 @@
 
 @interface TestUIViewViewController ()
 
+@property (nonatomic, weak) IBOutlet UIView *bottomView;
+
 @end
 
 @implementation TestUIViewViewController
