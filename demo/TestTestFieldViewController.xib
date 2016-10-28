@@ -15,9 +15,11 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="dafd" textAlignment="natural" minimumFontSize="17" background="dingdan" disabledBackground="icon_store" translatesAutoresizingMaskIntoConstraints="NO" id="g0G-o8-Ddw">
-                    <frame key="frameInset" minX="98" minY="256" width="97" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="dsafdasfd" borderStyle="roundedRect" placeholder="dafd" textAlignment="natural" minimumFontSize="17" background="dingdan" disabledBackground="icon_store" translatesAutoresizingMaskIntoConstraints="NO" id="g0G-o8-Ddw">
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Gep-F5-bda"/>
+                        <constraint firstAttribute="width" constant="241" id="k20-Ju-4rt"/>
+                    </constraints>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -27,6 +29,11 @@
                 </textField>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="g0G-o8-Ddw" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="G1g-Og-nc7"/>
+                <constraint firstItem="g0G-o8-Ddw" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="lHC-yI-qYA"/>
+            </constraints>
+            <point key="canvasLocation" x="32.5" y="117.5"/>
         </view>
     </objects>
     <resources>
