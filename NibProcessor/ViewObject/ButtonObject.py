@@ -36,28 +36,38 @@ class JHButtonObject(JHViewObject):
 			describle +="	"+classViewName+".frame = "+frame+";\n"
 			pass
 		
-		if attribView.get('contentVerticalAlignment', 'center') != 'center':
-			describle +="	"+classViewName+".contentVerticalAlignment = "+self.getControlContentVerticalAlignment(attribView.get('contentVerticalAlignment', 'center'))+";\n"
+		if attribView.has_key('contentVerticalAlignment'):
+			if attribView.get('contentVerticalAlignment', 'center') != 'center':
+				describle +="	"+classViewName+".contentVerticalAlignment = "+self.getControlContentVerticalAlignment(attribView.get('contentVerticalAlignment', 'center'))+";\n"
+				pass
 			pass
 
-		if attribView.get('contentHorizontalAlignment', 'center') != 'center':
-			describle +="	"+classViewName+".contentHorizontalAlignment = "+self.getControlContentHorizontalAlignment(attribView.get('contentHorizontalAlignment', 'center'))+";\n"
+		if attribView.has_key('contentHorizontalAlignment'):
+			if attribView.get('contentHorizontalAlignment', 'center') != 'center':
+				describle +="	"+classViewName+".contentHorizontalAlignment = "+self.getControlContentHorizontalAlignment(attribView.get('contentHorizontalAlignment', 'center'))+";\n"
+				pass
 			pass
 
 		for controlState in controlStates:
-			describle +="	["+classViewName+" setTitle:@"+"\""+controlState.get('title', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
-			if len(controlState.get('backgroundImage','')) > 0:
-					describle +="	["+classViewName+" setBackgroundImage:@"+"\""+controlState.get('backgroundImage', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
-					pass
-				elif len(controlState.get('image', '')) > 0:
-					describle +="	["+classViewName+" setImage:@"+"\""+controlState.get('image', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
+			if controlState.has_key('title'):
+				describle +="	["+classViewName+" setTitle:@"+"\""+controlState.get('title', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
+				pass
+			elif controlState.has_key('backgroundImage'):
+				describle +="	["+classViewName+" setBackgroundImage:@"+"\""+controlState.get('backgroundImage', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
+				pass
+			elif controlState.has_key('image'):
+				describle +="	["+classViewName+" setImage:@"+"\""+controlState.get('image', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
 				pass
 			pass
 			
 		for connection in connections:
-			action = connection.get('action', {})
-			if len(action) > 0:
-				describle +="	["+classViewName+" addTarget:self action:@selector("+action.get('selector','')+") forControlEvents:+"+self.getControlEvent(action.get('eventType', 'touchUpInside'))+"];\n"
+			if connection.has_key('action'):
+				action = connection.get('action', {})
+				if action.has_key('selector') and action.has_key('eventType'):
+					describle +="	["+classViewName+" addTarget:self action:@selector("+action.get('selector','')+") forControlEvents:+"+self.getControlEvent(action.get('eventType', 'touchUpInside'))+"];\n"
+					pass
+				pass
 			pass
+			
 		return describle
 
