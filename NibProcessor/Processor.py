@@ -219,14 +219,13 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				line = readFileHandle.readline()
 				pass
 		except Exception as e:
+			print 'you has a Exception when read ', self.classFileDir(), 'file'
 			readFileHandle.close()
 			writeFileHandle.close()
-			os.remove(self.classFileDir())
-			os.rename(self.classTempFileDir(),self.classFileDir())
+			os.remove(self.classTempFileDir())
 			raise
-		else:
-			pass
 		finally:
+			print 'finish parsor ',self.classFileDir(), 'file'
 			readFileHandle.close()
 			writeFileHandle.close()
 			os.remove(self.classFileDir())
