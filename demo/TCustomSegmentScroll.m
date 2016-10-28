@@ -9,6 +9,7 @@
 #import "TCustomSegmentScroll.h"
 
 #define  SelectedColor = [UIColor colorWithRed:0.239 green:0.600 blue:0.914 alpha:1.000];
+#define  scrollButtonWidht 150
 
 @interface TCustomSegmentScroll ()
 
@@ -57,8 +58,7 @@
 
 - (instancetype)initWithTitles:(NSArray *)titles delegate:(id)delegate bottomLineColor:(UIColor *)bottomLineColor itemSpace:(int)itemSpace bottomLineLengthPercent:(float)lengthPercent displaySeparator:(BOOL)displaySeparator separatorLineColor:(UIColor *)separatorLineColor
 {
-    CGRect frame = CGRectMake(0, 20, CGRectGetWidth([UIScreen mainScreen].bounds), 45.0);
-    if (self = [super initWithFrame:frame]) {
+    if (self = [super initWithFrame:CGRectMake(0, 20, CGRectGetWidth([UIScreen mainScreen].bounds), 45.0)]) {
         self.itemSpace = itemSpace;
         self.segmentScollEnabled = YES;
         self.bottomLineRation = lengthPercent > 1 ? 1 :lengthPercent;
@@ -70,7 +70,7 @@
         
         UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth([UIScreen mainScreen].bounds), 45.0)];
         scrollView.backgroundColor = [UIColor clearColor];
-        [self setupScrollView:scrollView titles:titles frame:frame];
+        [self setupScrollView:scrollView titles:titles];
         [self addSubview:scrollView];
         self.scrollView = scrollView;
         
@@ -80,10 +80,9 @@
     return self;
 }
 
-- (void)setupScrollView:(UIScrollView *)scrollView titles:(NSArray *)titles frame:(CGRect )frame
+- (void)setupScrollView:(UIScrollView *)scrollView titles:(NSArray *)titles
 {
-    CGFloat width4btn = (frame.size.width - (titles.count+1) *self.itemSpace)/titles.count ;
-    
+    CGFloat width4btn = scrollButtonWidht;
     for (int i = 0; i<[titles count]; i++) {
         UIButton *btns = [UIButton buttonWithType:UIButtonTypeCustom];
         btns.backgroundColor = [UIColor clearColor];
