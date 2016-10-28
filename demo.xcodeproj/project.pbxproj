@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF80E89B1DC324FA003090D7 /* TestUIImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF80E8991DC324FA003090D7 /* TestUIImageViewController.m */; };
+		BF80E89C1DC324FA003090D7 /* TestUIImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF80E89A1DC324FA003090D7 /* TestUIImageViewController.xib */; };
 		BF9E844F1DC1FED600B8EEFE /* TestUIButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9E844D1DC1FED600B8EEFE /* TestUIButtonViewController.m */; };
 		BF9E84501DC1FED600B8EEFE /* TestUIButtonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF9E844E1DC1FED600B8EEFE /* TestUIButtonViewController.xib */; };
 		BFD5422F1DC1D7780080614D /* TestUIViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFD5422D1DC1D7780080614D /* TestUIViewViewController.m */; };
@@ -34,6 +36,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BF80E8981DC324FA003090D7 /* TestUIImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUIImageViewController.h; sourceTree = "<group>"; };
+		BF80E8991DC324FA003090D7 /* TestUIImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUIImageViewController.m; sourceTree = "<group>"; };
+		BF80E89A1DC324FA003090D7 /* TestUIImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestUIImageViewController.xib; sourceTree = "<group>"; };
 		BF9E844C1DC1FED600B8EEFE /* TestUIButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUIButtonViewController.h; sourceTree = "<group>"; };
 		BF9E844D1DC1FED600B8EEFE /* TestUIButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUIButtonViewController.m; sourceTree = "<group>"; };
 		BF9E844E1DC1FED600B8EEFE /* TestUIButtonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestUIButtonViewController.xib; sourceTree = "<group>"; };
@@ -119,6 +124,9 @@
 				BF9E844C1DC1FED600B8EEFE /* TestUIButtonViewController.h */,
 				BF9E844D1DC1FED600B8EEFE /* TestUIButtonViewController.m */,
 				BF9E844E1DC1FED600B8EEFE /* TestUIButtonViewController.xib */,
+				BF80E8981DC324FA003090D7 /* TestUIImageViewController.h */,
+				BF80E8991DC324FA003090D7 /* TestUIImageViewController.m */,
+				BF80E89A1DC324FA003090D7 /* TestUIImageViewController.xib */,
 			);
 			path = demo;
 			sourceTree = "<group>";
@@ -229,6 +237,7 @@
 				BFFCE2B81DAF84B4004D3542 /* Assets.xcassets in Resources */,
 				BFFB2F621DC18D0C008EA8A3 /* TestUILabelViewController.xib in Resources */,
 				BFFCE2B61DAF84B4004D3542 /* Main.storyboard in Resources */,
+				BF80E89C1DC324FA003090D7 /* TestUIImageViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +261,7 @@
 				BF9E844F1DC1FED600B8EEFE /* TestUIButtonViewController.m in Sources */,
 				BFFCE2B01DAF84B4004D3542 /* AppDelegate.m in Sources */,
 				BFFCE2D31DAF84D7004D3542 /* TestUILabelViewController.m in Sources */,
+				BF80E89B1DC324FA003090D7 /* TestUIImageViewController.m in Sources */,
 				BFFCE2AD1DAF84B4004D3542 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

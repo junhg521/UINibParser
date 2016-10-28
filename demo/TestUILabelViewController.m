@@ -9,10 +9,12 @@
 #import "TestUILabelViewController.h"
 
 @interface TestUILabelViewController ()
+@property (nonatomic, weak) IBOutlet UILabel *bottomView;
 
 @end
 
 @implementation TestUILabelViewController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];

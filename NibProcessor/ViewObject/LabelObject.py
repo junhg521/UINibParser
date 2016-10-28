@@ -3,15 +3,15 @@
 
 __author__ = 'Junhg'
 
-# create: 2016/10/21
+# create: 2016/10/26
 # version: 0.0.1
 # author: Junhg
 # contribute:
 # 
 
-from BasicObject import JHBasicObject
+from ViewObject import JHViewObject
 
-class JHLabelObject(JHBasicObject):
+class JHLabelObject(JHViewObject):
 	def __init__(self):
 		pass
 
@@ -22,13 +22,12 @@ class JHLabelObject(JHBasicObject):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
-		textAligment = self.textAlignment(classViewAttrib.get('textAlignment', 'NSTextAlignmentLeft'))
-		lineAdjustment = self.baselineAdjustment(classViewAttrib.get('baselineAdjustment', 'UIBaselineAdjustmentAlignBaselines'))
-		font = self.textFont(attribView.get('fontDescription', {}))
-		textColor = self.objcClassColor(attribView.get('textColor', {}))
+		textAligment = self.getTextAlignment(classViewAttrib.get('textAlignment', 'NSTextAlignmentLeft'))
+		lineAdjustment = self.getBaselineAdjustment(classViewAttrib.get('baselineAdjustment', 'UIBaselineAdjustmentAlignBaselines'))
+		font = self.getTextFont(attribView.get('fontDescription', {}))
 		attributedStrings = attribView.get('attributedString',{})
 
-		describle = JHBasicObject.addSubview(self,attribView,False)
+		describle = JHViewObject.addSubview(self,attribView,False)
 
 		if classViewAttrib.get('adjustsFontSizeToFit', 'NO') != 'NO':
 			describle +="	"+classViewName+".adjustsFontSizeToFitWidth = "+classViewAttrib.get('adjustsFontSizeToFit', 'NO')+';\n'
@@ -52,10 +51,10 @@ class JHLabelObject(JHBasicObject):
 				describle += "\n"
 				describle += "	NSMutableAttributedString *"+attributeName+" = [[NSMutableAttributedString alloc] initWithString:@"+"\""+subContent+"\"];\n"
 				if attributedString.has_key('font'):
-					describle += "	["+attributeName+" addAttribute:NSFontAttributeName value:"+self.attributeTextFont(attributedString.get('font',{}))+" range:NSMakeRange(0, "+length+")];\n"
+					describle += "	["+attributeName+" addAttribute:NSFontAttributeName value:"+self.getAttributeTextFont(attributedString.get('font',{}))+" range:NSMakeRange(0, "+length+")];\n"
 					pass
 				if attributedString.has_key('color'):
-					describle += "	["+attributeName+" addAttribute:NSForegroundColorAttributeName value:"+self.objcClassColor(attributedString.get('color',{}))+" range:NSMakeRange(0, "+length+")];\n"
+					describle += "	["+attributeName+" addAttribute:NSForegroundColorAttributeName value:"+self.getClassColor(attributedString.get('color',{}))+" range:NSMakeRange(0, "+length+")];\n"
 					pass
 				describle +="	[attributeContent appendAttributedString:"+attributeName+"];\n"
 				i = i + 1
@@ -67,17 +66,15 @@ class JHLabelObject(JHBasicObject):
 		else :
 			describle +="	"+classViewName+".text = "+"@\""+classViewAttrib.get('text', '')+"\""+';\n'
 			describle +="	"+classViewName+".font = "+font+'\n'
-			if len(textColor) > 0:
-				describle +="	"+classViewName+".textColor = "+textColor+";\n"
+			for color in classColors:
+			if len(color.get('key','')) > 0 and color.get('key','') == 'textColor':
+				describle +="	"+classViewName+"."+color.get('key','')+" = "+self.getClassColor(color)+";\n"
 				pass
+			pass
 			pass
 
 		if textAligment != 'NSTextAlignmentNatural':
 			describle +="	"+classViewName+".textAlignment = "+textAligment+';\n'
-			pass
-
-		if classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
-			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
 			pass
 
 		if classViewAttrib.get('userInteractionEnabled', 'NO') != 'NO':
@@ -86,55 +83,7 @@ class JHLabelObject(JHBasicObject):
 		
 		return describle
 
-	def textAlignment(self, aligment):
-		textAligment = 'NSTextAlignmentNatural'
-
-		if aligment == 'left':
-			textAligment = 'NSTextAlignmentLeft'
-			pass
-		elif aligment == 'center':
-			textAligment = 'NSTextAlignmentCenter'
-			pass
-		elif aligment == 'right':
-			textAligment = 'NSTextAlignmentRight'
-			pass
-		elif aligment == 'justified':
-			textAligment = 'NSTextAlignmentJustified'
-			pass
-		elif aligment == 'natural':
-			textAligment = 'NSTextAlignmentNatural'
-			pass
-		else:
-			pass
-		return textAligment
-
-	def baselineAdjustment(self, adjustment):
-		lineAdjustment = 'UIBaselineAdjustmentAlignBaselines'
-
-		if adjustment == 'alignBaselines':
-			lineAdjustment = 'UIBaselineAdjustmentAlignBaselines'
-			pass
-		elif adjustment == 'alignCenters':
-			lineAdjustment = 'UIBaselineAdjustmentAlignCenters'
-			pass
-		else :
-			pass
-		return lineAdjustment
-
-	def textFont(self, fontDescription):
-		# print 'fontDescription = ', fontDescription
-		fontSize = fontDescription.get('pointSize', '17')
-		fontType = fontDescription.get('type', 'system')
-
-		if fontType == 'boldSystem':
-			return "[UIFont boldSystemFontOfSize:"+str(fontSize)+"];"
-		elif fontType == 'italicSystem':
-			return "[UIFont italicSystemFontOfSize:"+str(fontSize)+"];"
-		else :
-			return "[UIFont systemFontOfSize:"+str(fontSize)+"];"
-		pass
-
-	def attributeTextFont(self, fontDescription):
+	def getAttributeTextFont(self, fontDescription):
 		# print 'fontDescription = ', fontDescription
 		fontSize = fontDescription.get('size', '17')
 		fontType = fontDescription.get('metaFont', 'system')

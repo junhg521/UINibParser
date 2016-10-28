@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # _*_ coding: UTF-8 _*_
 
-# create: 2016/10/21
+# create: 2016/10/22
 # version: 0.0.1
 # author: Junhg
 # contribute:
@@ -21,10 +21,9 @@ class JHBasicObject(JHCommomObject):
 		classViewName = self.attribViewTag(attribView)
 		classType = self.objcClassNameType(classViewName)
 		classMethodName = self.attribViewViewMethod(attribView)
-		backgroundColor = self.objcClassColor(attribView.get('backgroundColor', {}))
-		autoresizingMask = self.loadAutoresizingMask(attribView.get('autoresizingMask', {}))
-		contentModel = self.loadViewContentModel(attribView.get('contentMode', 'scaleToFill'))
-		
+		classColors = attribView.get('color', {})
+		autoresizingMask = self.getAutoresizingMask(attribView.get('autoresizingMask', {}))
+		contentModel = self.getContentModel(attribView.get('contentMode', 'scaleToFill'))
 		describle = "\n"
 
 		# 变更成classViewName所对应的类型
@@ -32,7 +31,7 @@ class JHBasicObject(JHCommomObject):
 			classViewName = "self.view"
 			describle += "- (void)loadView\n{\n"
 
-			frame = self.objcClassFrame(attribView.get('rect', {}))
+			frame = self.getClassFrame(attribView.get('rect', {}))
 			if len(frame) > 0:
 				describle +="	self.view = [["+classType+" alloc] initWithFrame:"+frame+"];\n"
 				pass
@@ -40,9 +39,13 @@ class JHBasicObject(JHCommomObject):
 				describle +="	self.view = [["+classType+" alloc] init];\n"
 				pass
 			pass
-		else:
+		elif classType == 'UIButton':
 			describle += "- ("+classType+" *"+")"+classMethodName+"\n{\n"
-			frame = self.objcClassFrame(attribView.get('frame', {}))
+			describle +="	"+classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribView.get('buttonType', 'roundedRect'))+"];\n"
+			pass
+		else :
+			describle += "- ("+classType+" *"+")"+classMethodName+"\n{\n"
+			frame = self.getClassFrame(attribView.get('frame', {}))
 			if len(frame) > 0:
 				describle +="	"+classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+frame+"];\n"
 				pass
@@ -52,9 +55,11 @@ class JHBasicObject(JHCommomObject):
 			pass
 
 		describle +="	"+classViewName+".tag = [@"+"\""+self.attribViewMethodNameId(classMethodName)+"\""+" hash];\n"
-		
-		if len(backgroundColor) > 0:
-			describle +="	"+classViewName+".backgroundColor = "+backgroundColor+";\n"
+			
+		for color in classColors:
+			if len(color.get('key','')) > 0 and color.get('key','') != 'textColor':
+				describle +="	"+classViewName+"."+color.get('key','')+" = "+self.getClassColor(color)+";\n"
+				pass
 			pass
 		
 		if autoresizingMask != 'UIViewAutoresizingNone':
@@ -65,9 +70,13 @@ class JHBasicObject(JHCommomObject):
 			describle +="	"+classViewName+".contentMode = "+contentModel+";\n"
 			pass
 
+		if attribView.get('opaque', 'YES') != 'YES':
+			describle +="	"+classViewName+".opaque = "+attribView.get('opaque', 'YES')+";\n"
+			pass
+
 		return describle
 		
-	def objcClassFrame(self, frame):
+	def getClassFrame(self, frame):
 		classFrame = ""
 		if len(frame) == 0:
 			pass
@@ -80,7 +89,7 @@ class JHBasicObject(JHCommomObject):
 				pass
 		return classFrame
 
-	def objcClassColor(self, color):
+	def getClassColor(self, color):
 		if len(color) > 0:
 			red = str(color.get('red', 0))
 			green = str(color.get('green', 0))
@@ -91,7 +100,7 @@ class JHBasicObject(JHCommomObject):
 		else :
 			return ""
 
-	def loadViewContentModel(self, model):
+	def getContentModel(self, model):
 		contentMode = 'UIViewContentModeScaleToFill'
 
 		if model == 'scaleToFill':
@@ -137,34 +146,244 @@ class JHBasicObject(JHCommomObject):
 			pass
 		return contentMode
 
-	def loadAutoresizingMask(self, autoresizingMask):
+	def getAutoresizingMask(self, autoresizingMask):
 		autoresizing = 'UIViewAutoresizingNone'
 
 		if autoresizingMask.get('flexibleMaxX', 'NO') == 'YES':
-			autoresizing = self.mergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleLeftMargin')
+			autoresizing = self.getMergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleLeftMargin')
 			pass
 		if autoresizingMask.get('widthSizable', 'NO') == 'YES':
-			autoresizing = self.mergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleWidth')
+			autoresizing = self.getMergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleWidth')
 			pass
 		if autoresizingMask.get('flexibleMinX', 'NO') == 'YES':
-			autoresizing = self.mergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleRightMargin')
+			autoresizing = self.getMergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleRightMargin')
 			pass
 		if autoresizingMask.get('flexibleMaxY', 'NO') == 'YES':
-			autoresizing = self.mergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleTopMargin')
+			autoresizing = self.getMergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleTopMargin')
 			pass
 		if autoresizingMask.get('heightSizable', 'NO') == 'YES':
-			autoresizing = self.mergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleHeight')
+			autoresizing = self.getMergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleHeight')
 			pass
 		if autoresizingMask.get('flexibleMinY', 'NO') == 'YES':
-			autoresizing = self.mergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleBottomMargin')
+			autoresizing = self.getMergeAutoresizingMask(autoresizing, 'UIViewAutoresizingFlexibleBottomMargin')
 			pass
 
 		return autoresizing
 	
-	def mergeAutoresizingMask(self, oldAutoresizing, newAutoresizing):
+	def getMergeAutoresizingMask(self, oldAutoresizing, newAutoresizing):
 		if oldAutoresizing == 'UIViewAutoresizingNone':
 			oldAutoresizing = newAutoresizing 
 			pass
 		else :
 			oldAutoresizing = oldAutoresizing +' | '+ newAutoresizing
 		return oldAutoresizing
+
+	def getButtonType(self, buttonType):
+		bType = 'UIButtonTypeSystem'
+		if buttonType == 'roundedRect':
+			pass
+		elif buttonType == 'contactAdd':
+			bType = 'UIButtonTypeContactAdd'
+			pass
+		elif buttonType == 'infoDark':
+			bType = 'UIButtonTypeInfoDark'
+			pass
+		elif buttonType == 'infoLight':
+			bType = 'UIButtonTypeInfoLight'
+			pass
+		elif buttonType == 'detailDisclosure':
+			bType = 'UIButtonTypeDetailDisclosure'
+			pass
+		elif buttonType == 'system':
+			pass
+		elif buttonType == 'custom':
+			bType = 'UIButtonTypeCustom'
+			pass
+		else:
+			pass
+		return bType
+
+	def getTextAlignment(self, aligment):
+		textAligment = 'NSTextAlignmentNatural'
+
+		if aligment == 'left':
+			textAligment = 'NSTextAlignmentLeft'
+			pass
+		elif aligment == 'center':
+			textAligment = 'NSTextAlignmentCenter'
+			pass
+		elif aligment == 'right':
+			textAligment = 'NSTextAlignmentRight'
+			pass
+		elif aligment == 'justified':
+			textAligment = 'NSTextAlignmentJustified'
+			pass
+		elif aligment == 'natural':
+			textAligment = 'NSTextAlignmentNatural'
+			pass
+		else:
+			pass
+		return textAligment
+
+	def getBaselineAdjustment(self, adjustment):
+		lineAdjustment = 'UIBaselineAdjustmentAlignBaselines'
+
+		if adjustment == 'alignBaselines':
+			lineAdjustment = 'UIBaselineAdjustmentAlignBaselines'
+			pass
+		elif adjustment == 'alignCenters':
+			lineAdjustment = 'UIBaselineAdjustmentAlignCenters'
+			pass
+		else :
+			pass
+		return lineAdjustment
+
+	def getTextFont(self, fontDescription):
+		# print 'fontDescription = ', fontDescription
+		fontSize = fontDescription.get('pointSize', '17')
+		fontType = fontDescription.get('type', 'system')
+
+		if fontType == 'boldSystem':
+			return "[UIFont boldSystemFontOfSize:"+str(fontSize)+"];"
+		elif fontType == 'italicSystem':
+			return "[UIFont italicSystemFontOfSize:"+str(fontSize)+"];"
+		else :
+			return "[UIFont systemFontOfSize:"+str(fontSize)+"];"
+		pass
+
+	def getControlContentHorizontalAlignment(self, alignment):
+		controlAlignment = ''
+
+		if aligment == 'center':
+			controlAlignment = 'UIControlContentHorizontalAlignmentCenter'
+			pass
+		elif aligment == 'left':
+			controlAlignment = 'UIControlContentHorizontalAlignmentLeft'
+			pass
+		elif aligment == 'right':
+			controlAlignment = 'UIControlContentHorizontalAlignmentRight'
+			pass
+		elif aligment == 'fill':
+			controlAlignment = 'UIControlContentVerticalAlignmentFill'
+			pass
+		else:
+			pass
+
+		return controlAlignment
+
+	def getControlContentVerticalAlignment(self, alignment):
+		controlAlignment = ''
+
+		if aligment == 'center':
+			controlAlignment = 'UIControlContentVerticalAlignmentCenter'
+			pass
+		elif aligment == 'top':
+			controlAlignment = 'UIControlContentVerticalAlignmentTop'
+			pass
+		elif aligment == 'bottom':
+			controlAlignment = 'UIControlContentVerticalAlignmentBottom'
+			pass
+		elif aligment == 'fill':
+			controlAlignment = 'UIControlContentVerticalAlignmentFill'
+			pass
+		else:
+			pass
+
+		return controlAlignment
+
+	def getControlState(self, state):
+		controlState = ''
+
+		if state == 'normal':
+			controlState = 'UIControlStateNormal'
+			pass
+		elif state == 'highlighted':
+			controlState = 'UIControlStateHighlighted'
+			pass
+		elif state == 'disabled':
+			controlState = 'UIControlStateDisabled'
+			pass
+		elif state == 'selected':
+			controlState = 'UIControlStateSelected'
+			pass
+		elif state == 'focused':
+			controlState = 'UIControlStateFocused'
+			pass
+		elif state == 'application':
+			controlState = 'UIControlStateApplication'
+			pass
+		elif state == 'reserved':
+			controlState = 'UIControlStateReserved'
+			pass
+		else:
+			pass
+
+		return controlState
+
+	def getControlEvent(self, event):
+		controlEvent = ''
+
+		if event == 'down':
+			controlEvent = 'UIControlEventTouchDown'
+			pass
+		elif event == 'downRepeat':
+			controlEvent = 'UIControlEventTouchDownRepeat'
+			pass
+		elif event == 'dragInside':
+			controlEvent = 'UIControlEventTouchDragInside'
+			pass
+		elif event == 'dragOutside':
+			controlEvent = 'UIControlEventTouchDragOutside'
+			pass
+		elif event == 'dragEnter':
+			controlEvent = 'UIControlEventTouchDragEnter'
+			pass
+		elif event == 'dragExit':
+			controlEvent = 'UIControlEventTouchDragExit'
+			pass
+		elif event == 'touchUpInside':
+			controlEvent = 'UIControlEventTouchUpInside'
+			pass
+		elif event == 'touchUpOutside':
+			controlEvent = 'UIControlEventTouchUpOutside'
+			pass
+		elif event == 'cancel':
+			controlEvent = 'UIControlEventTouchCancel'
+			pass
+		elif event == 'valueChanged':
+			controlEvent = 'UIControlEventValueChanged'
+			pass
+		elif event == 'primaryActionTriggered':
+			controlEvent = 'UIControlEventPrimaryActionTriggered'
+			pass
+		elif event == 'editingDidBegin':
+			controlEvent = 'UIControlEventEditingDidBegin'
+			pass
+		elif event == 'editingChanged':
+			controlEvent = 'UIControlEventEditingChanged'
+			pass
+		elif event == 'editingDidEnd':
+			controlEvent = 'UIControlEventEditingDidEnd'
+			pass
+		elif event == 'editingDidEndOnExit':
+			controlEvent = 'UIControlEventEditingDidEndOnExit'
+			pass
+		elif event == 'allTouchEvents':
+			controlEvent = 'UIControlEventAllTouchEvents'
+			pass
+		elif event == 'allEditingEvents':
+			controlEvent = 'UIControlEventAllEditingEvents'
+			pass
+		elif event == 'applicationReserved':
+			controlEvent = 'UIControlEventApplicationReserved'
+			pass
+		elif event == 'systemReserved':
+			controlEvent = 'UIControlEventSystemReserved'
+			pass
+		elif event == 'allEvents':
+			controlEvent = 'UIControlEventAllEvents'
+			pass
+		else :
+			pass
+
+		return controlEvent

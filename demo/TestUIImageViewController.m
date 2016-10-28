@@ -1,20 +1,19 @@
 //
-//  TestUIViewViewController.m
+//  TestUIImageViewController.m
 //  demo
 //
-//  Created by Jun on 2016/10/27.
+//  Created by Jun on 2016/10/28.
 //  Copyright © 2016年 JunHg. All rights reserved.
 //
 
-#import "TestUIViewViewController.h"
+#import "TestUIImageViewController.h"
 
-@interface TestUIViewViewController ()
+@interface TestUIImageViewController ()
+@property (nonatomic, strong) IBOutlet UIImageView *headerImageView;
 
 @end
 
-@implementation TestUIViewViewController
-
-
+@implementation TestUIImageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

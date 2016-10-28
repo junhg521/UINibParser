@@ -16,16 +16,27 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cLu-wo-tSF">
-                    <frame key="frameInset" minX="106" minY="299" width="46" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <state key="normal" title="Button"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cLu-wo-tSF">
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="nAR-e7-xdf"/>
+                        <constraint firstAttribute="width" constant="46" id="zfA-J6-aK9"/>
+                    </constraints>
+                    <state key="normal" title="Button" backgroundImage="banner_bg"/>
+                    <state key="highlighted" title="dfasfd"/>
                     <connections>
                         <action selector="buttonTap:" destination="-1" eventType="touchUpInside" id="XMZ-aN-UGt"/>
+                        <action selector="buttonTapped:" destination="-1" eventType="valueChanged" id="qFJ-WG-xAc"/>
                     </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="cLu-wo-tSF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="106" id="fPv-VP-Jex"/>
+                <constraint firstItem="cLu-wo-tSF" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="299" id="o7L-XH-Ect"/>
+            </constraints>
         </view>
     </objects>
+    <resources>
+        <image name="banner_bg" width="320" height="111"/>
+    </resources>
 </document>

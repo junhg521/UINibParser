@@ -3,7 +3,7 @@
 
 __author__ = 'Junhg'
 
-# create: 2016/10/21
+# create: 2016/10/24
 # version: 0.0.1
 # author: Junhg
 # contribute:
@@ -19,7 +19,6 @@ class JHViewObject(JHBasicObject):
 			pass
 
 	def addSubview(self, attribView, isLoadView):
-		frame = self.objcClassFrame(attribView.get('rect', {}))
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
 

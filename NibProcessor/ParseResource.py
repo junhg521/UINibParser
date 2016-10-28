@@ -127,21 +127,32 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		attribView = objectViewAttrib
 		for element in resourecViewObject:
 			if element.tag == 'subviews':
-				# print 'tag=',element.tag, 'resourecObject=',list(element), 'element=',element
 				attribView[element.tag] = self.parseResourceSubViewObjectNode(list(element))
+				# print 'tag=',element.tag, 'resourecObject=',list(element), 'element=',element
 				pass
 			elif element.tag == 'constraints':
 				attribView[element.tag] = self.parseResourceConstraintObjectNode(list(element))
+				# print 'attributedString =', attribView[element.tag]
 				pass
 			elif element.tag == 'attributedString':
 				attribView[element.tag] = self.parseResourceAttributeStringObjectNode(list(element))
 				# print 'attributedString =', attribView[element.tag]
-			else :
-				# 对属性做特殊处理，UILabel的Color
-				if element.tag == 'color':
-					attribView[element.attrib['key']] = element.attrib
+			elif element.tag == 'connections':
+				attribView[element.tag] = self.parseResoureConnectionsObjectNode(list(element))
+				# print 'attributedString =', attribView[element.tag]
+			elif element.tag == 'color' or element.tag == 'state':
+				# 处理含有相同的tag字段
+				if attribView.has_key(element.tag):
+					colorAttrib = attribView.get(element.tag)
+					colorAttrib.append(element.attrib)
+					pass
 				else :
-					attribView[element.tag] = element.attrib
+					colorAttrib = []
+					colorAttrib.append(element.attrib)
+					attribView[element.tag] = colorAttrib
+					pass
+			else :
+				attribView[element.tag] = element.attrib
 				pass
 			pass
 
@@ -163,17 +174,17 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 
 	def parseResourceConstraintObjectNode(self, resourecObject):
 		# 解析Ojbect的约束
-		allConstraints = []
+		constraints = []
 		for element in resourecObject:
 			constraint = {}
 			constraint[element.tag] = element.attrib
-			allConstraints.append(constraint)
+			constraints.append(constraint)
 			pass
-		return allConstraints
+		return constraints
 
 	def parseResourceAttributeStringObjectNode(self, resourecObject):
 		# 解析UILable的AttributeString属性
-		allAttributeString = []
+		attributeStrings = []
 		for element in resourecObject:
 			attributedContent = {}
 			attributedContent[element.tag] = element.attrib
@@ -182,11 +193,19 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 				attributedContent.update(attribute)
 				pass
 				
-			allAttributeString.append(attributedContent)
+			attributeStrings.append(attributedContent)
 			pass
-			
-		# print 'allAttributeString=',allAttributeString
-		return allAttributeString
+		
+		return attributeStrings
+
+	def parseResoureConnectionsObjectNode(self, resourecObject):
+		connections = []
+		for element in resourecObject:
+			connect = {}
+			connect[element.tag] = element.attrib
+			connections.append(connect)
+			pass
+		return connections
 
 # exec
 

@@ -9,8 +9,8 @@
 #import "TestUIButtonViewController.h"
 
 @interface TestUIButtonViewController ()
+@property (nonatomic, strong) UIButton *button;
 
-@property (nonatomic, weak) IBOutlet UIButton *button;
 
 @end
 
@@ -18,6 +18,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -37,6 +38,11 @@
 */
 
 - (IBAction)buttonTap:(id)sender
+{
+    NSLog(@"you are tap here");
+}
+
+- (IBAction)buttonTapped:(id)sender
 {
     
 }
