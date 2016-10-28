@@ -55,7 +55,7 @@ function main()
 	All_Resource_File=`find $File_Dir -name "*.xib" -type f`
 	for Resource_File in $All_Resource_File
 	do
-		echo "you has parse ${Resource_File}"
+		echo "parse ${Resource_File}"
 		python ${Parse_Resource} ${Resource_File}
 	done
 
