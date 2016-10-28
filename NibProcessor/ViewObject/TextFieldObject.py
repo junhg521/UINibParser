@@ -23,7 +23,8 @@ class JHTextFieldObject(JHViewObject):
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
 		describle = JHViewObject.addSubview(self,attribView,False)
-		
+		connections = attribView.get('connections', {})
+
 		if classViewAttrib.has_key('background'):
 			describle +="	"+classViewName+".background = [UIImage imageNamed:@"+"\""+classViewAttrib.get('image','')+"\""+"];\n"
 			pass
