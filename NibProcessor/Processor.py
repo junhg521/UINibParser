@@ -223,6 +223,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			readFileHandle.close()
 			writeFileHandle.close()
 			os.remove(self.classTempFileDir())
+			sys.exit(1)
 			raise
 		finally:
 			print 'finish parsor ',self.classFileDir(), 'file'
