@@ -51,20 +51,20 @@ class JHTextFieldObject(JHViewObject):
 				pass
 			pass
 
-		if attribView.has_key('borderStyle'):
-			describle +="	"+classViewName+".borderStyle = "+self.getTextBorderStyle(attribView.get('borderStyle'))+'\n'
+		if classViewAttrib.has_key('borderStyle'):
+			describle +="	"+classViewName+".borderStyle = "+self.getTextBorderStyle(classViewAttrib.get('borderStyle'))+'\n'
 			pass
 
-		if attribView.has_key('clearButtonMode'):
-			describle +="	"+classViewName+".clearButtonMode = "+self.getTextBorderStyle(attribView.get('clearButtonMode'))+'\n'
+		if classViewAttrib.has_key('clearButtonMode'):
+			describle +="	"+classViewName+".clearButtonMode = "+self.getTextFieldViewMode(classViewAttrib.get('clearButtonMode'))+'\n'
 			pass
 		
-		if attribView.has_key('leftViewMode'):
-			describle +="	"+classViewName+".leftViewMode = "+self.getTextBorderStyle(attribView.get('leftViewMode'))+'\n'
+		if classViewAttrib.has_key('leftViewMode'):
+			describle +="	"+classViewName+".leftViewMode = "+self.getTextFieldViewMode(classViewAttrib.get('leftViewMode'))+'\n'
 			pass
 			
-		if attribView.has_key('rightViewMode'):
-			describle +="	"+classViewName+".rightViewMode = "+self.getTextBorderStyle(attribView.get('rightViewMode'))+'\n'
+		if classViewAttrib.has_key('rightViewMode'):
+			describle +="	"+classViewName+".rightViewMode = "+self.getTextFieldViewMode(classViewAttrib.get('rightViewMode'))+'\n'
 			pass
 		
 		for connection in connections:
