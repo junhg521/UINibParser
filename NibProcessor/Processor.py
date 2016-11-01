@@ -281,7 +281,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		writeFileHandle.write(viewObject.addSubview(attribView))
 		self.loadAllSubViewOfView(classViewName, subMethodNames, writeFileHandle);
 		self.loadViewConstranit(classViewName,self.attribViewNameID(attribView),attribView.get('constraints', []),writeFileHandle)
-		self.setClassViewProperty(self.outletViews, attribViewib.get('id',''), classViewName)
+		self.setClassViewProperty(self.outletViews, attribViewib.get('id',''), classViewName, writeFileHandle)
 		writeFileHandle.write("\
 	return "+classViewName+";\n}\n")
 
@@ -294,7 +294,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			pass
 		pass
 
-	def setClassViewProperty(self, IBoutViews, classViewId, classViewName):
+	def setClassViewProperty(self, IBoutViews, classViewId, classViewName,writeFileHandle):
 		for proprtyView in IBoutViews:
 			if proprtyView.get('destination','') == classViewId and len(proprtyView.get('property','')) > 0:
 				writeFileHandle.write("\
