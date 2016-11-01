@@ -194,6 +194,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			while line !='':
 				if line.find("@interface") and line.find(self.className) != -1:
 					lineEdge = True
+					writeFileHandle.write(line)
 					pass
 				elif line.find("IBOutlet") != -1 and lineEdge:
 					self.loadIBOutletProperty(self.outletViews,line,writeFileHandle)
@@ -220,9 +221,11 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 						pass
 					pass
 				elif line.find("@end"):
+					writeFileHandle.write(line)
 					lineEdge = False
 					pass
 				else:
+					writeFileHandle.write(line)
 					pass
 
 				line = readFileHandle.readline()
