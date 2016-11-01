@@ -192,15 +192,15 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			line = readFileHandle.readline()
 			lineEdge = False
 			while line !='':
-				if line.find("@interface") and line.find(self.className) != -1:
+				if line.find("@interface") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
 					writeFileHandle.write(line)
 					pass
-				elif line.find("IBOutlet") != -1 and lineEdge:
+				elif line.find("IBOutlet") >= 0 and lineEdge:
 					self.loadIBOutletProperty(self.outletViews,line,writeFileHandle)
 					writeFileHandle.write(line)
 					pass
-				elif line.find("@implementation") != -1 and line.find(self.className) != -1:
+				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
 					writeFileHandle.write(line)
 					self.loadView(attribView, writeFileHandle)
@@ -210,7 +210,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 						subMethodNames = self.loadAllSubView(subView, writeFileHandle)
 						pass
 					pass
-				elif line.find("[super viewDidLoad]") != -1 and lineEdge:
+				elif line.find("[super viewDidLoad]") >= 0 and lineEdge:
 					writeFileHandle.write(line)
 					if len(subMethodNames) > 0:
 						writeFileHandle.write("\n\
@@ -220,7 +220,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 						self.loadViewConstranit('self.view',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
 						pass
 					pass
-				elif line.find("@end"):
+				elif line.find("@end") >= 0:
 					writeFileHandle.write(line)
 					lineEdge = False
 					pass
@@ -245,9 +245,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 
 	def loadIBOutletProperty(self, attribView, line,writeFileHandle):
 		for attrib in attribView:
-			tag = attrib.get('property','')
-			print 'line =', line, 'tag=', tag
-			if line.find(tag,0,len(line)) and line.find('IBOutlet',0,len(line)):
+			if line.find(attrib.get('property','')) >= 0 and line.find("IBOutlet") >= 0:
 				line.replace('weak','strong')
 				line.replace('IBOutlet','')
 				pass
