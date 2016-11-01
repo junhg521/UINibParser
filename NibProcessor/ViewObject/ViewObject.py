@@ -44,6 +44,8 @@ class JHViewObject(JHBasicObject):
 		return describle
 
 	def loadView(self, attribView):
+		classViewAttrib = self.attribViewTagProperty(attribView)
+		
 		describle = "\n- (void)loadView\n{\n"
 
 		if len(self.getClassFrame(attribView.get('rect', {}))) > 0:
