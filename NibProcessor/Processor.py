@@ -266,12 +266,10 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					return self.findSubViewWithTag(attrib,tag)
 				else:
 					if type(attrib) == dict:
-						continue;	
-					else:
 						if attrib.get('id','') == tag:
-							return self.objcClassNameType(tag)
-						else:
-							pass
+							return self.objcClassNameType(tag)	
+					else:
+						pass
 					pass
 				pass
 			pass
