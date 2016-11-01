@@ -190,11 +190,18 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			readFileHandle = self.readClassFile()
 			writeFileHandle = self.readTempClassFile()
 			line = readFileHandle.readline()
+			lineEdge = False
 			while line !='':
-				if line.find("IBOutlet") != -1:
-					self.loadIBOutletProperty(self.outletViews,line,writeFileHandle)
+				if line.find("@interface" and line.find(self.className) != -1):
+					lineEdge = True
 					pass
-				elif line.find("@implementation") != -1:
+				elif line.find("IBOutlet") != -1 and lineEdge:
+					self.loadIBOutletProperty(self.outletViews,line,writeFileHandle)
+					writeFileHandle.write(line)
+					pass
+				elif line.find("@implementation") != -1 and line.find(self.className) != -1:
+					lineEdge = True
+					writeFileHandle.write(line)
 					self.loadView(attribView, writeFileHandle)
 					if len(subView) > 0:
 						writeFileHandle.write("\n\
@@ -202,7 +209,8 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 						subMethodNames = self.loadAllSubView(subView, writeFileHandle)
 						pass
 					pass
-				elif line.find("[super viewDidLoad]") != -1:
+				elif line.find("[super viewDidLoad]") != -1 and lineEdge:
+					writeFileHandle.write(line)
 					if len(subMethodNames) > 0:
 						writeFileHandle.write("\n\
 	// add subviews\n")
@@ -211,10 +219,12 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 						self.loadViewConstranit('self.view',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
 						pass
 					pass
+				elif line.find("@end"):
+					lineEdge = False
+					pass
 				else:
 					pass
 
-				writeFileHandle.write(line)
 				line = readFileHandle.readline()
 				pass
 		except Exception as e:
@@ -233,6 +243,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 	def loadIBOutletProperty(self, attribView, line,writeFileHandle):
 		for attrib in attribView:
 			tag = attrib.get('property','')
+			print 'line =', line, 'tag=', tag
 			if line.find(tag,0,len(line)) and line.find('IBOutlet',0,len(line)):
 				line.replace('weak','strong')
 				line.replace('IBOutlet','')
