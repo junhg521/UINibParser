@@ -197,8 +197,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					writeFileHandle.write(line)
 					pass
 				elif line.find("IBOutlet") >= 0 and lineEdge:
-					self.loadIBOutletProperty(self.outletViews,line,writeFileHandle)
-					writeFileHandle.write(line)
+					self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
 					pass
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
@@ -243,14 +242,34 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			writeFileHandle.close()
 			pass
 
-	def loadIBOutletProperty(self, attribView, line,writeFileHandle):
+	def loadIBOutletProperty(self, attribView, subView,writeFileHandle):
 		for attrib in attribView:
-			if line.find(attrib.get('property','')) >= 0 and line.find("IBOutlet") >= 0:
-				line.replace('weak','strong')
-				line.replace('IBOutlet','')
+			if attrib.get('property','') == 'view':
+				continue
+				pass
+			else:
+				classType = self.findSubViewWithTag(self,subView)
+				if len(classType) > 0:
+					writeFileHandle("\
+	@property (nonatomic, strong) "+classType+" *"+attrib.get('property','')+";\n")
+					pass
+				pass
+		pass
+
+	def findSubViewWithTag(self, attribViews, tag):
+		for subAttribView in attribViews:
+			attribView = {}
+			subViews = []
+			for (tag,attrib) in subAttribView.items():
+				if attrib.get('id','') == tag:
+					return self.objcClassNameType(tag)
+				elif tag == 'subviews':
+					return self.findSubViewWithTag(attrib,tag)
+				else:
+					pass
 				pass
 			pass
-		pass
+		return ''
 
 	def loadView(self, attribView, writeFileHandle):
 		viewName = self.attribViewTag(attribView)
