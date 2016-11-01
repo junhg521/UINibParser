@@ -194,11 +194,9 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			while line !='':
 				if line.find("@interface") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
-					if line.count('IBOutlet') > 0:
-						self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
-						pass
-					else:
-						writeFileHandle.write(line)
+					writeFileHandle.write(line)
+				elif line.count('IBOutlet') > 0 && lineEdge:
+					self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
 					pass
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
