@@ -18,7 +18,7 @@ class JHButtonObject(JHViewObject):
 	def __del__(self):
 			pass
 
-	def addSubview(self, attribView, isLoadView):
+	def addSubview(self, attribView):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
@@ -30,7 +30,7 @@ class JHButtonObject(JHViewObject):
 		connections = attribView.get('connections', {})
 		frame =  self.getClassFrame(attribView.get('frame', {}))
 
-		describle = JHViewObject.addSubview(self,attribView,False)
+		describle = JHViewObject.addSubview(self,attribView)
 
 		if len(frame) > 0:
 			describle +="	"+classViewName+".frame = "+frame+";\n"

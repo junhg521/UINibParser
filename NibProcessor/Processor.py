@@ -139,9 +139,6 @@ class JHBaseProcessor:
 		elif tag == 'tableViewCell':
 			viewObject = JHTableViewCellObject()
 			pass
-		# elif tag == 'tableViewCellContentView':
-		# 	className = ''
-		# 	pass
 		elif tag == 'imageView':
 			viewObject = JHImageViewObject()
 			pass
@@ -194,9 +191,8 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			writeFileHandle = self.readTempClassFile()
 			line = readFileHandle.readline()
 			while line !='':
-				writeFileHandle.write(line)
-				if line.find("@interface") != -1:
-					self.loadIBOutletProperty(self.outletViews,writeFileHandle)
+				if line.find("IBOutlet") != -1:
+					self.loadIBOutletProperty(self.outletViews,line,writeFileHandle)
 					pass
 				elif line.find("@implementation") != -1:
 					self.loadView(attribView, writeFileHandle)
@@ -208,6 +204,8 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					pass
 				elif line.find("[super viewDidLoad]") != -1:
 					if len(subMethodNames) > 0:
+						writeFileHandle.write("\n\
+	// add subviews\n")
 						self.loadAllSubViewOfView('self.view',subMethodNames,writeFileHandle)
 						view = self.attribViewTagProperty(attribView)
 						self.loadViewConstranit('self.view',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
@@ -216,6 +214,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				else:
 					pass
 
+				writeFileHandle.write(line)
 				line = readFileHandle.readline()
 				pass
 		except Exception as e:
@@ -231,16 +230,12 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			writeFileHandle.close()
 			pass
 
-	def loadIBOutletProperty(self, attribView, writeFileHandle):
+	def loadIBOutletProperty(self, attribView, line,writeFileHandle):
 		for attrib in attribView:
 			tag = attrib.get('property','')
-			if tag == 'view':
-				pass
-			else:
-				className = self.objcClassNameType(tag)
-				if len(className) > 0:
-					writeFileHandle.write("@property (nonatomic, strong) "+className+" *"+tag+";\n")
-					pass
+			if line.find(tag,0,len(line)) && line.find('IBOutlet',0,len(line)):
+				line.replace('weak','strong')
+				line.replace('IBOutlet','')
 				pass
 			pass
 		pass
@@ -251,7 +246,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		if len(className) > 0:
 			viewObject = self.viewObjectType(viewName)
 			writeFileHandle.write("\n#pragma mark - lifeCycle\n")
-			writeFileHandle.write(viewObject.addSubview(attribView,True))
+			writeFileHandle.write(viewObject.loadView(attribView))
 			pass
 		pass
 
@@ -281,29 +276,30 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 	def loadSubView(self, attribView, subMethodNames, writeFileHandle):
 		classViewName = self.attribViewTag(attribView)
 		viewObject = self.viewObjectType(classViewName)
+		attribViewib = self.attribViewTagProperty(attribView)
 
-		writeFileHandle.write(viewObject.addSubview(attribView,False))
-		for subMethod in subMethodNames:
-			writeFileHandle.write("\
-	["+classViewName+" addSubview:[self "+subMethod+"]];\n")
-			pass
-
-		parentView = self.attribViewTag(attribView)
-		viewId = self.attribViewNameID(attribView)
-		self.loadViewConstranit(parentView,viewId,attribView.get('constraints', []),writeFileHandle)
+		writeFileHandle.write(viewObject.addSubview(attribView))
+		self.loadAllSubViewOfView(classViewName, subMethodNames, writeFileHandle);
+		self.loadViewConstranit(classViewName,self.attribViewNameID(attribView),attribView.get('constraints', []),writeFileHandle)
+		self.setClassViewProperty(self.outletViews, attribViewib.get('id',''), classViewName)
 		writeFileHandle.write("\
-	return "+classViewName+";\n")
-		writeFileHandle.write("}\n")
+	return "+classViewName+";\n}\n")
 
 		return self.attribViewViewMethod(attribView)
-		pass
 
 	def loadAllSubViewOfView(self,parentView,subMethodNames,writeFileHandle):
-		writeFileHandle.write("\n\
-	// add subviews\n")
 		for subMethod in subMethodNames:
 			writeFileHandle.write("\
 	["+parentView+" addSubview:[self "+subMethod+"]];\n")
+			pass
+		pass
+
+	def setClassViewProperty(self, IBoutViews, classViewId, classViewName):
+		for proprtyView in IBoutViews:
+			if proprtyView.get('destination','') == classViewId && len(proprtyView.get('property','')) > 0:
+				writeFileHandle.write("\
+	self. "+proprtyView.get('property','')+" = "+classViewName+";\n")
+				pass
 			pass
 		pass
 

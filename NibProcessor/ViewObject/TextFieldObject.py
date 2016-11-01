@@ -18,11 +18,11 @@ class JHTextFieldObject(JHViewObject):
 	def __del__(self):
 		pass
 
-	def addSubview(self, attribView, isLoadView):
+	def addSubview(self, attribView):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
-		describle = JHViewObject.addSubview(self,attribView,False)
+		describle = JHViewObject.addSubview(self,attribView)
 		connections = attribView.get('connections', {})
 
 		if classViewAttrib.has_key('background'):

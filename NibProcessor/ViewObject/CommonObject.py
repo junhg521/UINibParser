@@ -136,9 +136,6 @@ class JHCommomObject():
 		elif tag == 'tableViewCell':
 			className = 'UITtableViewCell'
 			pass
-		# elif tag == 'tableViewCellContentView':
-		# 	className = ''
-		# 	pass
 		elif tag == 'imageView':
 			className = 'UIImageView'
 			pass

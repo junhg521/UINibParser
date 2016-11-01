@@ -3,17 +3,17 @@
 
 __author__ = 'Junhg'
 
-# create: 2016/10/21
+# create: 2016/11/1
 # version: 0.0.1
 # author: Junhg
 # contribute:
 # 
 
-from BasicObject import JHBasicObject
+from ViewObject import JHViewObject
 
-class JHTableViewObject(JHBasicObject):
-		def __init__(self):
-			pass
+class JHTableViewObject(JHViewObject):
+	def __init__(self):
+		pass
 
-		def __del__(self):
-			pass
+	def __del__(self):
+		pass

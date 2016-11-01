@@ -17,7 +17,7 @@ class JHBasicObject(JHCommomObject):
 	def __del__(self):
 		pass
 
-	def addSubview(self, attribView, isLoadView):
+	def addSubview(self, attribView):
 		classViewName = self.attribViewTag(attribView)
 		classType = self.objcClassNameType(classViewName)
 		classMethodName = self.attribViewViewMethod(attribView)
@@ -27,19 +27,7 @@ class JHBasicObject(JHCommomObject):
 		describle = "\n"
 
 		# 变更成classViewName所对应的类型
-		if isLoadView:
-			classViewName = "self.view"
-			describle += "- (void)loadView\n{\n"
-
-			frame = self.getClassFrame(attribView.get('rect', {}))
-			if len(frame) > 0:
-				describle +="	self.view = [["+classType+" alloc] initWithFrame:"+frame+"];\n"
-				pass
-			else :
-				describle +="	self.view = [["+classType+" alloc] init];\n"
-				pass
-			pass
-		elif classType == 'UIButton':
+		if classType == 'UIButton':
 			describle += "- ("+classType+" *"+")"+classMethodName+"\n{\n"
 			describle +="	"+classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribView.get('buttonType', 'roundedRect'))+"];\n"
 			pass

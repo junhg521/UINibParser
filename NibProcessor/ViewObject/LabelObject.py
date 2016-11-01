@@ -18,7 +18,7 @@ class JHLabelObject(JHViewObject):
 	def __del__(self):
 		pass
 
-	def addSubview(self, attribView, isLoadView):
+	def addSubview(self, attribView):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
@@ -28,7 +28,7 @@ class JHLabelObject(JHViewObject):
 		attributedStrings = attribView.get('attributedString',{})
 		classColors = attribView.get('color', {})
 
-		describle = JHViewObject.addSubview(self,attribView,False)
+		describle = JHViewObject.addSubview(self,attribView)
 
 		if classViewAttrib.get('adjustsFontSizeToFit', 'NO') != 'NO':
 			describle +="	"+classViewName+".adjustsFontSizeToFitWidth = "+classViewAttrib.get('adjustsFontSizeToFit', 'NO')+';\n'
