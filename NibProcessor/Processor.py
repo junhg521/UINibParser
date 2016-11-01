@@ -196,7 +196,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					lineEdge = True
 					writeFileHandle.write(line)
 					pass
-				elif line.find("IBOutlet") >= 0 and lineEdge:
+				elif lineEdge:
 					self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
 					pass
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
@@ -261,11 +261,17 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			attribView = {}
 			subViews = []
 			for (tag,attrib) in subAttribView.items():
-				if attrib.get('id','') == tag:
-					return self.objcClassNameType(tag)
-				elif tag == 'subviews':
+				print 'tag=',tag,' attrib=',attrib
+				if tag == 'subviews':
 					return self.findSubViewWithTag(attrib,tag)
 				else:
+					if type(attrib) == dict:
+						continue;	
+					else:
+						if attrib.get('id','') == tag:
+							return self.objcClassNameType(tag)
+						else:
+							pass
 					pass
 				pass
 			pass
