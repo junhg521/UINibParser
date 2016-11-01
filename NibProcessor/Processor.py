@@ -192,7 +192,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			line = readFileHandle.readline()
 			lineEdge = False
 			while line !='':
-				if line.find("@interface" and line.find(self.className) != -1):
+				if line.find("@interface") and line.find(self.className) != -1:
 					lineEdge = True
 					pass
 				elif line.find("IBOutlet") != -1 and lineEdge:
