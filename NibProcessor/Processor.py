@@ -233,7 +233,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 	def loadIBOutletProperty(self, attribView, line,writeFileHandle):
 		for attrib in attribView:
 			tag = attrib.get('property','')
-			if line.find(tag,0,len(line)) && line.find('IBOutlet',0,len(line)):
+			if line.find(tag,0,len(line)) and line.find('IBOutlet',0,len(line)):
 				line.replace('weak','strong')
 				line.replace('IBOutlet','')
 				pass
@@ -296,7 +296,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 
 	def setClassViewProperty(self, IBoutViews, classViewId, classViewName):
 		for proprtyView in IBoutViews:
-			if proprtyView.get('destination','') == classViewId && len(proprtyView.get('property','')) > 0:
+			if proprtyView.get('destination','') == classViewId and len(proprtyView.get('property','')) > 0:
 				writeFileHandle.write("\
 	self. "+proprtyView.get('property','')+" = "+classViewName+";\n")
 				pass
