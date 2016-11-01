@@ -248,7 +248,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				continue
 				pass
 			else:
-				classType = self.findSubViewWithTag(self,subView)
+				classType = self.findSubViewWithTag(subView,attrib.get('property',''))
 				if len(classType) > 0:
 					writeFileHandle("\
 	@property (nonatomic, strong) "+classType+" *"+attrib.get('property','')+";\n")
