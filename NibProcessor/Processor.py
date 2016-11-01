@@ -256,17 +256,17 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				pass
 		pass
 
-	def findSubViewWithTag(self, attribViews, tag):
+	def findSubViewWithTag(self, attribViews, attributeProperty):
 		for subAttribView in attribViews:
 			attribView = {}
 			subViews = []
 			for (tag,attrib) in subAttribView.items():
-				print 'tag=',tag,' attrib=',attrib
+				# print 'tag=',tag,' attrib=',attrib
 				if tag == 'subviews':
-					return self.findSubViewWithTag(attrib,tag)
+					return self.findSubViewWithTag(attrib,attributeProperty)
 				else:
 					if type(attrib) == dict:
-						if attrib.get('id','') == tag:
+						if attrib.get('id','') == attributeProperty:
 							return self.objcClassNameType(tag)	
 					else:
 						pass
