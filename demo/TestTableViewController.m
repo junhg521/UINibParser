@@ -56,7 +56,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TestTableViewCell"];
-    cell.textLabel.text = [self.datasource objectAtIndex:indexPath.row];
+    NSNumber *number = [self.datasource objectAtIndex:indexPath.row];
+    cell.textLabel.text = [number stringValue];
     return cell;
 }
 
