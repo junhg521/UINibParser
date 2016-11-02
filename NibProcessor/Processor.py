@@ -192,15 +192,15 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			line = readFileHandle.readline()
 			lineEdge = False
 			while line !='':
+				writeFileHandle.write(line)
 				if line.find("@interface") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
-					writeFileHandle.write(line)
-				elif line.count('IBOutlet') > 0 and lineEdge:
 					self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
-					pass
+				# elif line.count('IBOutlet') > 0 and lineEdge:
+				# 	self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
+				# 	pass
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
-					writeFileHandle.write(line)
 					self.loadView(attribView, writeFileHandle)
 					if len(subView) > 0:
 						writeFileHandle.write("\n\
@@ -209,7 +209,6 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 						pass
 					pass
 				elif line.find("[super viewDidLoad]") >= 0 and lineEdge:
-					writeFileHandle.write(line)
 					if len(subMethodNames) > 0:
 						writeFileHandle.write("\n\
 	// add subviews\n")
@@ -219,11 +218,9 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 						pass
 					pass
 				elif line.find("@end") >= 0:
-					writeFileHandle.write(line)
 					lineEdge = False
 					pass
 				else:
-					writeFileHandle.write(line)
 					pass
 
 				line = readFileHandle.readline()
