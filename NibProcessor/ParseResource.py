@@ -108,9 +108,8 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 					self.className = subElememt.attrib.get('customClass', '')
 					# 处理tableViewCell的xib类型
 					# 是否将tableViewCellContentView做为tableViewCell的子类来解析
-					cellAttribView = {}
-					cellAttribView[subElememt.tag] = subElememt.attrib
-					attribView = dict(cellAttribView)
+					attribView = {}
+					attribView[subElememt.tag] = subElememt.attrib
 
 					subAttribView = self.parseResourceTableViewCellContentView(list(subElememt))
 					attribView.update(subAttribView)
