@@ -23,7 +23,7 @@ from ViewObject.CommonObject import JHCommomObject
 from Processor import JHObjcProcessor
 
 class JHBaseParser():
-	'定义通用的接口'
+	'定义解析通用资源文件所需要的属性及接口'
 	# 描述: 采用构造函数初始化解析器属性
 	# propety:
 	#	__resourceFileName: 私有变量，解析的文件名
@@ -44,9 +44,8 @@ class JHBaseParser():
 		if index > 1:
 			file_dir = self.resourceFileName[0:index]
 			return file_dir
-			pass
-		return ""
-		pass
+		else:
+			return ""
 	
 
 class JHNibParser(JHBaseParser, JHCommomObject):
@@ -80,12 +79,11 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 			sys.exit(1)
 			raise
 		else:
+			resourecObject = root.findall('objects')
+			self.parseResourceObjectNode(resourecObject)
 			pass
 		finally:
 			pass
-
-		resourecObject = root.findall('objects')
-		self.parseResourceObjectNode(resourecObject)
 
 	def parseResourceObjectNode(self,resourecObject):
 		# 罗列出resourecObject中的objects
