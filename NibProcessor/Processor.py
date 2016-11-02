@@ -182,8 +182,8 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 	def processing(self):
 		analyseAttrib = self.analyseAttribView(self.attribViews)
 		attribView = analyseAttrib[0]
-		subView = analyseAttrib[1]
-		# print 'attribView=', attribView, 'subView=',subView
+		subViews = analyseAttrib[1]
+		# print 'attribView=', attribView, 'subViews=',subViews
 		
 		try:
 			subMethodNames = []
@@ -195,18 +195,18 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				writeFileHandle.write(line)
 				if line.find("@interface") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
-					self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
+					self.loadIBOutletProperty(self.outletViews,subViews,writeFileHandle)
 				# elif line.count('IBOutlet') > 0 and lineEdge:
-				# 	self.loadIBOutletProperty(self.outletViews,subView,writeFileHandle)
+				# 	self.loadIBOutletProperty(self.outletViews,subViews,writeFileHandle)
 				# 	pass
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
-					self.loadView(attribView, writeFileHandle)
-					if len(subView) > 0:
+					if len(subViews) > 0:
 						writeFileHandle.write("\n\
 #pragma mark - loadAllSubViews\n")
-						subMethodNames = self.loadAllSubView(subView, writeFileHandle)
+						subMethodNames = self.loadAllSubView(subViews, writeFileHandle)
 						pass
+					self.loadView(attribView,writeFileHandle)
 					pass
 				elif line.find("[super viewDidLoad]") >= 0 and lineEdge:
 					if len(subMethodNames) > 0:
