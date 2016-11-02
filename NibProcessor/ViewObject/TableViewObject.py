@@ -17,3 +17,17 @@ class JHTableViewObject(JHViewObject):
 
 	def __del__(self):
 		pass
+
+	def addSubview(self, attribView):
+		# print 'attribView=', attribView
+		classViewName = self.attribViewTag(attribView)
+		classViewAttrib = self.attribViewTagProperty(attribView)
+		describle = JHViewObject.addSubview(self,attribView)
+		connections = attribView.get('connections', {})
+		
+		for connection in connections:
+			outlets = connection.get('outlet', {})
+			describle +="	"+classViewName+"."+action.get('property','')+" = self;\n"
+			pass
+		return describle
+		

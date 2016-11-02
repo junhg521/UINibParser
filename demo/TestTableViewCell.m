@@ -8,6 +8,12 @@
 
 #import "TestTableViewCell.h"
 
+@interface TestTableViewCell ()
+
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel2;
+
+@end
+
 @implementation TestTableViewCell
 
 - (void)awakeFromNib {

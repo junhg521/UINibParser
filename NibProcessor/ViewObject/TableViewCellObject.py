@@ -17,3 +17,5 @@ class JHTableViewCellObject(JHViewObject):
 
 	def __del__(self):
 		pass
+		
+	def addSubview(self, attribView):
