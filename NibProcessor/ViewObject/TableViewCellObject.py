@@ -19,3 +19,4 @@ class JHTableViewCellObject(JHViewObject):
 		pass
 		
 	def addSubview(self, attribView):
+		pass
