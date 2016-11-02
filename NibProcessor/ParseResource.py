@@ -73,12 +73,12 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 	def parse(self):
 		try:
 			tree = ElementTree.parse(self.resourceFileName)
-			root = tree.getroot()
 		except Exception as e:
 			print 'can not parse resource file name:', self.resourceFileName, 'please make user load right resource file name' 
 			sys.exit(1)
 			raise
 		else:
+			root = tree.getroot()
 			resourecObject = root.findall('objects')
 			self.parseResourceObjectNode(resourecObject)
 			pass
@@ -115,7 +115,6 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 					subAttribView = self.parseResourceTableViewCellContentView(list(subElememt))
 					attribView.update(subAttribView)
 					self.attribViews.append(attribView)
-
 					# print 'attribView=', self.attribViews
 				else:
 					# 暂时在xib中未发现存在的类型，直接过滤掉
