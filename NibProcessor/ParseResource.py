@@ -111,6 +111,9 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 
 					attribView = self.parseResourceTableViewCellContentView(list(subElememt))
 					attribView[subElememt.tag] = subElememt.attrib
+					# 将TableViewCellContentView的subview提到cell上，方便processor解析出subviews
+					contentViewAttrib = attribView.get('tableViewCellContentView',{})
+					attribView['subviews'] = contentViewAttrib.get('subviews',[])
 					self.attribViews.append(attribView)
 					print 'attribView=', self.attribViews
 				else:
