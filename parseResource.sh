@@ -53,11 +53,12 @@ function main()
 	done
 
 	All_Resource_File=`find $File_Dir -name "*.xib" -type f`
-	for Resource_File in $All_Resource_File
-	do
-		echo "parse ${Resource_File}"
-		python ${Parse_Resource} ${Resource_File}
-	done
+	# for Resource_File in $All_Resource_File
+	# do
+	# 	echo "parse ${Resource_File}"
+	# 	python ${Parse_Resource} ${Resource_File}
+	# done
+	python ${Parse_Resource} "demo/TestTableViewCell.xib"
 
 	find ${Project_Dir}/NibProcessor -name "*.pyc" | xargs rm -rf
 }

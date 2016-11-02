@@ -93,17 +93,32 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 			for subElememt in element:
 				# print 'list=', list(subElememt)
 				if subElememt.tag == 'view':
-					attribView = {}
+					# 处理普通的controller的xib类型
+					attribView = self.parseResourceViewObjectNode(list(subElememt))
 					attribView[subElememt.tag] = subElememt.attrib
-					self.attribViews.append(self.parseResourceViewObjectNode(list(subElememt), attribView))
+					self.attribViews.append(attribView)
 					# print 'attribView=', self.attribViews
 					pass
 				elif subElememt.tag == 'placeholder':
+					# 处理获取controller的类名
 					if subElememt.attrib.get('placeholderIdentifier','') == 'IBFilesOwner':
 						self.className = subElememt.attrib.get('customClass', '')
 						pass
 					self.parseResourcePlaceholderObjectNode(list(subElememt))
 					pass
+				elif subElememt.tag == 'tableViewCell':
+					self.className = subElememt.attrib.get('customClass', '')
+					# 处理tableViewCell的xib类型
+					# 是否将tableViewCellContentView做为tableViewCell的子类来解析
+					cellAttribView = {}
+					cellAttribView[subElememt.tag] = subElememt.attrib
+					attribView = dict(cellAttribView)
+
+					subAttribView = self.parseResourceTableViewCellContentView(list(subElememt))
+					attribView.update(subAttribView)
+					self.attribViews.append(attribView)
+
+					# print 'attribView=', self.attribViews
 				else:
 					# 暂时在xib中未发现存在的类型，直接过滤掉
 					pass
@@ -122,9 +137,25 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		# print 'outletViews=', self.outletViews
 		pass
 
-	def parseResourceViewObjectNode(self, resourecViewObject, objectViewAttrib):
+	def parseResourceTableViewCellContentView(self, resourecViewObject):
+		attribView = {}
+		for element in resourecViewObject:
+			if element.tag == 'tableViewCellContentView':
+				attribView[element.tag] = self.parseResourceViewObjectNode(list(element))
+				pass
+			elif element.tag == 'connections':
+				attribView[element.tag] = self.parseResoureConnectionsObjectNode(list(element))
+				pass
+			else:
+				attribView[element.tag] = element.attrib
+				pass
+			pass
+
+		return attribView
+
+	def parseResourceViewObjectNode(self, resourecViewObject):
 		# 解析xib上的view及subViews
-		attribView = objectViewAttrib
+		attribView = {}
 		for element in resourecViewObject:
 			if element.tag == 'subviews':
 				attribView[element.tag] = self.parseResourceSubViewObjectNode(list(element))
@@ -151,7 +182,7 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 					colorAttrib.append(element.attrib)
 					attribView[element.tag] = colorAttrib
 					pass
-			else :
+			else:
 				attribView[element.tag] = element.attrib
 				pass
 			pass
@@ -164,10 +195,10 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		for element in resourecObject:
 			# print 'tag=',element.tag, 'attrib=', list(element)
 			if self.judgementViewTag(element.tag):
-				attribView = {}
+				attribView = self.parseResourceViewObjectNode(list(element))
 				attribView[element.tag] = element.attrib
 				# 添加element.tag下的其他属性
-				allAttribViews.append(self.parseResourceViewObjectNode(list(element), attribView))
+				allAttribViews.append(attribView)
 				pass
 			pass
 		return allAttribViews
@@ -203,6 +234,13 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		for element in resourecObject:
 			connect = {}
 			connect[element.tag] = element.attrib
+
+			# 特殊处理情况
+			# 对tableViewCell这类型的IBoutlet放置位置坐处理
+			if element.tag == 'outlet':
+				self.outletViews.append(element.attrib)
+				pass
+
 			connections.append(connect)
 			pass
 		return connections
