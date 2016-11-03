@@ -184,7 +184,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		analyseAttrib = self.analyseAttribView(self.attribViews)
 		attribView = analyseAttrib[0]
 		subViews = analyseAttrib[1]
-		print 'attribView=', attribView, 'subViews=',subViews
+		# print 'attribView=', attribView, 'subViews=',subViews
 		
 		try:
 			subMethodNames = []
@@ -244,8 +244,8 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 			else:
 				classType = self.findSubViewWithTag(subView,attrib.get('destination',''))
 				if len(classType) > 0:
-					writeFileHandle.write("\
-@property (nonatomic, strong) "+classType+" *"+attrib.get('property','')+";\n")
+					writeFileHandle.write("\n\
+@property (nonatomic, strong) "+classType+" *"+attrib.get('property','')+";")
 					pass
 				pass
 		pass
@@ -293,7 +293,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					attribView[tag] = attrib
 					pass
 
-			if len(subViews):
+			if len(subViews) > 0:
 				subMethodNames = self.loadAllSubView(subViews, writeFileHandle)
 				pass
 			# print 'attribView=', attribView
