@@ -22,7 +22,7 @@ class JHButtonObject(JHControlObject):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classType = self.objcClassNameType(classViewName)
-		classMethodName = self.attribViewViewMethod(classViewName,attribView)
+		classMethodName = self.attribViewViewMethod(attribView)
 
 		describle = "\n- ("+classType+" *"+")"+classMethodName+"\n{\n"
 		describle +="	"+classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribView.get('buttonType', 'roundedRect'))+"];\n"

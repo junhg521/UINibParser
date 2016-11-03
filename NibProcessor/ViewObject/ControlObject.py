@@ -26,7 +26,7 @@ class JHControlObject(JHViewObject):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		
-		describle = JHViewObject.addViewAttribute(attribView)
+		describle = JHViewObject.addViewAttribute(classViewName,self.attribViewTagProperty(attribView))
 		if attribView.get('contentVerticalAlignment', 'center') != 'center':
 			describle +="	self.view.contentVerticalAlignment = "+self.getControlContentVerticalAlignment(attribView.get('contentVerticalAlignment', 'center'))+";\n"
 			pass

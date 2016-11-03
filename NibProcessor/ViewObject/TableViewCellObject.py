@@ -33,8 +33,8 @@ class JHTableViewCellObject(JHViewObject):
 				pass
 			pass
 		
-		describle += JHViewObject.addViewAttribute("self",attribView)
-		describle += JHViewObject.addViewAttribute("self.contentView",attribView)
+		describle += JHViewObject.addViewAttribute("self",self.attribViewTagProperty(attribView))
+		describle += JHViewObject.addViewAttribute("self.contentView",self.attribViewTagProperty(attribView))
 		describle +="	[self loadAllSubView];"
 		describle +="	}\n"
 		describle +="	return self;\n"
