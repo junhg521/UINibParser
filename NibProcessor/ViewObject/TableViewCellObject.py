@@ -22,7 +22,7 @@ class JHTableViewCellObject(JHViewObject):
 		pass
 
 	def loadView(self,attribView):
-		print 'attribView=', attribView
+		# print 'attribView=', attribView
 		classViewAttrib = self.attribViewTagProperty(attribView)
 		
 		describle = "\n- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier\n{\n"

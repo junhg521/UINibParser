@@ -10,7 +10,6 @@
 
 @interface TestTableViewCell ()<UITextFieldDelegate>
 
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel2;
 
 @end
 

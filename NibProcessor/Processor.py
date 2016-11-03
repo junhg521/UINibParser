@@ -180,6 +180,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		pass
 
 	def processing(self):
+		# print 'attribViews=',self.attribViews
 		analyseAttrib = self.analyseAttribView(self.attribViews)
 		attribView = analyseAttrib[0]
 		subViews = analyseAttrib[1]

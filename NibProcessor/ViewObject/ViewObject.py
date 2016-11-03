@@ -33,7 +33,7 @@ class JHViewObject(JHBasicObject):
 			pass
 		pass
 
-		describle +=self.addViewAttribute(classViewName,attribView)
+		describle +=self.addViewAttribute(classViewName,self.attribViewTagProperty(attribView))
 		describle +="	"+classViewName+".tag = [@"+"\""+self.attribViewMethodNameId(classMethodName)+"\""+" hash];\n"
 
 		return describle
@@ -53,7 +53,7 @@ class JHViewObject(JHBasicObject):
 			pass
 		pass
 			
-		describle +=self.addViewAttribute("self.view",attribView)
+		describle +=self.addViewAttribute("self.view",self.attribViewTagProperty(attribView))
 		describle += "}\n"
 
 		return describle
@@ -74,8 +74,8 @@ class JHViewObject(JHBasicObject):
 			describle +="	"+classViewName+".clearsContextBeforeDrawing = "+attribView.get('clearsContextBeforeDrawing', 'YES')+";\n"
 			pass
 
-		if classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
-			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+classViewAttrib.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
+		if attribView.get('translatesAutoresizingMaskIntoConstraints', 'YES') != 'YES':
+			describle +="	"+classViewName+".translatesAutoresizingMaskIntoConstraints = "+attribView.get('translatesAutoresizingMaskIntoConstraints', 'YES')+';\n'
 			pass
 
 		for color in attribView.get('color', {}):
@@ -84,24 +84,24 @@ class JHViewObject(JHBasicObject):
 				pass
 			pass
 
-		if classViewAttrib.get('userInteractionEnabled', 'YES') != 'YES':
-			describle +="	"+classViewName+".userInteractionEnabled = "+classViewAttrib.get('userInteractionEnabled', 'YES')+';\n'
+		if attribView.get('userInteractionEnabled', 'YES') != 'YES':
+			describle +="	"+classViewName+".userInteractionEnabled = "+attribView.get('userInteractionEnabled', 'YES')+';\n'
 			pass
 
-		if classViewAttrib.get('canBecomeFocused', 'NO') != 'NO':
-			describle +="	"+classViewName+".canBecomeFocused = "+classViewAttrib.get('canBecomeFocused', 'NO')+';\n'
+		if attribView.get('canBecomeFocused', 'NO') != 'NO':
+			describle +="	"+classViewName+".canBecomeFocused = "+attribView.get('canBecomeFocused', 'NO')+';\n'
 			pass
 
-		if classViewAttrib.get('clipsToBounds', 'YES') != 'YES':
-			describle +="	"+classViewName+".clipsToBounds = "+classViewAttrib.get('clipsToBounds', 'YES')+';\n'
+		if attribView.get('clipsToBounds', 'YES') != 'YES':
+			describle +="	"+classViewName+".clipsToBounds = "+attribView.get('clipsToBounds', 'YES')+';\n'
 			pass
 
-		if classViewAttrib.get('alpha', '1.0') != '1.0':
-			describle +="	"+classViewName+".alpha = "+classViewAttrib.get('alpha', '1.0')+';\n'
+		if attribView.get('alpha', '1.0') != '1.0':
+			describle +="	"+classViewName+".alpha = "+attribView.get('alpha', '1.0')+';\n'
 			pass
 
-		if classViewAttrib.get('hidden', 'NO') != 'NO':
-			describle +="	"+classViewName+".hidden = "+classViewAttrib.get('hidden', 'NO')+';\n'
+		if attribView.get('hidden', 'NO') != 'NO':
+			describle +="	"+classViewName+".hidden = "+attribView.get('hidden', 'NO')+';\n'
 			pass
 
 		if self.getContentModel(attribView.get('contentMode', 'scaleToFill')) != 'UIViewContentModeScaleToFill':
