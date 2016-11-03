@@ -13,8 +13,32 @@
 export LC_CTYPE=C 
 export LANG=C
 
-Project_Dir=`echo $PWD`
-Parse_Resource="NibProcessor/parseResource.py"
+declare Project_Dir=`echo $PWD`
+declare Parse_Resource="NibProcessor/parseResource.py"
+declare File_Name=""
+declare File_Dir=""
+declare parseObjcType="objc"
+
+while getopts ":osd:f:" option; do
+	case $option in
+		o)
+			parseObjcType="objc"
+			;;
+		s)
+			Parse_Resource="swift"
+			echo "exchange xib file to swift code is not accpted for the moment"
+			;;
+		f) 
+			File_Name=${OPTARG}
+			;;
+		d)
+			File_Dir=${OPTARG}
+			;;
+		\? )
+			echo "Invalid option: -$OPTARG"
+			;;
+	esac
+done
 
 function deleteImplementOriginProperty()
 {
@@ -41,27 +65,37 @@ function insertImplementOriginProperty()
 
 function main()
 {
+	if [ ${#File_Name} -gt 0 ]; then
+		module_File_Name=${Project_Dir}/${File_Name}
+		implement_File_Name=${module_File_Name/%.xib/.m}
+		echo ${implement_File_Name}
+		deleteImplementOriginProperty ${implement_File_Name}
+		python ${Parse_Resource} ${module_File_Name}
+	else
+		module_Dir=${Project_Dir}/${File_Dir}
+		# 删除File_Dir目录下所有后缀名为(.m)文件中所包含的IBOutlet变量
+		All_Implement_File=`find ${module_Dir} -name "*.m" -type f`
+		for Implement_File in ${All_Implement_File}; do
+			deleteImplementOriginProperty ${Implement_File}
+		done
+
+		# 解析File_Dir目录下所有的xib文件
+		All_Resource_File=`find ${module_Dir} -name "*.xib" -type f`
+		for Resource_File in $All_Resource_File; do
+			python ${Parse_Resource} ${Resource_File}
+		done
+	fi
+	
 	# 添加解析资源文件的可执行权限
 	chmod +x ${Project_Dir}/${Parse_Resource}
-
-	File_Dir=${Project_Dir}/demo
-	All_Implement_File=`find $File_Dir -name "*.m" -type f`
-	for Implement_File in $All_Implement_File
-	do
-		deleteImplementOriginProperty ${Implement_File}
-		# insertImplementOriginProperty ${Implement_File}
-	done
-
-	All_Resource_File=`find $File_Dir -name "*.xib" -type f`
-	# for Resource_File in $All_Resource_File
-	# do
-	# 	echo "parse ${Resource_File}"
-	# 	python ${Parse_Resource} ${Resource_File}
-	# done
 	python ${Parse_Resource} "demo/TestTableViewCell.xib"
 
+	# 将产生的中间代码删除
 	find ${Project_Dir}/NibProcessor -name "*.pyc" | xargs rm -rf
 }
 
 # exec
 main
+
+
+
