@@ -115,7 +115,7 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 					contentViewAttrib = attribView.get('tableViewCellContentView',{})
 					attribView['subviews'] = contentViewAttrib.get('subviews',[])
 					self.attribViews.append(attribView)
-					print 'attribView=', self.attribViews
+					# print 'attribView=', self.attribViews
 				else:
 					# 暂时在xib中未发现存在的类型，直接过滤掉
 					pass

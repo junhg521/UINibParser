@@ -184,7 +184,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		analyseAttrib = self.analyseAttribView(self.attribViews)
 		attribView = analyseAttrib[0]
 		subViews = analyseAttrib[1]
-		# print 'attribView=', attribView, 'subViews=',subViews
+		print 'attribView=', attribView, 'subViews=',subViews
 		
 		try:
 			subMethodNames = []
