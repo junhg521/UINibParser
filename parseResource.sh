@@ -65,6 +65,9 @@ function insertImplementOriginProperty()
 
 function main()
 {
+	# 添加解析资源文件的可执行权限
+	chmod +x ${Project_Dir}/${Parse_Resource}
+
 	if [ ${#File_Name} -gt 0 ]; then
 		module_File_Name=${Project_Dir}/${File_Name}
 		implement_File_Name=${module_File_Name/%.xib/.m}
@@ -85,10 +88,6 @@ function main()
 			python ${Parse_Resource} ${Resource_File}
 		done
 	fi
-	
-	# 添加解析资源文件的可执行权限
-	chmod +x ${Project_Dir}/${Parse_Resource}
-	python ${Parse_Resource} "demo/TestTableViewCell.xib"
 
 	# 将产生的中间代码删除
 	find ${Project_Dir}/NibProcessor -name "*.pyc" | xargs rm -rf
