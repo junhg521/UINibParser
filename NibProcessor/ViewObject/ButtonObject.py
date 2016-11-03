@@ -26,7 +26,7 @@ class JHButtonObject(JHControlObject):
 
 		describle = "\n- ("+classType+" *"+")"+classMethodName+"\n{\n"
 		describle +="	"+classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribView.get('buttonType', 'roundedRect'))+"];\n"
-		describle += JHControlObject.addControlAttribute(attribView)
+		describle += JHControlObject.addControlAttribute(self,attribView)
 
 		if len(self.getClassFrame(attribView.get('frame', {}))) > 0:
 			describle +="	"+classViewName+".frame = "+self.getClassFrame(attribView.get('frame', {}))+";\n"
