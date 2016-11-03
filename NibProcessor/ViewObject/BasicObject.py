@@ -149,7 +149,7 @@ class JHBasicObject(JHCommomObject):
 		else:
 			pass
 
-		return bType
+		return buttonObjectType
 
 	def getTextAlignment(self, aligment):
 		textAligment = 'NSTextAlignmentNatural'
