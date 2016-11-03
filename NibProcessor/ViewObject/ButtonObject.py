@@ -9,9 +9,9 @@ __author__ = 'Junhg'
 # contribute:
 # 
 
-from ViewObject import JHViewObject
+from ControlObject import JHControlObject
 
-class JHButtonObject(JHViewObject):
+class JHButtonObject(JHControlObject):
 	def __init__(self):
 			pass
 
@@ -21,22 +21,18 @@ class JHButtonObject(JHViewObject):
 	def addSubview(self, attribView):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
-		classViewAttrib = self.attribViewTagProperty(attribView)
-		textAligment = self.getTextAlignment(classViewAttrib.get('textAlignment', 'NSTextAlignmentLeft'))
-		lineAdjustment = self.getBaselineAdjustment(classViewAttrib.get('baselineAdjustment', 'UIBaselineAdjustmentAlignBaselines'))
-		font = self.getTextFont(attribView.get('fontDescription', {}))
-		textColor = self.getClassColor(attribView.get('textColor', {}))
-		controlStates = attribView.get('state', {})
-		connections = attribView.get('connections', {})
-		frame =  self.getClassFrame(attribView.get('frame', {}))
+		classType = self.objcClassNameType(classViewName)
+		classMethodName = self.attribViewViewMethod(classViewName,attribView)
 
-		describle = JHViewObject.addSubview(self,attribView)
+		describle = "\n- ("+classType+" *"+")"+classMethodName+"\n{\n"
+		describle +="	"+classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribView.get('buttonType', 'roundedRect'))+"];\n"
+		describle += JHControlObject.addControlAttribute(attribView)
 
-		if len(frame) > 0:
-			describle +="	"+classViewName+".frame = "+frame+";\n"
+		if len(self.getClassFrame(attribView.get('frame', {}))) > 0:
+			describle +="	"+classViewName+".frame = "+self.getClassFrame(attribView.get('frame', {}))+";\n"
 			pass
 
-		for controlState in controlStates:
+		for controlState in attribView.get('state', {}):
 			if controlState.has_key('title'):
 				describle +="	["+classViewName+" setTitle:@"+"\""+controlState.get('title', '')+"\""+" forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
 				pass
@@ -45,15 +41,6 @@ class JHButtonObject(JHViewObject):
 				pass
 			if controlState.has_key('image'):
 				describle +="	["+classViewName+" setImage:[UIImage imageNamed:@"+"\""+controlState.get('image', '')+"\""+"] forState:"+self.getControlState(controlState.get('key','normal'))+"];\n"
-				pass
-			pass
-			
-		for connection in connections:
-			if connection.has_key('action'):
-				action = connection.get('action', {})
-				if action.has_key('selector') and action.has_key('eventType'):
-					describle +="	["+classViewName+" addTarget:self action:@selector("+action.get('selector','')+") forControlEvents:+"+self.getControlEvent(action.get('eventType', 'touchUpInside'))+"];\n"
-					pass
 				pass
 			pass
 			

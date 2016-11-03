@@ -18,57 +18,13 @@ class JHBasicObject(JHCommomObject):
 		pass
 
 	def addSubview(self, attribView):
-		classViewName = self.attribViewTag(attribView)
-		classType = self.objcClassNameType(classViewName)
-		classMethodName = self.attribViewViewMethod(attribView)
-		classColors = attribView.get('color', {})
-		autoresizingMask = self.getAutoresizingMask(attribView.get('autoresizingMask', {}))
-		contentModel = self.getContentModel(attribView.get('contentMode', 'scaleToFill'))
-		describle = "\n"
-
-		# 变更成classViewName所对应的类型
-		if classType == 'UIButton':
-			describle += "- ("+classType+" *"+")"+classMethodName+"\n{\n"
-			describle +="	"+classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribView.get('buttonType', 'roundedRect'))+"];\n"
-			pass
-		else :
-			describle += "- ("+classType+" *"+")"+classMethodName+"\n{\n"
-			frame = self.getClassFrame(attribView.get('frame', {}))
-			if len(frame) > 0:
-				describle +="	"+classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+frame+"];\n"
-				pass
-			else :
-				describle +="	"+classType+"* "+classViewName+" = [["+classType+" alloc] init];\n"
-				pass
-			pass
-
-		describle +="	"+classViewName+".tag = [@"+"\""+self.attribViewMethodNameId(classMethodName)+"\""+" hash];\n"
-			
-		for color in classColors:
-			if len(color.get('key','')) > 0 and color.get('key','') != 'textColor':
-				describle +="	"+classViewName+"."+color.get('key','')+" = "+self.getClassColor(color)+";\n"
-				pass
-			pass
-		
-		if autoresizingMask != 'UIViewAutoresizingNone':
-			describle +="	"+classViewName+".autoresizingMask = "+autoresizingMask+";\n"
-			pass
-		
-		if contentModel != 'UIViewContentModeScaleToFill':
-			describle +="	"+classViewName+".contentMode = "+contentModel+";\n"
-			pass
-
-		if attribView.get('opaque', 'YES') != 'YES':
-			describle +="	"+classViewName+".opaque = "+attribView.get('opaque', 'YES')+";\n"
-			pass
-
-		return describle
+		return ""
 		
 	def getClassFrame(self, frame):
 		classFrame = ""
 		if len(frame) == 0:
 			pass
-		else :
+		else:
 			if frame.get('key','frameInset') == 'frameInset':
 				classFrame = "CGRectMake("+str(frame.get('minX', 0))+","+str(frame.get('minY', 0))+","+str(frame.get('width', 320))+","+str(frame.get('height', 480))+")"
 				pass
@@ -84,8 +40,7 @@ class JHBasicObject(JHCommomObject):
 			blue = str(color.get('blue',0))
 			alpha = str(color.get('alpha', 1))
 			return "[UIColor colorWithRed:"+red+" green:"+green+" blue:"+blue+" alpha:"+alpha+"]"
-			pass
-		else :
+		else:
 			return ""
 
 	def getContentModel(self, model):
@@ -132,6 +87,7 @@ class JHBasicObject(JHCommomObject):
 			pass
 		else:
 			pass
+
 		return contentMode
 
 	def getAutoresizingMask(self, autoresizingMask):
@@ -162,33 +118,37 @@ class JHBasicObject(JHCommomObject):
 		if oldAutoresizing == 'UIViewAutoresizingNone':
 			oldAutoresizing = newAutoresizing 
 			pass
-		else :
+		else:
 			oldAutoresizing = oldAutoresizing +' | '+ newAutoresizing
+
 		return oldAutoresizing
 
 	def getButtonType(self, buttonType):
-		bType = 'UIButtonTypeSystem'
+		buttonObjectType = 'UIButtonTypeSystem'
+
 		if buttonType == 'roundedRect':
 			pass
 		elif buttonType == 'contactAdd':
-			bType = 'UIButtonTypeContactAdd'
+			buttonObjectType = 'UIButtonTypeContactAdd'
 			pass
 		elif buttonType == 'infoDark':
-			bType = 'UIButtonTypeInfoDark'
+			buttonObjectType = 'UIButtonTypeInfoDark'
 			pass
 		elif buttonType == 'infoLight':
-			bType = 'UIButtonTypeInfoLight'
+			buttonObjectType = 'UIButtonTypeInfoLight'
 			pass
 		elif buttonType == 'detailDisclosure':
-			bType = 'UIButtonTypeDetailDisclosure'
+			buttonObjectType = 'UIButtonTypeDetailDisclosure'
 			pass
 		elif buttonType == 'system':
+			buttonObjectType = 'UIButtonTypeSystem'
 			pass
 		elif buttonType == 'custom':
-			bType = 'UIButtonTypeCustom'
+			buttonObjectType = 'UIButtonTypeCustom'
 			pass
 		else:
 			pass
+
 		return bType
 
 	def getTextAlignment(self, aligment):
@@ -211,6 +171,7 @@ class JHBasicObject(JHCommomObject):
 			pass
 		else:
 			pass
+
 		return textAligment
 
 	def getBaselineAdjustment(self, adjustment):
@@ -222,8 +183,9 @@ class JHBasicObject(JHCommomObject):
 		elif adjustment == 'alignCenters':
 			lineAdjustment = 'UIBaselineAdjustmentAlignCenters'
 			pass
-		else :
+		else:
 			pass
+
 		return lineAdjustment
 
 	def getTextFont(self, fontDescription):
@@ -240,7 +202,7 @@ class JHBasicObject(JHCommomObject):
 		pass
 
 	def getControlContentHorizontalAlignment(self, alignment):
-		controlAlignment = ''
+		controlAlignment = 'UIControlContentHorizontalAlignmentCenter'
 
 		if aligment == 'center':
 			controlAlignment = 'UIControlContentHorizontalAlignmentCenter'
@@ -260,7 +222,7 @@ class JHBasicObject(JHCommomObject):
 		return controlAlignment
 
 	def getControlContentVerticalAlignment(self, alignment):
-		controlAlignment = ''
+		controlAlignment = 'UIControlContentVerticalAlignmentCenter'
 
 		if aligment == 'center':
 			controlAlignment = 'UIControlContentVerticalAlignmentCenter'
@@ -280,7 +242,7 @@ class JHBasicObject(JHCommomObject):
 		return controlAlignment
 
 	def getControlState(self, state):
-		controlState = ''
+		controlState = 'UIControlStateNormal'
 
 		if state == 'normal':
 			controlState = 'UIControlStateNormal'
@@ -377,7 +339,7 @@ class JHBasicObject(JHCommomObject):
 		return controlEvent
 
 	def getTextBorderStyle(self, borderStyle):
-		textBorderStyle = ''
+		textBorderStyle = 'UITextBorderStyleNone'
 
 		if borderStyle == 'none':
 			textBorderStyle = 'UITextBorderStyleNone'
@@ -393,10 +355,11 @@ class JHBasicObject(JHCommomObject):
 			pass
 		else:
 			pass
+
 		return textBorderStyle
 
 	def getTextFieldViewMode(self, mode):
-		textFieldViewMode = ''
+		textFieldViewMode = 'UITextFieldViewModeNever'
 
 		if mode == 'never':
 			textFieldViewMode = 'UITextFieldViewModeNever'
@@ -412,5 +375,6 @@ class JHBasicObject(JHCommomObject):
 			pass
 		else:
 			pass
+			
 		return textFieldViewMode
 		

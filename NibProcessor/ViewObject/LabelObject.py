@@ -22,11 +22,6 @@ class JHLabelObject(JHViewObject):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
-		textAligment = self.getTextAlignment(classViewAttrib.get('textAlignment', 'NSTextAlignmentLeft'))
-		lineAdjustment = self.getBaselineAdjustment(classViewAttrib.get('baselineAdjustment', 'UIBaselineAdjustmentAlignBaselines'))
-		font = self.getTextFont(attribView.get('fontDescription', {}))
-		attributedStrings = attribView.get('attributedString',{})
-		classColors = attribView.get('color', {})
 
 		describle = JHViewObject.addSubview(self,attribView)
 
@@ -34,16 +29,16 @@ class JHLabelObject(JHViewObject):
 			describle +="	"+classViewName+".adjustsFontSizeToFitWidth = "+classViewAttrib.get('adjustsFontSizeToFit', 'NO')+';\n'
 			pass
 
-		if lineAdjustment != 'UIBaselineAdjustmentAlignBaselines':
-			describle +="	"+classViewName+".baselineAdjustment = "+lineAdjustment+';\n'
+		if self.getBaselineAdjustment(classViewAttrib.get('baselineAdjustment', 'UIBaselineAdjustmentAlignBaselines')) != 'UIBaselineAdjustmentAlignBaselines':
+			describle +="	"+classViewName+".baselineAdjustment = "+self.getBaselineAdjustment(classViewAttrib.get('baselineAdjustment', 'UIBaselineAdjustmentAlignBaselines'))+';\n'
 			pass
 
-		if len(attributedStrings) > 0:
+		if len(attribView.get('attributedString',{})) > 0:
 			describle +="	"+classViewName+".numberOfLines = 0;\n"
 			describle += "	NSMutableAttributedString *attributeContent = [[NSMutableAttributedString alloc] init];\n"
 			describle +="	[attributeContent beginEditing];\n"
 			i = 0
-			for attributedString in attributedStrings:
+			for attributedString in attribView.get('attributedString',{}):
 				fragment = attributedString.get('fragment', '')
 				subContent = fragment.get('content', '')
 				length = str("[@"+"\""+subContent+"\""+" length]")
@@ -64,24 +59,20 @@ class JHLabelObject(JHViewObject):
 			describle +="	[attributeContent endEditing];\n"
 			describle +="	"+classViewName+".attributedText = attributeContent;\n"
 			pass
-		else :
+		else:
 			describle +="	"+classViewName+".text = "+"@\""+classViewAttrib.get('text', '')+"\""+';\n'
-			describle +="	"+classViewName+".font = "+font+'\n'
-			for color in classColors:
+			describle +="	"+classViewName+".font = "+self.getTextFont(attribView.get('fontDescription', {}))+'\n'
+			for color in attribView.get('color', {}):
 				if len(color.get('key','')) > 0 and color.get('key','') == 'textColor':
 					describle +="	"+classViewName+"."+color.get('key','')+" = "+self.getClassColor(color)+";\n"
 					pass
 				pass
 			pass
 
-		if textAligment != 'NSTextAlignmentNatural':
-			describle +="	"+classViewName+".textAlignment = "+textAligment+';\n'
+		if self.getTextAlignment(classViewAttrib.get('textAlignment', 'NSTextAlignmentLeft')) != 'NSTextAlignmentNatural':
+			describle +="	"+classViewName+".textAlignment = "+self.getTextAlignment(classViewAttrib.get('textAlignment', 'NSTextAlignmentLeft'))+';\n'
 			pass
 
-		if classViewAttrib.get('userInteractionEnabled', 'NO') != 'NO':
-			describle +="	"+classViewName+".userInteractionEnabled = "+classViewAttrib.get('userInteractionEnabled', 'NO')+';\n'
-			pass
-		
 		return describle
 
 	def getAttributeTextFont(self, fontDescription):
@@ -95,4 +86,3 @@ class JHLabelObject(JHViewObject):
 			return "[UIFont italicSystemFontOfSize:"+str(fontSize)+"]"
 		else :
 			return "[UIFont systemFontOfSize:"+str(fontSize)+"]"
-		pass

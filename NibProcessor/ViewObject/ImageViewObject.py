@@ -22,12 +22,19 @@ class JHImageViewObject(JHViewObject):
 		# print 'attribView=', attribView
 		classViewName = self.attribViewTag(attribView)
 		classViewAttrib = self.attribViewTagProperty(attribView)
+
 		describle = JHViewObject.addSubview(self,attribView)
 		
 		if classViewAttrib.has_key('image'):
 			describle +="	"+classViewName+".image = [UIImage imageNamed:@"+"\""+classViewAttrib.get('image','')+"\""+"];\n"
 			pass
+
 		if classViewAttrib.has_key('highlightedImage'):
 			describle +="	"+classViewName+".highlightedImage = [UIImage imageNamed:@"+"\""+classViewAttrib.get('image','')+"\""+"];\n"
 			pass
+
+		if classViewAttrib.get('highlighted','NO') != 'NO':
+			describle +="	"+classViewName+".highlighted = "+classViewAttrib.get('highlighted','NO')+"];\n"
+			pass
+
 		return describle
