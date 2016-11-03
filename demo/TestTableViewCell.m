@@ -11,9 +11,7 @@
 @interface TestTableViewCell ()<UITextFieldDelegate>
 
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel2;
-@property (nonatomic, weak) UIControl *button;
-@property (nonatomic, weak) UIView *sview;
-@property (nonatomic, weak) UIImageView *image;
+
 @end
 
 @implementation TestTableViewCell
@@ -23,7 +21,6 @@
     [super awakeFromNib];
     // Initialization code
     
-    self.titleLabel2.adjustsFontSizeToFitWidth = NO;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
