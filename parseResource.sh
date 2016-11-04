@@ -25,7 +25,7 @@ while getopts ":osd:f:" option; do
 			parseObjcType="objc"
 			;;
 		s)
-			Parse_Resource="swift"
+			parseObjcType="swift"
 			echo "exchange xib file to swift code is not accpted for the moment"
 			;;
 		f) 
@@ -43,6 +43,7 @@ done
 function deleteImplementOriginProperty()
 {
 	File_Property=`grep -n "IBOutlet" $1 | awk '{print $1}' | cut -d ':' -f 1`
+	# echo "File_Property=${File_Property}, fileName=${1}"
 	if [ ${#File_Property} != 0 ]
 	then
 		# echo "You has delete ${1}'s property:${File_Property}"
@@ -50,16 +51,17 @@ function deleteImplementOriginProperty()
 	fi
 }
 
-function deleteResourceFile()
+function deleteResourceFileFromProject()
 {
-	echo $1
-	projectFiles='find ${Project_Dir} -name ".pbxproj" -type f'
-	for projectFile in projectFiles; do
+	projectFiles=`find ${Project_Dir} -name "*.pbxproj" -type f`
+	for projectFile in ${projectFiles}; do
+		echo "projectFile=${projectFile}, fileName=${1}"
 		resoureFile=`grep -n $1 ${projectFile} | awk '{print $1}' | cut -d ':' -f 1`
-		if [ ${#resoureFile} != 0 ]
-		then
-			echo ${resoureFile}
-			sed -i "" "${File_Property}d" ${projectFile}
+
+		if [[ ${#resoureFile} -gt 0 ]]; then
+			deleteResourceFileFromProject $1
+		else
+			sed -i "" "${resoureFile[0]}d" ${projectFile}
 		fi
 	done
 }
@@ -69,13 +71,17 @@ function main()
 	# 添加解析资源文件的可执行权限
 	chmod +x ${Project_Dir}/${Parse_Resource}
 
-	if [ ${#File_Name} -gt 0 ]; then
+	if [[ ${#File_Name} -gt 0 ]]; then
+		file_extend=${File_Name##*.}
+		if [[ ${file_extend} != 'xib' ]]; then
+			echo "can't parse such extension ${file_extend}"
+			return
+		fi
+
 		module_File_Name=${Project_Dir}/${File_Name}
-		implement_File_Name=${module_File_Name/%.xib/.m}
-		echo ${implement_File_Name}
-		deleteImplementOriginProperty ${implement_File_Name}
+		deleteImplementOriginProperty ${module_File_Name/%.xib/.m}
 		python ${Parse_Resource} ${module_File_Name}
-		deleteResourceFile ${module_File_Name##*/}
+		deleteResourceFileFromProject ${module_File_Name##*/}
 		rm -rf ${module_File_Name}
 	else
 		module_Dir=${Project_Dir}/${File_Dir}
