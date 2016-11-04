@@ -50,6 +50,19 @@ function deleteImplementOriginProperty()
 	fi
 }
 
+function insertImplementOriginProperty()
+{
+	Implement_Extend_Line=`grep -n "@interface" $1 | awk '{print $1}' | cut -d ':' -f 1`
+	
+	if [ ${#Implement_Extend_Line} != 0 ]
+	then
+		echo ${Implement_Extend_Line}
+		sed -i "" "${Implement_Extend_Line}a\ 
+		@property (nonatomic, strong) UIView *bottomView;
+		" $1
+	fi
+}
+
 function main()
 {
 	# 添加解析资源文件的可执行权限
@@ -82,6 +95,3 @@ function main()
 
 # exec
 main
-
-
-

@@ -49,6 +49,7 @@ class JHBaseProcessor:
 	def __init__(self,nibParser):
 		self.resouce_file_dir = nibParser.resourceFileDir()
 		self.className = nibParser.className
+		self.parseType = nibParser.parseType
 		pass
 
 	def __del__(self):
@@ -199,11 +200,16 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					self.loadIBOutletProperty(self.outletViews,subViews,writeFileHandle)
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
+					if self.parseType == 'tableViewCell':
+						analyseAttrib = self.analyseAttribView(self.attribViews.get('tableViewCellContentView',{}))
+						subViews = analyseAttrib[1]
+						pass
+					
 					if len(subViews) > 0:
 						writeFileHandle.write("\n\
 #pragma mark - loadAllSubViews\n")
 						subMethodNames = self.loadAllSubView(subViews, writeFileHandle)
-						pass
+						
 					self.loadView(attribView,writeFileHandle)
 					pass
 				elif line.find("[super viewDidLoad]") >= 0 and lineEdge:

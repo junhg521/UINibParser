@@ -64,6 +64,7 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		JHBaseParser.__init__(self,resource_file_name)
 		self.outletViews = []
 		self.attribViews = []
+		self.parseType = "controller"
 		pass
 	
 	def __del__(self):
@@ -105,15 +106,11 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 					self.parseResourcePlaceholderObjectNode(list(subElememt))
 					pass
 				elif subElememt.tag == 'tableViewCell':
+					self.parseType = "tableViewCell"
 					self.className = subElememt.attrib.get('customClass', '')
 					# 处理tableViewCell的xib类型
-					# 是否将tableViewCellContentView做为tableViewCell的子类来解析
-
 					attribView = self.parseResourceTableViewCellContentView(list(subElememt))
 					attribView[subElememt.tag] = subElememt.attrib
-					# 将TableViewCellContentView的subview提到cell上，方便processor解析出subviews
-					contentViewAttrib = attribView.get('tableViewCellContentView',{})
-					attribView['subviews'] = contentViewAttrib.get('subviews',[])
 					self.attribViews.append(attribView)
 					# print 'attribView=', self.attribViews
 				else:
@@ -138,6 +135,10 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		attribView = {}
 		for element in resourecViewObject:
 			if element.tag == 'tableViewCellContentView':
+				# subAttribViews = []
+				# contentViewAttribute[element.tag] = self.parseResourceViewObjectNode(list(element))
+				# subAttribViews.append(contentViewAttribute)
+				# attribView['subviews'] = subAttribViews
 				attribView[element.tag] = self.parseResourceViewObjectNode(list(element))
 				pass
 			elif element.tag == 'connections':
