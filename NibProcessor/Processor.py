@@ -215,7 +215,8 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 							for subMethod in subMethodNames:
 								writeFileHandle.write("[self "+subMethod+"];\n")
 								pass
-							view = self.attribViewTagProperty(attribView)
+							contentAttrib = self.analyseAttribView(subViews)
+							view = self.attribViewTagProperty(contentAttrib[0])
 							self.loadViewConstranit('self.contentView',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
 							writeFileHandle.write("}\n")
 							pass

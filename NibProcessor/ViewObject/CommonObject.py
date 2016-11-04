@@ -27,32 +27,23 @@ class JHCommomObject():
 	# 获取属性字段Tag值
 	def attribViewTag(self, attribView):
 		attribView = self.findAttribViewTagAndProperty(attribView)
-		if len(attribView) > 0:
-			return attribView[0]
-			pass
-		return ""
+		return attribView[0]
+			
 
 	# 获取属性的tag的attrib值
 	def attribViewTagProperty(self, attribView):
 		attribView = self.findAttribViewTagAndProperty(attribView)
-		if len(attribView) > 0:
-			return attribView[1]
-			pass
-		return ""
+		return attribView[1]
 
 	def attribViewNameID(self, attribView):
 		viewAttrIdValue = self.attribViewTagProperty(attribView)
-		if str(viewAttrIdValue) > 0:
-			attribId = viewAttrIdValue.get('id', '')
-			if len(attribId) > 0:
-				viewID = attribId.replace('-', '_')
-				return viewID
-				pass
-			pass
+		if len(viewAttrIdValue) > 0:
+			return viewAttrIdValue.get('id', '')
 		return ''
 
 	def attribViewViewMethod(self, attribView):
-		return "loadSubView_"+self.attribViewNameID(attribView)
+		attribId = self.attribViewNameID(attribView)
+		return "loadSubView_"+attribId.replace('-', '_')
 
 	def attribViewMethodNameId(self, viewMethodName):
 		length = len("loadSubView_")
@@ -63,13 +54,13 @@ class JHCommomObject():
 		pass
 		return ''
 		
-
 	def findAttribViewTagAndProperty(self, attribView):
 		for (key,value) in attribView.items():
 			if len(self.objcClassNameType(key)) > 0:
 				return (key,value);
 			pass
-		return ()
+		pass
+		return ("","")
 
 	def objcClassNameType(self, tag):
 		className = ''
