@@ -60,10 +60,12 @@ class JHViewObject(JHBasicObject):
 
 	def addContentSubview(self,attribView):
 		# print 'attribView=', attribView
-		classMethodName = self.attribViewViewMethod(attribView)
 		attribViewId = self.attribViewTagProperty(attribView)
+		classViewName = self.attribViewTag(attribView)
+		classType = self.objcClassNameType(classViewName)
+		classMethodName = self.attribViewViewMethod(attribView)
 
-		describle = "\n- (void)"+classMethodName+"\n{\n"
+		describle = "\n- ("+classType+" *"+")"+classMethodName+"\n{\n"
 		describle +=self.addViewAttribute("self."+attribViewId.get('key','contentView'),self.attribViewTagProperty(attribView))
 		describle += "}\n"
 

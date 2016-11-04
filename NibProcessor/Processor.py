@@ -210,11 +210,12 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					if self.parseType == 'tableViewCell':
 						if len(subMethodNames) > 0:
 							writeFileHandle.write("\n\
-	// load contentView subviews\n\
-	- (void)loadAllContentSubView\n{\n")
+#pragma mark - load contentView subviews\n\
+- (void)loadAllContentSubView\n{\n")
 							self.loadAllSubViewOfView('self.contentView',subMethodNames,writeFileHandle)
 							view = self.attribViewTagProperty(attribView)
 							self.loadViewConstranit('self.contentView',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
+							writeFileHandle.write("}\n")
 							pass
 						pass
 					pass
@@ -321,10 +322,12 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 
 		if self.parseType == 'tableViewCell' and attribView.has_key('tableViewCellContentView'):
 			writeFileHandle.write(viewObject.addContentSubview(attribView))
+			classViewName = "self.contView"
 			pass
 		else:
 			writeFileHandle.write(viewObject.addSubview(attribView))
 			pass
+
 		self.loadAllSubViewOfView(classViewName, subMethodNames, writeFileHandle);
 		self.loadViewConstranit(classViewName,self.attribViewNameID(attribView),attribView.get('constraints', []),writeFileHandle)
 		self.setClassViewProperty(self.outletViews, attribViewib.get('id',''), classViewName, writeFileHandle)
@@ -335,7 +338,12 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 
 	def loadAllSubViewOfView(self,parentView,subMethodNames,writeFileHandle):
 		for subMethod in subMethodNames:
-			writeFileHandle.write("\
+			if self.parseType == 'tableViewCell':
+				writeFileHandle.write("\
+	[self "+subMethod+"];\n")
+				pass
+			else:
+				writeFileHandle.write("\
 	["+parentView+" addSubview:[self "+subMethod+"]];\n")
 			pass
 		pass
