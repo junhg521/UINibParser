@@ -71,7 +71,7 @@ class JHViewObject(JHBasicObject):
 		return describle
 
 	def addViewAttribute(self, classViewName, attribView):
-		print 'attribView=', attribView
+		# print 'attribView=', attribView
 
 		describle = ""
 		if self.getAutoresizingMask(attribView.get('autoresizingMask', {})) != 'UIViewAutoresizingNone':

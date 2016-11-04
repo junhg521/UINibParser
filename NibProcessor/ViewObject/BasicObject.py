@@ -115,6 +115,7 @@ class JHBasicObject(JHCommomObject):
 		return autoresizing
 	
 	def getMergeAutoresizingMask(self, oldAutoresizing, newAutoresizing):
+		# print 'oldAutoresizing=', oldAutoresizing, ' newAutoresizing=',newAutoresizing
 		if oldAutoresizing == 'UIViewAutoresizingNone':
 			oldAutoresizing = newAutoresizing 
 			pass
@@ -124,6 +125,7 @@ class JHBasicObject(JHCommomObject):
 		return oldAutoresizing
 
 	def getButtonType(self, buttonType):
+		# print 'buttonType = ', buttonType
 		buttonObjectType = 'UIButtonTypeSystem'
 
 		if buttonType == 'roundedRect':
@@ -152,6 +154,7 @@ class JHBasicObject(JHCommomObject):
 		return buttonObjectType
 
 	def getTextAlignment(self, aligment):
+		# print 'aligment = ', aligment
 		textAligment = 'NSTextAlignmentNatural'
 
 		if aligment == 'left':
@@ -175,6 +178,7 @@ class JHBasicObject(JHCommomObject):
 		return textAligment
 
 	def getBaselineAdjustment(self, adjustment):
+		# print 'adjustment = ', adjustment
 		lineAdjustment = 'UIBaselineAdjustmentAlignBaselines'
 
 		if adjustment == 'alignBaselines':
@@ -202,6 +206,7 @@ class JHBasicObject(JHCommomObject):
 		pass
 
 	def getControlContentHorizontalAlignment(self, alignment):
+		# print 'alignment = ', alignment
 		controlAlignment = 'UIControlContentHorizontalAlignmentCenter'
 
 		if aligment == 'center':
