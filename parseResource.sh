@@ -50,17 +50,18 @@ function deleteImplementOriginProperty()
 	fi
 }
 
-function insertImplementOriginProperty()
+function deleteResourceFile()
 {
-	Implement_Extend_Line=`grep -n "@interface" $1 | awk '{print $1}' | cut -d ':' -f 1`
-	
-	if [ ${#Implement_Extend_Line} != 0 ]
-	then
-		echo ${Implement_Extend_Line}
-		sed -i "" "${Implement_Extend_Line}a\ 
-		@property (nonatomic, strong) UIView *bottomView;
-		" $1
-	fi
+	echo $1
+	projectFiles='find ${Project_Dir} -name ".pbxproj" -type f'
+	for projectFile in projectFiles; do
+		resoureFile=`grep -n $1 ${projectFile} | awk '{print $1}' | cut -d ':' -f 1`
+		if [ ${#resoureFile} != 0 ]
+		then
+			echo ${resoureFile}
+			sed -i "" "${File_Property}d" ${projectFile}
+		fi
+	done
 }
 
 function main()
@@ -74,6 +75,8 @@ function main()
 		echo ${implement_File_Name}
 		deleteImplementOriginProperty ${implement_File_Name}
 		python ${Parse_Resource} ${module_File_Name}
+		deleteResourceFile ${module_File_Name##*/}
+		rm -rf ${module_File_Name}
 	else
 		module_Dir=${Project_Dir}/${File_Dir}
 		# 删除File_Dir目录下所有后缀名为(.m)文件中所包含的IBOutlet变量
@@ -86,6 +89,8 @@ function main()
 		All_Resource_File=`find ${module_Dir} -name "*.xib" -type f`
 		for Resource_File in $All_Resource_File; do
 			python ${Parse_Resource} ${Resource_File}
+			deleteResourceFile ${Resource_File##*/}
+			rm -rf ${Resource_File}
 		done
 	fi
 

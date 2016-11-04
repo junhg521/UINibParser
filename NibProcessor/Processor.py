@@ -212,7 +212,9 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 							writeFileHandle.write("\n\
 #pragma mark - load contentView subviews\n\
 - (void)loadAllContentSubView\n{\n")
-							self.loadAllSubViewOfView('self.contentView',subMethodNames,writeFileHandle)
+							for subMethod in subMethodNames:
+								writeFileHandle.write("\[self "+subMethod+"];\n")
+								pass
 							view = self.attribViewTagProperty(attribView)
 							self.loadViewConstranit('self.contentView',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
 							writeFileHandle.write("}\n")

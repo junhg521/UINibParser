@@ -21,7 +21,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self.tableView registerNib:[UINib nibWithNibName:@"TestTableViewCell" bundle:nil] forCellReuseIdentifier:@"TestTableViewCell"];
+//    [self.tableView registerNib:[UINib nibWithNibName:@"TestTableViewCell" bundle:nil] forCellReuseIdentifier:@"TestTableViewCell"];
+    [self.tableView registerClass:[TestTableViewCell class] forCellReuseIdentifier:@"TestTableViewCell"];
     self.datasource = [NSMutableArray arrayWithCapacity:100];
     for (NSInteger i=0; i<100; i++) {
         [self.datasource addObject:@(i)];
