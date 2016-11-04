@@ -56,13 +56,14 @@ function deleteResourceFileFromProject()
 	projectFiles=`find ${Project_Dir} -name "*.pbxproj" -type f`
 	for projectFile in ${projectFiles}; do
 		echo "projectFile=${projectFile}, fileName=${1}"
-		resoureFile=`grep -n $1 ${projectFile} | awk '{print $1}' | cut -d ':' -f 1`
+		resoureFiles=`grep -n $1 ${projectFile} | awk '{print $1}' | cut -d ':' -f 1`
 
-		if [[ ${#resoureFile} -gt 0 ]]; then
-			deleteResourceFileFromProject $1
-		else
-			sed -i "" "${resoureFile[0]}d" ${projectFile}
-		fi
+		i=0
+		for resoureFile in ${resoureFiles}; do
+			line=`expr ${resoureFile} - ${i}`
+			sed -i "" "${line}d" ${projectFile}
+			i=`expr ${i} + 1`
+		done
 	done
 }
 
