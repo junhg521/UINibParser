@@ -181,7 +181,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		pass
 
 	def processing(self):
-		# print 'attribViews=',self.attribViews
+		print 'attribViews=',self.attribViews
 		analyseAttrib = self.analyseAttribView(self.attribViews)
 		attribView = analyseAttrib[0]
 		subViews = analyseAttrib[1]
@@ -201,7 +201,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
 					if self.parseType == 'tableViewCell':
-						analyseAttrib = self.analyseAttribView(self.attribViews.get('tableViewCellContentView',{}))
+						analyseAttrib = self.analyseAttribView(attribView.get('tableViewCellContentView',{}))
 						subViews = analyseAttrib[1]
 						pass
 					
