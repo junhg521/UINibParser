@@ -27,7 +27,6 @@ class JHTableViewCellObject(JHViewObject):
 		describle = "\n- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier\n{\n"
 		describle +="	if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {\n"
 		describle +="	"+JHViewObject.addViewAttribute(self,"self",attribView)
-		describle +="	"+JHViewObject.addViewAttribute(self,"self.contentView",attribView.get('tableViewCellContentView',{}))
 		describle +="	[self loadAllSubView];\n"
 		describle +="	}\n"
 		describle +="	return self;\n"

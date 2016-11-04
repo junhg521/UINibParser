@@ -77,7 +77,7 @@ class JHBaseProcessor:
 
 	def viewObjectType(self, tag):
 		viewObject = JHBasicObject()
-		if tag == 'view':
+		if tag == 'view' or tag == 'tableViewCellContentView':
 			viewObject = JHViewObject()
 			pass
 		elif tag == 'label':
@@ -185,7 +185,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		analyseAttrib = self.analyseAttribView(self.attribViews)
 		attribView = analyseAttrib[0]
 		subViews = analyseAttrib[1]
-		print 'attribView=', attribView, 'subViews=',subViews
+		# print 'attribView=', attribView, 'subViews=',subViews
 		
 		try:
 			subMethodNames = []
@@ -200,17 +200,22 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 					self.loadIBOutletProperty(self.outletViews,subViews,writeFileHandle)
 				elif line.find("@implementation") >= 0 and line.find(self.className) >= 0:
 					lineEdge = True
-					if self.parseType == 'tableViewCell':
-						analyseAttrib = self.analyseAttribView(attribView.get('tableViewCellContentView',{}))
-						subViews = analyseAttrib[1]
-						pass
-					
 					if len(subViews) > 0:
 						writeFileHandle.write("\n\
 #pragma mark - loadAllSubViews\n")
 						subMethodNames = self.loadAllSubView(subViews, writeFileHandle)
 						
 					self.loadView(attribView,writeFileHandle)
+					if self.parseType == 'tableViewCell':
+						if len(subMethodNames) > 0:
+							writeFileHandle.write("\n\
+	// load contentView subviews\n\
+	- (void)loadAllContentSubView\n{\n")
+							self.loadAllSubViewOfView('self.contentView',subMethodNames,writeFileHandle)
+							view = self.attribViewTagProperty(attribView)
+							self.loadViewConstranit('self.contentView',view.get('id', ''),attribView.get('constraints', []),writeFileHandle)
+							pass
+						pass
 					pass
 				elif line.find("[super viewDidLoad]") >= 0 and lineEdge:
 					if len(subMethodNames) > 0:
@@ -313,7 +318,12 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 		viewObject = self.viewObjectType(classViewName)
 		attribViewib = self.attribViewTagProperty(attribView)
 
-		writeFileHandle.write(viewObject.addSubview(attribView))
+		if self.parseType == 'tableViewCell' and attribView.has_key('tableViewCellContentView'):
+			writeFileHandle.write(viewObject.addContentSubview(attribView))
+			pass
+		else:
+			writeFileHandle.write(viewObject.addSubview(attribView))
+			pass
 		self.loadAllSubViewOfView(classViewName, subMethodNames, writeFileHandle);
 		self.loadViewConstranit(classViewName,self.attribViewNameID(attribView),attribView.get('constraints', []),writeFileHandle)
 		self.setClassViewProperty(self.outletViews, attribViewib.get('id',''), classViewName, writeFileHandle)
