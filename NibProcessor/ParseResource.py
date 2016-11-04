@@ -135,11 +135,11 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		attribView = {}
 		for element in resourecViewObject:
 			if element.tag == 'tableViewCellContentView':
-				# subAttribViews = []
-				# contentViewAttribute[element.tag] = self.parseResourceViewObjectNode(list(element))
-				# subAttribViews.append(contentViewAttribute)
-				# attribView['subviews'] = subAttribViews
-				attribView[element.tag] = self.parseResourceViewObjectNode(list(element))
+				subAttribViews = []
+				contentViewAttribute[element.tag] = attrib
+				contentViewAttribute.update(self.parseResourceViewObjectNode(list(element)))
+				subAttribViews.append(contentViewAttribute)
+				attribView['subviews'] = subAttribViews
 				pass
 			elif element.tag == 'connections':
 				attribView[element.tag] = self.parseResoureConnectionsObjectNode(list(element))
