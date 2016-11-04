@@ -322,7 +322,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 
 		if self.parseType == 'tableViewCell' and attribView.has_key('tableViewCellContentView'):
 			writeFileHandle.write(viewObject.addContentSubview(attribView))
-			classViewName = "self.contView"
+			classViewName = "self.contentView"
 			pass
 		else:
 			writeFileHandle.write(viewObject.addSubview(attribView))
@@ -338,12 +338,7 @@ class JHObjcProcessor(JHBaseProcessor,JHCommomObject):
 
 	def loadAllSubViewOfView(self,parentView,subMethodNames,writeFileHandle):
 		for subMethod in subMethodNames:
-			if self.parseType == 'tableViewCell':
-				writeFileHandle.write("\
-	[self "+subMethod+"];\n")
-				pass
-			else:
-				writeFileHandle.write("\
+			writeFileHandle.write("\
 	["+parentView+" addSubview:[self "+subMethod+"]];\n")
 			pass
 		pass

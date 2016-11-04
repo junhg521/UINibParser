@@ -67,7 +67,6 @@ class JHViewObject(JHBasicObject):
 
 		describle = "\n- ("+classType+" *"+")"+classMethodName+"\n{\n"
 		describle +=self.addViewAttribute("self."+attribViewId.get('key','contentView'),self.attribViewTagProperty(attribView))
-		describle += "}\n"
 
 		return describle
 
