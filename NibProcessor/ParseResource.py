@@ -136,6 +136,7 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		for element in resourecViewObject:
 			if element.tag == 'tableViewCellContentView':
 				subAttribViews = []
+				contentViewAttribute = {}
 				contentViewAttribute[element.tag] = element.attrib
 				contentViewAttribute.update(self.parseResourceViewObjectNode(list(element)))
 				subAttribViews.append(contentViewAttribute)
