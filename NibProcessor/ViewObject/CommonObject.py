@@ -73,7 +73,7 @@ class JHCommomObject():
 
 	def objcClassNameType(self, tag):
 		className = ''
-		if tag == 'view' and tag == 'tableViewCellContentView':
+		if tag == 'view' or tag == 'tableViewCellContentView':
 			className = 'UIView'
 			pass
 		elif tag == 'label':

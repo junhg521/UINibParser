@@ -76,6 +76,7 @@ class JHBaseProcessor:
 		pass
 
 	def viewObjectType(self, tag):
+		# print 'tag=',tag
 		viewObject = JHBasicObject()
 		if tag == 'view' or tag == 'tableViewCellContentView':
 			viewObject = JHViewObject()
