@@ -1,0 +1,204 @@
+#!/bin/sh
+
+# create: 2016/10/16
+# version: 0.0.1
+# author: Junhg
+# contribute:
+# 
+
+# describle：
+# 1. 将工程中的资源文件中的资源信息加载到实现文件中
+# 2. 删除所有的xib文件，优化工程的代码大小
+
+export LC_CTYPE=C 
+export LANG=C
+
+declare Project_Dir=`echo $PWD`
+declare Parse_Resource="NibProcessor/parseResource.py"
+declare File_Name=""
+declare File_Dir=""
+declare parseObjcType="objc"
+declare parseNibCount=0
+declare needloadConfiguration=0
+
+while getopts ":osd:f:" option; do
+	case $option in
+		o)
+			parseObjcType="objc"
+			;;
+		s)
+			parseObjcType="swift"
+			echo "exchange xib file to swift code is not accpted for the moment"
+			;;
+		f) 
+			File_Name=${OPTARG}
+			;;
+		d)
+			File_Dir=${OPTARG}
+			;;
+		\? )
+			echo "Invalid option: -$OPTARG"
+			;;
+	esac
+done
+
+function stringByAddingPercentEscape()
+{
+	declare local escapeCharacter=""
+
+	for x in $(seq 1 ${#1}); do
+		location=`expr $x - 1`
+		character=${1:$location:1}
+
+		if [[ "${character}" == "(" ]] || [[ "${character}" == ")" ]] || [[ "${character}" == "[" ]] || [[ "${character}" == "]" ]] || [[ "${character}" == '"' ]]; then
+			escapeCharacter=${escapeCharacter}"$2\\"${character}
+		else
+			escapeCharacter=${escapeCharacter}${character}
+		fi
+	done
+	
+	if [[ "$__originvar" ]]; then
+		eval $__originvar="${escapeCharacter}"
+	else
+		echo "${escapeCharacter}"
+	fi
+}
+
+function modifyIBOutletPropertyInSourceFile()
+{
+	sed -i "" "s/@property.*IBOutlet/@property \(nonatomic, strong\)/g" $1
+}
+
+function modifyAwakeFromNibInSourceFile()
+{
+	File_Properties=`grep -n "\[.*super.*awakeFromNib.*\]" $1`
+
+	if [[ ${#File_Properties} -gt 0 ]]; then
+		needloadConfiguration=1
+		sed -i "" "/\[.*super.*awakeFromNib.*\]/d" ${1}
+		sed -i "" "s/awakeFromNib/loadConfigCellInfo/g" ${1}
+	else
+		needloadConfiguration=0
+	fi
+}
+
+function modifyRegisterNibToClass()
+{
+	registers=`grep -n "registerNib.*UINib.*nibWithNibName.*bundle" ${1} |  cut -d ':' -f 4`
+	declare registerClassName=""
+	for register in ${registers}; do
+		if [[ ${register} == "bundle" ]]; then
+			origin=`stringByAddingPercentEscape "${registerClassName}" ".*"`
+			destination=`stringByAddingPercentEscape "${registerClassName}" ""`
+			sed -i "" "s/registerNib.*UINib.*nibWithNibName.*$origin.*bundle:nil\]/registerClass:NSClassFromString\($destination\)/g" $1
+			registerClassName=""
+		else
+			registerClassName=${registerClassName}${register}" "
+		fi
+	done
+}
+
+function modifyNibInitialToCodeInitial()
+{
+	registers=`grep -n "UINib.*nibWithNibName.*bundle.*.instantiateWithOwner" ${1} | cut -d ':' -f 3`
+	registerClassName=""
+	for register in ${registers}; do
+		if [[ ${register} == "bundle" ]]; then
+			origin=`stringByAddingPercentEscape "${registerClassName}" ".*"`
+			destination=`stringByAddingPercentEscape "${registerClassName}" ""`
+			sed -i "" "s/\[.*UINib.*nibWithNibName.*$origin.*bundle.*.instantiateWithOwner.*/\[\[NSClassFromString\(${destination}\) alloc\] init\];/g" $1
+			registerClassName=""
+		else
+			registerClassName=${registerClassName}${register}" "
+		fi
+	done
+}
+
+function modifyBundleInitialToCodeInitial()
+{
+	registers=`grep -n "NSBundle.*mainBundle.*loadNibNamed.*owner.*options" ${1} | cut -d ':' -f 3`
+	registerClassName=""
+	for register in ${registers}; do
+		if [[ ${register} == "owner" ]]; then
+			origin=`stringByAddingPercentEscape "${registerClassName}" ".*"`
+			destination=`stringByAddingPercentEscape "${registerClassName}" ""`
+			sed -i "" "s/\[.*NSBundle.*mainBundle.*loadNibNamed.*$origin.*owner.*options.*/\[\[NSClassFromString\(${destination}\) alloc\] init\];/g" $1
+			registerClassName=""
+		else
+			registerClassName=${registerClassName}${register}" "
+		fi
+	done
+}	
+
+function deleteResourceFileFromProject()
+{
+	projectFileDir=${Project_Dir%/*}
+	projectFiles=`find ${projectFileDir} -name "*.pbxproj" -type f`
+	for projectFile in ${projectFiles}; do
+		sed -i "" "/$1/d" ${projectFile}
+	done
+}
+
+function executeParseXib()
+{
+	headerFileDir=${1/%.xib/.h}
+	sourceFileDir=${1/%.xib/.m}
+	modifyIBOutletPropertyInSourceFile ${headerFileDir}
+	modifyIBOutletPropertyInSourceFile ${sourceFileDir}
+	modifyAwakeFromNibInSourceFile ${sourceFileDir}
+	modifyRegisterNibToClass ${sourceFileDir}
+	modifyNibInitialToCodeInitial ${sourceFileDir}
+	modifyBundleInitialToCodeInitial ${sourceFileDir}
+	python ${Parse_Resource} ${1} ${needloadConfiguration}
+	deleteResourceFileFromProject ${1##*/}
+	rm -rf ${1}
+}
+
+function main()
+{
+	startTime=$((`date +%s`))
+	ps -ef | grep "/Applications/Xcode.app/Contents/MacOS/Xcode" | grep -v grep | awk '{print $2}' | xargs kill -9
+
+	# add execute permission for parseResource file
+	chmod +x ${Project_Dir}/${Parse_Resource}
+
+	if [[ ${#File_Name} -gt 0 ]]; then
+		file_extend=${File_Name##*.}
+		if [[ ${file_extend} != 'xib' ]]; then
+			echo "can't parse ${file_extend} extension name"
+			return
+		fi
+
+		parseNibCount=1
+		executeParseXib ${Project_Dir}/${File_Name}
+	else
+		length=`expr ${#File_Dir} - 1`
+		module_Dir=${Project_Dir}
+		if [[ ${File_Dir:$length:1} == '/' ]]; then
+			module_Dir=${Project_Dir}/${File_Dir:0:$length}
+		else
+			module_Dir=${Project_Dir}/${File_Dir}
+		fi
+		
+		# echo "module_Dir=${module_Dir}"
+		All_Resource_File=`find ${module_Dir} -name "*.xib" -type f`
+		for Resource_File in $All_Resource_File; do
+			parseNibCount=`expr ${parseNibCount} + 1`
+			executeParseXib ${Resource_File}
+		done
+	fi
+
+	# remove py product pyc file
+	find ${Project_Dir}/NibProcessor -name "*.pyc" | xargs rm -rf
+
+	# open workspace
+	workspace=`ls ${Project_Dir%/*} | grep ".xcworkspace"`
+	open ${Project_Dir%/*}/${workspace}
+	
+	endTime=$((`date +%s`))
+	expressTime=`expr ${endTime} - ${startTime}`
+	echo "parse ${parseNibCount} xib file in all，time consumed：${expressTime} second"
+}
+
+# exec
+main
