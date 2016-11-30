@@ -107,7 +107,7 @@ class JHViewObject(JHBasicObject):
 		describle += self.setViewProperty(classViewName, 'exclusiveTouch', attribViewId.get('exclusiveTouch', 'NO'), 'NO')
 		describle += self.setViewProperty(classViewName, 'autoresizesSubviews', attribViewId.get('autoresizesSubviews', 'YES'), 'YES')
 		describle += self.setViewProperty(classViewName, 'autoresizingMask', self.getAutoresizingMask(attribViewId.get('autoresizingMask', {})), 'UIViewAutoresizingNone')
-		describle += self.setViewProperty(classViewName, 'clipsToBounds', attribViewId.get('clipsToBounds', 'NO'), 'YES')
+		describle += self.setViewProperty(classViewName, 'clipsToBounds', attribViewId.get('clipsToBounds', 'NO'), 'NO')
 		describle += self.setViewProperty(classViewName, 'alpha', attribViewId.get('alpha', '1.0'), '1.0')
 		describle += self.setViewProperty(classViewName, 'opaque', attribViewId.get('opaque', 'YES'), 'YES')
 		describle += self.setViewProperty(classViewName, 'clearsContextBeforeDrawing', attribViewId.get('clearsContextBeforeDrawing', 'YES'), 'YES')
@@ -115,6 +115,7 @@ class JHViewObject(JHBasicObject):
 		describle += self.setViewProperty(classViewName, 'contentMode', self.getContentModel(attribViewId.get('contentMode', {})), 'UIViewContentModeScaleToFill')
 		describle += self.setViewProperty(classViewName, 'translatesAutoresizingMaskIntoConstraints', attribViewId.get('translatesAutoresizingMaskIntoConstraints', 'YES'), 'YES')
 		describle += self.setViewProperty(classViewName, 'userInteractionEnabled', attribViewId.get('userInteractionEnabled', 'YES'), 'YES')
+		describle += self.setViewRuntimeProperty(classViewName, attribView)
 		return describle
 
 	def addViewAttribute(self, classViewName, attribView):
@@ -123,6 +124,48 @@ class JHViewObject(JHBasicObject):
 		describle = self.addBasicViewAttribute(classViewName, attribView)
 		describle += self.getViewConnection(classViewName, attribView)
 		
+		return describle
+
+	def setViewRuntimeProperty(self, classViewName, attribView):
+		describle = ""
+		classLayName = classViewName+".layer"
+
+		for runtimeProperty in attribView.get('userDefinedRuntimeAttributes',[]):
+			userDefine = runtimeProperty.get('userDefinedRuntimeAttribute', {})
+			if userDefine.get('type', '') == 'number':
+				userDefineValue = ""
+				if runtimeProperty.get('integer', '') != '':
+					userDefineValue = runtimeProperty.get('integer').get('value', '')
+					pass
+				elif runtimeProperty.get('real', '') != '':
+					userDefineValue = runtimeProperty.get('real').get('value', '')
+					pass
+				pass
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), userDefineValue, '')
+			elif userDefine.get('type', '') == 'point':
+				userDefineValue = runtimeProperty.get('point')
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), "CGPointMake("+userDefineValue.get('x', '0.0')+", "+userDefineValue.get('y', '0.0')+")", '')
+				pass
+			elif userDefine.get('type', '') == 'size':
+				userDefineValue = runtimeProperty.get('size')
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), "CGSizeMake("+userDefineValue.get('width', '0.0')+", "+userDefineValue.get('height', '0.0')+")", '')
+				pass
+			elif userDefine.get('type', '') == 'rect':
+				userDefineValue = runtimeProperty.get('rect')
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), "CGRectMake("+userDefineValue.get('x', '0.0')+", "+userDefineValue.get('y', '0.0')+userDefineValue.get('width', '0.0')+", "+userDefineValue.get('height', '0.0')+")", '')
+				pass
+			elif userDefine.get('type', '') == 'range':
+				userDefineValue = runtimeProperty.get('range')
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), "NSMakeRange("+userDefineValue.get('location', '0.0')+", "+userDefineValue.get('length', '0.0')+")", '')
+				pass
+			elif userDefine.get('type', '') == 'color':
+				userDefineValue = runtimeProperty.get('color')
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), self.getClassColor(userDefineValue), '')
+				pass
+			else:
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), userDefine.get('value', ''), '')
+				pass
+			pass
 		return describle
 
 	def getViewColor(self, classViewName, attribView):
@@ -138,7 +181,6 @@ class JHViewObject(JHBasicObject):
 				describle = self.getViewColorProperty(classViewName, attribView.get('color', {}))
 				pass
 			else:
-				# print 'attribView=', attribView
 				pass
 		else:
 			# print 'attribView=', attribView
@@ -173,7 +215,6 @@ class JHViewObject(JHBasicObject):
 				describle = self.setViewProperty(classViewName, outlet.get('property', ''), 'self', '')
 				pass
 			else:
-				# print 'attribView=', attribView
 				pass
 		else:
 			# print 'attribView=', attribView

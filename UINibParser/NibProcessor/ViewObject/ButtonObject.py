@@ -37,5 +37,63 @@ class JHButtonObject(JHControlObject):
 		# print 'attribView=', attribView
 
 		describle = JHControlObject.addViewAttribute(self, classViewName, attribView)
+		describle += self.addButtonViewAttribute(classViewName, attribView)
+		return describle
 
+	def addButtonViewAttribute(self, classViewName, attribView):
+		describle = ""
+		if attribView.has_key('states'):
+			if type(attribView.get('states')) == list:
+				for controlState in attribView.get('states', []):
+					describle += self.setControlSateInfos(classViewName, controlState)
+				pass
+			elif type(attribView.get('states')) == dict:
+				describle += self.setControlSateInfos(classViewName, attribView.get('states', {}))
+				pass
+			else:
+				pass
+			pass
+		return describle
+
+	def setControlSateInfos(self, classViewName, controlStates):
+		# print 'controlState=',controlState
+		
+		describle = ""
+		controlState = controlStates.get('state', {})
+		buttonState = self.getControlState(controlState.get('key','normal'))
+		if controlState.get('title', '') != '':
+			describle += self.addBlackCharacter()
+			describle += self.writeDescribleSyntax("["+classViewName+" setTitle:@"+"\""+controlState.get('title', '').encode('utf-8') +"\""+" forState:"+buttonState+"];")
+			pass
+
+		if controlState.get('backgroundImage','') != '':
+			describle += self.addBlackCharacter()
+			describle += self.writeDescribleSyntax("["+classViewName+" setBackgroundImage:[UIImage imageNamed:@"+"\""+controlState.get('backgroundImage', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
+			pass
+
+		if controlState.get('image', '') != '':
+			describle += self.addBlackCharacter()
+			describle += self.writeDescribleSyntax("["+classViewName+" setImage:[UIImage imageNamed:@"+"\""+controlState.get('image', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
+			pass
+
+		if controlStates.has_key('color'):
+			if type(controlStates.get('color')) == list:
+				for color in controlStates.get('color', []):
+					describle += self.getControlColorProperty(classViewName, color, buttonState)
+					pass
+				pass
+			elif type(controlStates.get('color')) == dict:
+				describle = self.getControlColorProperty(classViewName, controlStates.get('color', {}), buttonState)
+				pass
+			else:
+				pass
+		else:
+			# print 'controlState=', controlState
+			pass
+		return describle
+
+	def getControlColorProperty(self, classViewName, color, controlState):
+		colorTag = color.get('key', '')
+		describle = self.addBlackCharacter()
+		describle += self.writeDescribleSyntax("["+classViewName +" set"+colorTag[0].upper()+colorTag[1:]+":"+self.getClassColor(color)+" forState:"+controlState+"];")
 		return describle

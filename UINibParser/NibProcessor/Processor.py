@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # _*_ coding: UTF-8 _*_
 
+__author__ = 'Junhg'
+
 # create: 2016/10/18
 # version: 0.0.1
 # author: Junhg
@@ -9,6 +11,7 @@
 __author__ = 'Junhg'
 
 import os
+
 from ViewObject.CommonObject import JHCommomObject
 from ViewObject.ViewObject import JHViewObject
 from ViewObject.BasicObject import JHBasicObject
@@ -45,146 +48,34 @@ from ViewObject.WebViewObject import JHWebViewObject
 from ViewObject.CollectionReusableView import JHCollectionReusableView
 from ViewObject.CollectionViewCell import JHCollectionViewCell
 
-class JHBaseProcessor:
+class JHBaseProcessor(object):
 
-	'定义通用读取JHNibParser解析Objects属性的接口，主要将objects中的属性写入相应objc/swift相关的代码'
+	"define a common interface of reading JHNibParser class properties which will be \
+	written for corresponding objc/swift related code"
 
 	def __init__(self, nibParser):
-		self.resouce_file_dir = os.path.dirname(nibParser.resourceFileName)
-		# print 'resouce_file_dir=',self.resouce_file_dir
+		""" use the constructor to initialize properties of `JHBaseProcessor` class
+		args:
+			resourceDirname:absolute directory of resource file
+			className:class name of resource file
+			parseType:parse type of resource file
+		"""
+		self.resourceDirname = os.path.dirname(nibParser.resourceFileName)
 		self.className = nibParser.className
 		self.parseType = nibParser.parseType
 		pass
 
 	def classFileDir(self):
-		return self.resouce_file_dir + "/" + self.className + '.m'
+		return self.resourceDirname + "/" + self.className + '.m'
 
 	def classTempFileDir(self):
-		return self.resouce_file_dir + "/" + self.className + 'Temp.m'
+		return self.resourceDirname + "/" + self.className + 'Temp.m'
 
 	def readClassFile(self):
 		return open(self.classFileDir(), "r")
 
 	def readTempClassFile(self):
 		return open(self.classTempFileDir(), "w")
-
-	def allViewTags(self):
-		viewTags = ['view', 'label', 'tableViewCellContentView','segmentedControl', 'button', 'textField', 'slider', 'switch', 'customswitch','activityIndicatorView', 'progressView', 'pageControl', 'stepper', 'datePicker', 'MTKView', 'searchBar', 'tabBar', 'toolBar', 'navigationBar', 'stackView', 'tableView', 'tableViewCell', 'imageView', 'collectionView', 'textView', 'scrollView', 'visualEffectView', 'collectionViewCell']
-		pass
-
-	def viewObjectType(self, tag):
-		viewObject = JHBasicObject()
-		if tag == 'view' or tag == 'tableViewCellContentView':
-			viewObject = JHViewObject()
-			pass
-		elif tag == 'label':
-			viewObject = JHLabelObject()
-			pass
-		elif tag == 'segmentedControl':
-			viewObject = JHSegmentedControlObject()
-			pass
-		elif tag == 'button':
-			viewObject = JHButtonObject()
-			pass
-		elif tag == 'textField':
-			viewObject = JHTextFieldObject()
-			pass
-		elif tag == 'slider':
-			viewObject = JHSliderObject()
-			pass
-		elif tag == 'switch' or tag == 'customswitch':
-			viewObject = JHSwitchObject()
-			pass
-		elif tag == 'activityIndicatorView':
-			viewObject = JHActivityIndicatorObject()
-			pass
-		elif tag == 'progressView':
-			viewObject = JHProgressObject()
-			pass
-		elif tag == 'pageControl':
-			viewObject = JHPageControlObject()
-			pass
-		elif tag == 'stepper':
-			viewObject = JHStepperObject()
-			pass
-		elif tag == 'datePicker':
-			viewObject = JHDataPickerObject()
-			pass
-		elif tag == 'pickerView':
-			viewObject = JHPickerViewObject()
-			pass
-		elif tag == 'MTKView':
-			viewObject = JHMTKViewObject()
-			pass
-		elif tag == 'searchBar':
-			viewObject = JHSearchBarObject()
-			pass
-		elif tag == 'tabBar':
-			viewObject = JHTabBarObject()
-			pass
-		elif tag == 'toolBar':
-			viewObject = JHToolBarObject()
-			pass
-		elif tag == 'navigationBar':
-			viewObject = JHNavigationObject()
-			pass
-		elif tag == 'stackView':
-			viewObject = JHStackObject()
-			pass
-		elif tag == 'tableView':
-			viewObject = JHTableViewObject()
-			pass
-		elif tag == 'tableViewCell':
-			viewObject = JHTableViewCellObject()
-			pass
-		elif tag == 'imageView':
-			viewObject = JHImageViewObject()
-			pass
-		elif tag == 'collectionView':
-			viewObject = JHCollectionViewObject()
-			pass
-		elif tag == 'textView':
-			viewObject = JHTextViewObject()
-			pass
-		elif tag == 'scrollView':
-			viewObject = JHScrollViewObject()
-			pass
-		elif tag == 'visualEffectView':
-			viewObject = JHVisualEffectViewObject()
-			pass
-		elif tag == 'webView':
-			viewObject = JHWebViewObject()
-			pass
-		elif tag == 'glkView':
-			viewObject = JHGLKViewObject()
-			pass
-		elif tag == 'mapView':
-			viewObject = JHMapViewObject()
-			pass
-		elif tag == 'sceneKitView':
-			viewObject = JHSceneKitViewObject()
-			pass
-		elif tag == 'collectionReusableView':
-			viewObject = JHCollectionReusableView()
-			pass
-		elif tag == 'collectionViewCell':
-			viewObject = JHCollectionViewCell()
-			pass
-		else:
-			print 'tag=',tag
-			pass
-		return viewObject
-
-class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
-	'将parseResourceManager解析后的文件保存到实现文件中'
-
-	def __init__(self, nibParser):
-		JHBaseProcessor.__init__(self, nibParser)
-		self.outletViews = nibParser.outletViews
-		self.attribViews = nibParser.attribViews
-		self.needloadConfiguration = int(nibParser.needloadConfiguration)
-		self.allMethodNames = []
-		pass
 
 	def writeSyntaxWithSingleLineFeed(self, syntax, writeFileHandle):
 		writeFileHandle.write(syntax+self.newlineCharacter())
@@ -200,17 +91,59 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 
 	def writeDoubleBackCharacter(self, writeFileHandle):
 		writeFileHandle.write(self.addBlackCharacter())
-		pass 
+		pass
+
+	def allViewObject(self):
+		return ["view", "tableViewCellContentView", "label", "segmentedControl",
+		"button", "textField", "slider", "switch", "customswitch", "activityIndicatorView",
+		"progressView", "pageControl", "stepper", "datePicker", "pickerView", "MTKView",
+		"searchBar", "tabBar", "toolBar", "navigationBar", "stackView", "tableView", 
+		"tableViewCell", "imageView", "collectionView", "textView", "scrollView", "visualEffectView",
+		"webView", "glkView", "mapView", "sceneKitView", "collectionReusableView", "collectionViewCell"]
+
+	def viewObjectType(self, tag):
+		viewObject = tag
+		if tag == "tableViewCellContentView":
+			viewObject = "view"
+			pass
+		elif tag == "customswitch":
+			viewObject = "switch"
+			pass
+		else:
+			pass
+
+		return eval("JH"+viewObject[0].upper() + viewObject[1:]+"Object()")
+
+class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
+
+	"set parsed resourece data written as objective-c code, and attempts to insert all \
+	resourece files(including initialization、constarints definiton、attributes assignment、\
+	add all subviews etc) to the corresponding implementation file"
+
+	def __init__(self, nibParser):
+		""" use the constructor to initialize properties of `JHObjcProcessor` class 
+		args:
+			outletViews:gets all node vaules of `outlet` node in xib file.
+				(such as [{'destination':'','property':'','id':''},{...},...])
+			attribViews:gets all node values of all `view` node in xib file.
+				(such as [{'subviews':[{...}...]},{...},...])
+			resources:gets all node values of `resource` node in xib file.(such as {{...},...})
+			needloadConfiguration:indicates whether an alternate function for awakeFromNib neends to be loaded
+			parseType:xib file type, default value is controller
+			viewId: it's controller main view identify
+		"""
+		JHBaseProcessor.__init__(self, nibParser)
+		self.outletViews = nibParser.outletViews
+		self.attribViews = nibParser.attribViews
+		self.needloadConfiguration = int(nibParser.needloadConfiguration)
+		self.viewId = nibParser.viewId
+		pass
 
 	def processing(self):
 		# print 'attribViews=',self.attribViews
-		analyseAttrib = self.analyseAttribView(self.attribViews)
-		attribView = analyseAttrib[0]
-		subViews = analyseAttrib[1]
-		# print 'attribView=', attribView, 'subViews=',subViews
-		
+	
 		try:
-			subMethodNames = []
+			resourceInfos = ()
 			readFileHandle = self.readClassFile()
 			writeFileHandle = self.readTempClassFile()
 			line = readFileHandle.readline()
@@ -218,76 +151,65 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 			while line !='':
 				writeFileHandle.write(line)
 				line = line.strip()
-				if self.containObj(line,'@interface') and self.containObj(line,self.className):
+				if self.containObj(line, '@implementation') and self.containObj(line, self.className):
 					lineEdge = True
-					# self.loadIBOutletProperty(self.outletViews,subViews,writeFileHandle)
-				elif self.containObj(line,'@implementation') and self.containObj(line,self.className):
-					lineEdge = True
-					if len(subViews) > 0:
-						self.writeSyntaxWithDoubleLineFeed("#pragma mark - loadAllSubViews",writeFileHandle)
-						subMethodNames = self.loadAllSubView(subViews, writeFileHandle)
-					self.loadView(attribView, subMethodNames, subViews, writeFileHandle)
+					resourceInfos = self.loadAllResourceView(self.attribViews, writeFileHandle)
 					pass
 				elif line.find("[super viewDidLoad];") >= 0 and lineEdge:
-					if len(subMethodNames) > 0:
-						self.loadAllSubViewProperty('self.view', subMethodNames, writeFileHandle) 
-						if type(self.attribViewTagProperty(attribView)) == dict:
-							self.loadViewConstranit('self.view', subMethodNames, self.attribViewTagProperty(attribView).get('id', ''),attribView.get('constraints', []),writeFileHandle)
-							pass
+					self.loadAllSubViewProperty('self.view', resourceInfos[0], writeFileHandle) 
+					self.loadViewConstranit('self.view', resourceInfos[0], self.viewId, resourceInfos[1], writeFileHandle)
+					for methodName in resourceInfos[2]:
+						self.writeSingleBackCharacter(writeFileHandle)
+						self.writeSyntaxWithSingleLineFeed("[self "+methodName+"];", writeFileHandle)
 						pass
 					pass
-				elif self.containObj(line,'@end'):
+				elif self.containObj(line, '@end'):
 					lineEdge = False
 					pass
 				else:
 					pass
-
 				line = readFileHandle.readline()
 				pass
 		except Exception as e:
-			print "crashed when parser "+self.resouce_file_dir+self.className+".xib"
+			print "crashed when parser "+self.resourceDirname+self.className+".xib"
 			os.remove(self.classTempFileDir())
 			raise
 		else:
 			os.remove(self.classFileDir())
 			os.rename(self.classTempFileDir(),self.classFileDir())
 		finally:
-			print "finish parsor "+self.resouce_file_dir+"/"+self.className+".xib"
+			print "finish parsor "+self.resourceDirname+"/"+self.className+".xib"
 			readFileHandle.close()
 			writeFileHandle.close()
 			pass
 
-	# def loadIBOutletProperty(self, attribView, subView,writeFileHandle):
-	# 	# print 'subView=',subView
-	# 	for attrib in attribView:
-	# 		if attrib.get('property','') == 'view':
-	# 			continue
-	# 		else:
-	# 			classType = self.findSubViewWithTag(subView,attrib.get('destination',''))
-	# 			if len(classType) > 0:
-	# 				self.writeSyntaxWithSingleLineFeed("@property (nonatomic, strong) "+classType+" *"+attrib.get('property','')+";", writeFileHandle)
-	# 				pass
-	# 			pass
-	# 		pass
-	# 	pass
+	def loadAllResourceView(self, attribViews, writeFileHandle):
+		subMethodNames = []
+		constraints = []
+		addSubViews = []
 
-	# def findSubViewWithTag(self, attribViews, attributeProperty):
-	# 	for subAttribView in attribViews:
-	# 		for (tag,attrib) in subAttribView.items():
-	# 			# print 'tag=',tag,' attrib=',attrib
-	# 			if type(attrib) == list:
-	# 				propertyTag = self.findSubViewWithTag(attrib,attributeProperty)
-	# 				if len(propertyTag) > 0:
-	# 					return propertyTag
-	# 			elif type(attrib) == dict and attrib.get('id','') == attributeProperty:
-	# 				return self.objcClassNameType(tag)
-	# 			pass
-	# 		pass
-	# 	return ''
+		if len(attribViews):
+			self.writeSyntaxWithDoubleLineFeed("#pragma mark - loadAllSubViews",writeFileHandle)
+			pass
 
-	def loadView(self, attribView, subMethodNames, subViews, writeFileHandle):
+		for attribView in attribViews:
+			analyseAttrib = self.analyseAttribView(attribView)
+			viewPropety = self.attribViewTagProperty(analyseAttrib[0])
+			methodNames = self.loadAllSubView(analyseAttrib[1], writeFileHandle)
+			if (viewPropety.get('id', '') == self.viewId and self.parseType == 'controller') or self.parseType != 'controller':
+				subMethodNames = methodNames
+				constraints = analyseAttrib[0].get('constraints', [])
+				self.loadView(analyseAttrib[0], methodNames, analyseAttrib[1], writeFileHandle)
+			else:
+				methodName = self.loadSubView(analyseAttrib[0], methodNames, writeFileHandle)
+				addSubViews.append(methodName)
+			pass
+
+		return (subMethodNames, constraints, addSubViews)
+
+	def loadView(self, attribView, methodNames, subViews, writeFileHandle):
 		# print 'attribView=', attribView
-		# print "subMethodNames=",subMethodNames, 'subViews=', subViews
+		# print "methodNames=",methodNames, 'subViews=', subViews
 
 		classViewName = self.attribViewTag(attribView)
 		viewObject = self.viewObjectType(classViewName)
@@ -297,18 +219,16 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 			self.writeSyntaxWithDoubleLineFeed("#pragma mark - lifeCycle",writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed(viewObject.loadView(self.needloadConfiguration, attribView), writeFileHandle)
 
-			if len(subMethodNames) > 0:
+			if len(methodNames) > 0:
 				self.writeSyntaxWithDoubleLineFeed("#pragma mark - loadContentViewSubviews",writeFileHandle)
 				self.writeSyntaxWithSingleLineFeed("- (void)loadAllContentSubView",writeFileHandle)
 				self.writeSyntaxWithSingleLineFeed(self.leftBrackets(),writeFileHandle)
-				for subMethod in subMethodNames:
-					self.writeSingleBackCharacter(writeFileHandle)
-					self.writeSyntaxWithSingleLineFeed("[self "+subMethod+"];",writeFileHandle)
+				for subMethodNames in methodNames:
+					for subMethod in subMethodNames:
+						self.writeSingleBackCharacter(writeFileHandle)
+						self.writeSyntaxWithSingleLineFeed("[self "+subMethod+"];",writeFileHandle)
+						pass
 					pass
-				# contentAttrib = self.analyseAttribView(subViews)
-				# if type(self.attribViewTagProperty(contentAttrib[0])) == dict:
-				# 	self.loadViewConstranit('self.contentView', subMethodNames, self.attribViewTagProperty(contentAttrib[0]).get('id', ''), attribView.get('constraints', []), writeFileHandle)
-				# 	pass
 				self.writeSyntaxWithSingleLineFeed(self.rightBrackets(),writeFileHandle)
 				pass
 			pass
@@ -316,15 +236,15 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 			self.writeSyntaxWithSingleLineFeed(self.newlineCharacter(),writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed("#pragma mark - lifeCycle",writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed(viewObject.loadView(self.needloadConfiguration, attribView), writeFileHandle)
-			self.loadAllSubViewProperty('self', subMethodNames, writeFileHandle)
+			self.loadAllSubViewProperty('self', methodNames, writeFileHandle)
 			if type(self.attribViewTagProperty(attribView)) == dict:
-				self.loadViewConstranit('self', subMethodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
+				self.loadViewConstranit('self', methodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
 				pass
 			self.writeSyntaxWithSingleLineFeed(self.rightBrackets(),writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed("return self;",writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed(self.rightBrackets(),writeFileHandle)
 			pass
-		elif self.parseType == 'parseOther':
+		elif self.parseType == 'view':
 			self.writeSyntaxWithSingleLineFeed(self.newlineCharacter(),writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed("#pragma mark - lifeCycle",writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed(viewObject.loadInitialization(self.needloadConfiguration, attribView), writeFileHandle)
@@ -332,9 +252,9 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 			self.writeSyntaxWithSingleLineFeed("#pragma mark - load contentView subviews", writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed("- (void)loadAllContentSubView", writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed(self.leftBrackets(), writeFileHandle)
-			self.loadAllSubViewProperty('self', subMethodNames, writeFileHandle)
+			self.loadAllSubViewProperty('self', methodNames, writeFileHandle)
 			if type(self.attribViewTagProperty(attribView)) == dict:
-				self.loadViewConstranit('self', subMethodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
+				self.loadViewConstranit('self', methodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
 				pass
 			self.writeSyntaxWithSingleLineFeed(self.rightBrackets(),writeFileHandle)
 			pass
@@ -346,37 +266,28 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 
 	def loadAllSubView(self, attribViews, writeFileHandle):
 		methodNames = []
-		for subAttribView in attribViews:
-			attribView = {}
-			subViews = []
-			for (tag,attrib) in subAttribView.items():
-				if tag == 'subviews':
-					subViews = attrib
-					pass
-				else:
-					attribView[tag] = attrib
-					pass
+		for attribView in attribViews:
+			analyseAttrib = self.analyseAttribView(attribView)
+			subMethodeNames = []
+
+			if len(analyseAttrib[1]) > 0:
+				subMethodeNames = self.loadAllSubView(analyseAttrib[1], writeFileHandle)
 				pass
 
-			if len(subViews) > 0:
-				methodName = self.loadSubView(attribView, self.loadAllSubView(subViews, writeFileHandle), writeFileHandle)
-				pass
-			else:
-				methodName = self.loadSubView(attribView, [], writeFileHandle)
-				pass
-
-			methodNames.append(methodName);
-			self.allMethodNames.append(methodName)
+			methodName = self.loadSubView(analyseAttrib[0], subMethodeNames, writeFileHandle)
+			methods = {}
+			methods[methodName] = subMethodeNames
+			methodNames.append(methods);
 			# print 'attribView=', attribView
 			pass
 		return methodNames
 
-	def loadSubView(self, attribView, subMethodNames, writeFileHandle):
+	def loadSubView(self, attribView, methodNames, writeFileHandle):
 		# print 'attribView=',attribView ' subMethodNames=',subMethodNames
 
 		classViewName = self.loadViewProperty(attribView, writeFileHandle)
-		self.loadAllSubViewProperty(classViewName, subMethodNames, writeFileHandle)
-		self.loadViewConstranit(classViewName, subMethodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
+		self.loadAllSubViewProperty(classViewName, methodNames, writeFileHandle)
+		self.loadViewConstranit(classViewName, methodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
 		self.loadOutletProperty(classViewName, attribView, writeFileHandle)
 		self.writeSingleBackCharacter(writeFileHandle)
 		self.writeSyntaxWithSingleLineFeed("return "+classViewName+";",writeFileHandle)
@@ -408,21 +319,23 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		pass
 		return classViewName
 
-	def loadAllSubViewProperty(self, parentView, subMethodNames, writeFileHandle):
-		# print 'parentView=',parentView, ' subMethodNames=',subMethodNames
+	def loadAllSubViewProperty(self, parentView, methodNames, writeFileHandle):
+		# print 'parentView=',parentView, ' methodNames=',methodNames
 
-		for subMethod in subMethodNames:
-			self.writeSingleBackCharacter(writeFileHandle)
-			viewTag = self.attribViewMethodTag(subMethod)
-			classType = self.objcClassNameType(viewTag)
-			self.writeSyntaxWithSingleLineFeed(classType+" *"+subMethod+" = [self "+subMethod+"];", writeFileHandle)
-			self.writeSingleBackCharacter(writeFileHandle)
-			self.writeSyntaxWithSingleLineFeed("["+parentView+" addSubview:"+subMethod+"];", writeFileHandle)
-			pass
+		for subMethodNames in methodNames:
+			for subMethod in subMethodNames.keys():
+				self.writeSingleBackCharacter(writeFileHandle)
+				viewTag = self.attribViewMethodTag(subMethod)
+				classType = self.objcClassNameType(viewTag)
+				self.writeSyntaxWithSingleLineFeed(classType+" *"+subMethod+" = [self "+subMethod+"];", writeFileHandle)
+				self.writeSingleBackCharacter(writeFileHandle)
+				self.writeSyntaxWithSingleLineFeed("["+parentView+" addSubview:"+subMethod+"];", writeFileHandle)
+				pass
+			pass	
 		pass
 
-	def loadViewConstranit(self, parentView, subMethodNames, viewId, attribViews, writeFileHandle):
-		# print 'parentView=',parentView, ' subMethodNames=',subMethodNames
+	def loadViewConstranit(self, parentView, methodNames, viewId, attribViews, writeFileHandle):
+		# print 'parentView=',parentView, ' methodNames=',methodNames
 
 	 	for attribViewConstraint in list(attribViews):
 	 		# print 'attribViewConstraint=',attribViewConstraint
@@ -436,8 +349,8 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 	 		constant = attribView.get('constant', '0')
 	 		relation = attribView.get('relation', 'equal')
 
-	 		firstItemView = self.attribViewName(self.allMethodNames, firstItem)
-	 		secodeItemView = self.attribViewName(self.allMethodNames, secondItem)
+	 		firstItemView = self.attribViewName(methodNames, firstItem)
+	 		secodeItemView = self.attribViewName(methodNames, secondItem)
 	 		if viewId == secondItem:
 	 			secodeItemView = parentView
 	 			pass
@@ -452,13 +365,11 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 	 			secondAttribute = "notAnAttribute"
 	 			pass
 
-	 		print 'firstItem=', firstItem, 'secondItem=', secondItem, ' subMethodNames=',self.allMethodNames
-
 	 		constraintProperty = self.getClassOutletProperty(self.outletViews, attribView.get('id',''))
 	 		describle = self.constraintMake(firstItemView, secodeItemView, firstAttribute, secondAttribute, multiplier, relation, constant)
 	 		if len(constraintProperty) > 0:
 	 			self.writeSingleBackCharacter(writeFileHandle)
-	 			self.writeSyntaxWithSingleLineFeed(constraintProperty+" = "+describle+"];", writeFileHandle)
+	 			self.writeSyntaxWithSingleLineFeed(constraintProperty+" = "+describle+";", writeFileHandle)
 	 			self.writeSingleBackCharacter(writeFileHandle)
 	 			self.writeSyntaxWithSingleLineFeed("["+parentView+" addConstraint:"+constraintProperty+"];", writeFileHandle)
 	 			pass
@@ -490,15 +401,21 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		return outletProperty
 
 	def analyseAttribView(self, attribViews):
+		""" attend view tag and  current view subviews
+		args:
+			attribViews:
+		return:
+			attribView:
+			subView:
+		"""
 		attribView = {}
 		subView = []
-		for subAttribView in attribViews:
-			for (tag,attrib) in subAttribView.items():
-				if tag == 'subviews':
-					subView = attrib
-					pass
-				else:
-					attribView[tag] = attrib
-					pass
+		for (tag, attrib) in attribViews.items():
+			if tag == 'subviews':
+				subView = attrib
+				pass
+			else:
+				attribView[tag] = attrib
+				pass
 			pass
 		return (attribView, subView)

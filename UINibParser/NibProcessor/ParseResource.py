@@ -19,276 +19,328 @@ finally:
 import sys
 import os
 import commands
+
 from ViewObject.CommonObject import JHCommomObject
 from Processor import JHObjcProcessor
 
-class JHBaseParser():
-	'定义解析通用资源文件所需要的属性及接口'
-	# 描述: 采用构造函数初始化解析器属性
-	# propety:
-	#	__resourceFileName: 私有变量，解析的文件名
-	#	className: 实现类名,字符换类型（如"TestUIViewViewController"
+class JHBaseParser(object):
+	"define the attributes and interfaces required to parse a commom resource file"
+	
 	def __init__(self, resource_file_name):
+		""" use the constructor to initialize the parser properties
+		args:
+			resource_file_name:parse name of resource file（such as *.xib or *.storyboard）
+		properties:
+			resourceFileName:recevied file name
+			className:the class name of xib file name,you can get the value from 
+				customClass node of xib file, the initial vaule is empty
+		"""
 		self.resourceFileName = resource_file_name
 		self.className = ""
 
 	def parse(self):
 		pass
 
-class JHNibParser(JHBaseParser, JHCommomObject):
-	'解析xib文件，将xib中的资源抽离到实现文件中'
+class JHXibParser(JHBaseParser, JHCommomObject):
+	"extract the nodes in the parsed file into attributes of JHXibParser class"
 	
-	# 描述：	采用构造函数初始化该解析器
-	# 		将__resourceFileName文件的资源文件中的试图解析到属性变量中
-	# propety:
-	#	outletViews:xib所持有的outlet变量，数组类型
-	#   如下列的所示：[{'destination': 'Jfs-zd-G9X', 'property': 'bottomView', 'id': 'Net-4U-kRv'},
-	#    {'destination': 'i5M-Pr-FkT', 'property': 'view', 'id': 'VQG-gN-rva'}]
-	#   attribViews:xib所持有的控件属性，数组类型
-	#	如下列的所示：[{'subviews':[{'autoresizingMask':{'flexibleMaxY':'YES','key':'autoresizingMask','flexibleMaxX':'YES'},'color':{'blue':'0.27450980390000002','colorSpace':'calibratedRGB','green':'0.75294117650000003','key':'backgroundColor','alpha':'1','red':'1'},'frame':{'minY':'79','height':'128','key':'frameInset','width':'375'},'view':{'fixedFrame':'YES','translatesAutoresizingMaskIntoConstraints':'NO','contentMode':'scaleToFill','id':'Jfs-zd-G9X'}},],
-	#				'point':{'y':'51.5','x':'25.5','key':'canvasLocation'},'color':{'blue':'1','colorSpace':'custom','green':'1','key':'backgroundColor','alpha':'1','customColorSpace':'sRGB','red':'1'},'autoresizingMask':{'heightSizable':'YES','widthSizable':'YES','key':'autoresizingMask'},'rect':{'y':'0.0','x':'0.0','height':'667','key':'frame','width':'375'},'view':{'clearsContextBeforeDrawing':'NO','contentMode':'scaleToFill','id':'i5M-Pr-FkT'}}]
 	def __init__(self, resource_file_name, needloadConfiguration):
+		""" use the constructor to initialize the xib parser properties
+		args:
+			resource_file_name:parse name of resource file（such as *.xib）
+		properties:
+			outletViews:gets all node vaules of `outlet` node in xib file.
+				(such as [{'destination':'','property':'','id':''},{...},...])
+			attribViews:gets all node values of all `view` node in xib file.
+				(such as [{'subviews':[{...}...]},{...},...])
+			resources:gets all node values of `resource` node in xib file.(such as {{...},...})
+			needloadConfiguration:indicates whether an alternate function for awakeFromNib neends to be loaded
+			parseType:xib file type, default value is controller
+			viewId: it's controller main view identify
+		"""
 		JHBaseParser.__init__(self, resource_file_name)
 		self.outletViews = []
 		self.attribViews = []
 		self.resources = []
 		self.needloadConfiguration = needloadConfiguration
 		self.parseType = "controller"
+		self.viewId = ""
 		pass
 
-	# 描述：解析资源文件，将相关的属性字段通过fileHandleManager写到文件中
 	def parse(self):
+		""" resolve the node named `objects` and `resources` under file named (*.xib) and
+		bind data to the corresponding properties of JHXibParser class
+		"""
 		try:
 			tree = ElementTree.parse(self.resourceFileName)
 		except Exception as e:
-			print 'can not parse resource file name:', self.resourceFileName, 'please make user load right resource file name' 
+			print "can\'t parse resource file name:"+self.resourceFileName+",please make user load right resource file name"
 			sys.exit(1)
 			raise
 		else:
 			root = tree.getroot()
-			nibObject = root.findall('objects')
-			self.parseNibObjectNode(nibObject)
+			objects = root.findall('objects')
+			self.parseObjectsNode(list(objects))
 
 			resourceObject = root.findall('resources')
-			self.parseResourceObjectNode(resourceObject)
-			pass
+			self.parseResourcesNode(list(resourceObject))
 		finally:
-			pass
-
-	def parseResourceObjectNode(self, resourecObject):
-		for element in list(resourecObject):
 			pass
 		pass
 
-	def parseNibObjectNode(self, resourecObject):
-		# 罗列出resourecObject中的objects
-		for element in list(resourecObject):
+	def parseResourcesNode(self, resourecObjects):
+		"""
+		args:
+			resourecObjects:
+		"""
+		for element in resourecObjects:
+			pass
+		pass
+
+	def parseObjectsNode(self, resourecObjects):
+		"""
+		args:parse `object` node
+			resourecObjects:lists all nodes under the objects node and resolves them, you can
+		get the class name of current xib file from the `customClass` node under the `objects` node
+		"""
+		for element in resourecObjects:
 			for subElememt in element:
 				# print 'list=', list(subElememt)
 				if subElememt.tag == 'view':
-					# 处理普通的controller的xib类型
-					customClass = subElememt.attrib.get('customClass', '')
-					if len(customClass) > 0:
-						self.parseType = 'parseOther'
-						self.className = customClass
-						pass
-					else:
-						self.parseType = 'controller'
-						pass
-					
-					attribView = self.parseResourceViewObjectNode(list(subElememt))
+					self.getParseClassName(subElememt.tag, subElememt.attrib)
+					attribView = self.parseViewNode(list(subElememt))
 					attribView[subElememt.tag] = subElememt.attrib
 					self.attribViews.append(attribView)
 					# print 'attribView=', self.attribViews
 					pass
 				elif subElememt.tag == 'placeholder':
-					# 处理获取controller的类名
 					if subElememt.attrib.get('placeholderIdentifier','') == 'IBFilesOwner':
-						self.className = subElememt.attrib.get('customClass', '')
+						self.getParseClassName('controller', subElememt.attrib)
 						pass
-					self.parseResourcePlaceholderObjectNode(list(subElememt))
+					
+					self.parsePlaceholderObjectNode(list(subElememt))
 					pass
 				elif subElememt.tag == 'tableViewCell':
-					self.parseType = "tableViewCell"
-					self.className = subElememt.attrib.get('customClass', '')
-					# 处理UITableViewCell的xib类型
-					attribView = self.parseResourceTableContentViewWithViewTag(list(subElememt),'tableViewCellContentView')
+					self.getParseClassName(subElememt.tag, subElememt.attrib)
+					attribView = self.parseTableViewCellNode(list(subElememt))
 					attribView[subElememt.tag] = subElememt.attrib
 					self.attribViews.append(attribView)
 					# print 'attribView=', self.attribViews
 					pass
 				elif subElememt.tag == 'collectionReusableView':
-					self.parseType = 'collectionReusableView'
-					self.className = subElememt.attrib.get('customClass', '')
-					# 处理UICollectionReusableView的xib类型
-					attribView = self.parseResourceViewObjectNode(list(subElememt))
+					self.getParseClassName(subElememt.tag, subElememt.attrib)
+					attribView = self.parseViewNode(list(subElememt))
 					attribView[subElememt.tag] = subElememt.attrib
 					self.attribViews.append(attribView)
 					# print 'attribView=', self.attribViews
 					pass
 				elif subElememt.tag == 'collectionViewCell':
-					self.parseType = 'collectionViewCell'
-					self.className = subElememt.attrib.get('customClass', '')
-					# 处理UICollectionViewCell的xib类型
-					attribView = self.parseResourceCollectionContentView(list(subElememt),'view', subElememt.attrib.get('id',''))
+					self.getParseClassName(subElememt.tag, subElememt.attrib)
+					attribView = self.parseCollectionViewCellNode(list(subElememt), subElememt.attrib.get('id',''))
 					attribView[subElememt.tag] = subElememt.attrib
 					self.attribViews.append(attribView)
 					# print 'attribView=', self.attribViews
 					pass
 				else:
-					# 暂时在xib中未发现存在的类型，直接过滤掉
+					# Temporarily not found the type in the xib file and directly filter out
 					pass
 			pass
 		# print 'className=', self.className
 		pass
 
-	def parseResourcePlaceholderObjectNode(self, resourecObject):
-		for element in resourecObject:
+	def getParseClassName(self, attribTag, attribValue):
+		""" set parse type and class name
+		arg:
+			attribTag:resolve the type of node, there are controller、view、collectionReusableView、tableViewCell、collectionViewCell five types
+			attribValue:attibute of node
+		"""
+		if len(attribValue.get('customClass', '')):
+			self.parseType = attribTag
+			self.className = attribValue.get('customClass', '')
+			pass
+		pass
+
+	def parsePlaceholderObjectNode(self, resourecObjects):
+		""" parses data of `placeholder` node under `objects` node and assigned to `outletViews` 
+		property of `JHXibParser` class
+		"""
+		for element in resourecObjects:
 			for subElement in list(element):
 				if subElement.tag == 'outlet':
+					if subElement.attrib.get('property', '') == 'view':
+						self.viewId = subElement.attrib.get('destination', '')
+						pass
 					self.outletViews.append(subElement.attrib)
 				pass
-			
+
 			pass
 		# print 'outletViews=', self.outletViews
 		pass
 
-	def parseResourceTableContentViewWithViewTag(self, resourecViewObject, viewTag):
+	def parseTableViewCellNode(self, resourecObjects):
+		""" parses data of `tableViewCell` node under `objects` node and assigned to `attribViews` 
+		property of `JHXibParser` class
+		args:
+			resourecObjects: all nodes of `tableViewCell` node
+		"""
 		attribView = {}
-		for element in resourecViewObject:
-			if element.tag == viewTag:
+		for element in resourecObjects:
+			if element.tag == 'tableViewCellContentView':
 				subAttribViews = []
 				contentViewAttribute = {}
 				contentViewAttribute[element.tag] = element.attrib
-				contentViewAttribute.update(self.parseResourceViewObjectNode(list(element)))
+				contentViewAttribute.update(self.parseViewNode(list(element)))
 				subAttribViews.append(contentViewAttribute)
 				attribView['subviews'] = subAttribViews
 				pass
 			elif element.tag == 'connections':
-				attribView[element.tag] = self.parseResoureConnectionsObjectNode(list(element))
+				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
 				pass
 			elif element.tag == 'constraints':
-				attribView[element.tag] = self.parseResourceConstraintObjectNode(list(element))
-				# print 'attributedString =', attribView[element.tag]
+				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
+				pass
+			elif element.tag == 'userDefinedRuntimeAttributes':
 				pass
 			else:
-				attribView[element.tag] = element.attrib
+				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
+				self.parseViewPropetyNode(attribView, element.tag, element.attrib)
 				pass
 			pass
-
 		return attribView
 
-	def parseResourceCollectionContentView(self, resourecViewObject, viewTag, parentId):
+	def parseCollectionViewCellNode(self, resourecObjects, parentId):
+		""" parses data of `collectionViewCell` node under `objects` node and assigned to `attribViews` 
+		property of `JHXibParser` class
+		args:
+			resourecObjects: all nodes of `collectionViewCell` node
+			parentId: value of `collectionViewCell` node
+		"""
 		attribView = {}
-		constraints = []
 		contentView = {}
-		for element in resourecViewObject:
-			if element.tag == viewTag:
+		for element in resourecObjects:
+			if element.tag == 'view':
 				element.attrib['id'] = parentId
 				contentView[element.tag] = element.attrib
-				contentView.update(self.parseResourceViewObjectNode(list(element)))
+				contentView.update(self.parseViewNode(list(element)))
 				
 				subAttribViews = []
 				subAttribViews.append(contentView)
 				attribView['subviews'] = subAttribViews
 				pass
 			elif element.tag == 'connections':
-				attribView[element.tag] = self.parseResoureConnectionsObjectNode(list(element))
+				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
 				pass
 			elif element.tag == 'constraints':
-				constraints = self.parseResourceConstraintObjectNode(list(element))
-				# print 'attributedString =', attribView[element.tag]
+				contentView['constraints'] = self.parseViewListPropertyNode(list(element))
+				pass
+			elif element.tag == 'userDefinedRuntimeAttributes':
+				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
 				pass
 			else:
-				attribView[element.tag] = element.attrib
+				self.parseViewPropetyNode(attribView, element.tag, element.attrib)
 				pass
 			pass
-
-		contentView['constraints'] = constraints
-
 		return attribView
 
-	def parseResourceViewObjectNode(self, resourecViewObject):
-		# 解析xib上的view及subViews
+	def parseViewNode(self, resourecViewObject):
+		""" parses data of `tableViewCell` node under `objects` node and assigned to `attribViews` 
+		property of `JHXibParser` class
+		args:
+			resourecObjects: all nodes of `tableViewCell` node
+		"""
 		attribView = {}
 		for element in resourecViewObject:
 			if element.tag == 'subviews':
-				attribView[element.tag] = self.parseResourceSubViewObjectNode(list(element))
-				# print 'tag=',element.tag, 'resourecObject=',list(element), 'element=',element
+				attribView[element.tag] = self.parseSubViewsNode(list(element))
 				# print 'subviews =', attribView[element.tag]
 				pass
 			elif element.tag == 'constraints':
-				attribView[element.tag] = self.parseResourceConstraintObjectNode(list(element))
+				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
 				# print 'attributedString =', attribView[element.tag]
 				pass
 			elif element.tag == 'attributedString':
-				attribView[element.tag] = self.parseResourceAttributeStringObjectNode(list(element))
+				attribView[element.tag] = self.parseAttributeStringNode(list(element))
 				# print 'attributedString =', attribView[element.tag]
 				pass
 			elif element.tag == 'connections':
-				attribView[element.tag] = self.parseResoureConnectionsObjectNode(list(element))
+				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
 				# print 'attributedString =', attribView[element.tag]
 				pass
 			elif element.tag == 'collectionViewFlowLayout':
-				attribView[element.tag] = self.parsecollectionViewFlowLayoutObjectNode(list(element),element.tag, element.attrib)
+				attribView[element.tag] = self.parsecollectionViewFlowLayoutNode(list(element),element.tag, element.attrib)
 				# print 'attributedString =', attribView[element.tag]
 				pass
-			else:
-				# 处理含有相同的tag字段
-				if attribView.has_key(element.tag):
-					# print 'element.tag=',element.tag,'attribView=',attribView
-					sameElement = attribView.get(element.tag)
-					if type(sameElement) == list:
-						sameElement.append(element.attrib)
-						pass
-					elif type(sameElement) == dict:
-						theSameElement = []
-						theSameElement.append(sameElement)
-						theSameElement.append(element.attrib)
-						attribView[element.tag] = theSameElement
-						pass
-					else:
-						pass
-					pass
-				else:
-					attribView[element.tag] = element.attrib
-					pass
+			elif element.tag == 'state':
+				states = {}
+				states[element.tag] = element.attrib
+				states.update(self.parseViewNode(list(element)))
+				self.parseViewPropetyNode(attribView, 'states', states)
 				pass
+			elif element.tag == 'userDefinedRuntimeAttributes':
+				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
+				pass
+			else:
+				self.parseViewPropetyNode(attribView, element.tag, element.attrib)
 			pass
 
 		return attribView
 
-	def parseResourceSubViewObjectNode(self, resourecObject):
-		# 解析view上的subView
+	def parseSubViewsNode(self, resourceObjects):
+		""" parse `subviews` node 
+		"""
 		allAttribViews = []
-		for element in resourecObject:
+		for element in resourceObjects:
 			# print 'tag=',element.tag, 'attrib=', list(element)
 			if self.judgementViewTag(element.tag):
-				attribView = self.parseResourceViewObjectNode(list(element))
+				attribView = self.parseViewNode(list(element))
 				attribView[element.tag] = element.attrib
-				# 添加element.tag下的其他属性
 				allAttribViews.append(attribView)
 				pass
 			pass
 		return allAttribViews
 
-	def parseResourceConstraintObjectNode(self, resourecObject):
-		# 解析Ojbect的约束
-		constraints = []
-		for element in resourecObject:
-			constraint = {}
-			constraint[element.tag] = element.attrib
-			constraints.append(constraint)
-			pass
-		return constraints
+	def parseViewPropetyNode(self, attribView, viewTag, viewValue):
 
-	def parseResourceAttributeStringObjectNode(self, resourecObject):
+		if attribView.has_key(viewTag):
+			# print 'viewTag=',viewTag,'attribView=',attribView
+			sameElement = attribView.get(viewTag)
+			if type(sameElement) == list:
+				sameElement.append(viewValue)
+				pass
+			elif type(sameElement) == dict:
+				theSameElement = []
+				theSameElement.append(sameElement)
+				theSameElement.append(viewValue)
+				attribView[viewTag] = theSameElement
+				pass
+			else:
+				pass
+			pass
+		else:
+			attribView[viewTag] = viewValue
+			pass
+		pass
+
+	def parseViewListPropertyNode(self, resourceObjects):
+		# 解析Ojbect的约束
+		properties = []
+		for element in resourceObjects:
+			viewProperty = {}
+			viewProperty[element.tag] = element.attrib
+			if element.tag == 'outlet':
+				self.outletViews.append(element.attrib)
+				pass
+			properties.append(viewProperty)
+			pass
+		return properties
+
+	def parseAttributeStringNode(self, resourceObjects):
 		# 解析UILable的AttributeString属性
 		attributeStrings = []
-		for element in resourecObject:
+		for element in resourceObjects:
 			attributedContent = {}
 			attributedContent[element.tag] = element.attrib
-			attributedString = self.parseResourceAttributeStringObjectNode(list(element))
+			attributedString = self.parseAttributeStringNode(list(element))
 			for attribute in attributedString:
 				attributedContent.update(attribute)
 				pass
@@ -298,36 +350,31 @@ class JHNibParser(JHBaseParser, JHCommomObject):
 		
 		return attributeStrings
 
-	def parseResoureConnectionsObjectNode(self, resourecObject):
-		connections = []
-		for element in resourecObject:
-			connect = {}
-			connect[element.tag] = element.attrib
-
-			# 特殊处理情况
-			# 对tableViewCell这类型的IBoutlet放置位置坐处理
-			if element.tag == 'outlet':
-				self.outletViews.append(element.attrib)
-				pass
-
-			connections.append(connect)
-			pass
-		return connections
-
-	def parsecollectionViewFlowLayoutObjectNode(self, resourecObject, tag, attrib):
+	def parsecollectionViewFlowLayoutNode(self, resourceObjects, tag, attrib):
+		""" 
+		"""
 		element = {}
 		element[tag] = attrib
 		propertyElement = {}
-		propertyElement['property'] = self.parseResourceViewObjectNode(resourecObject)
+		propertyElement['property'] = self.parseViewNode(resourceObjects)
 		element.update(propertyElement)
 		return element
+
+	def parseViewListContainObjectPropertyNode(self, resourceObjects):
+		properties = []
+		for element in resourceObjects:
+			viewProperty = {}
+			viewProperty[element.tag] = element.attrib
+			viewProperty.update(self.parseViewNode(list(element)))
+			properties.append(viewProperty)
+			pass
+		return properties
 # exec
 
 if __name__ == '__main__':
-	# 解析nib文件
-	nibParser = JHNibParser(sys.argv[1], sys.argv[2])
-	nibParser.parse()
+	
+	parser = JHXibParser(sys.argv[1], sys.argv[2])
+	parser.parse()
 
-	# processor解析后的属性
-	processor = JHObjcProcessor(nibParser)
+	processor = JHObjcProcessor(parser)
 	processor.processing()

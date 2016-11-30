@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # _*_ coding: UTF-8 _*_
 
+__author__ = 'Junhg'
+
 # create: 2016/10/18
 # modify: 2016/10/18
 # version: 0.0.1
@@ -9,7 +11,7 @@
 # 
 __author__ = 'Junhg'
 
-class JHCommomObject():
+class JHCommomObject(object):
 	def __init__(self):
 		pass
 
@@ -75,18 +77,36 @@ class JHCommomObject():
 	def attribViewMethodTag(self, viewMethodName):
 		splits = viewMethodName.split('__')
 		return splits[0]
+	
+	def attributeSubViewNames(self, subView, methodNames, propertyId):
 
-	def attribViewName(self, viewMethodNames, propertyId):
+		i=0
+		for subMethodNames in methodNames:
+			for viewMethodName in subMethodNames.keys():
+				if propertyId.replace('-', '_') == self.attribViewMethodPropertyId(viewMethodName):
+					return "["+subView+".subviews objectAtIndex:"+str(i)+"]"
+				subViewMethodNames = self.attributeSubViewNames("["+subView+".subviews objectAtIndex:"+str(i)+"]", subMethodNames[viewMethodName], propertyId)
+				i = i + 1
+				if len(subViewMethodNames):
+					return subViewMethodNames
+				pass
+			pass
+			
+		return ""
+
+	def attribViewName(self, methodNames, propertyId):
 		# print 'viewMethodNames=',viewMethodNames, 'propertyId=',propertyId
-		
-		for viewMethodName in viewMethodNames:
-			if type(viewMethodName) == list:
-				return self.attribViewName(viewMethodName, propertyId)
-			else:
+
+		for subMethodNames in methodNames:
+			for viewMethodName in subMethodNames.keys():
 				if propertyId.replace('-', '_') == self.attribViewMethodPropertyId(viewMethodName):
 					return viewMethodName
-
+				subViewMethodNames = self.attributeSubViewNames(viewMethodName, subMethodNames[viewMethodName], propertyId)
+				if len(subViewMethodNames):
+					return subViewMethodNames
+				pass
 			pass
+
 		return ""
 
 	def attribViewNameId(self, viewMethodNames, propertyId):
@@ -97,11 +117,13 @@ class JHCommomObject():
 		return ""
 		
 	def findAttribViewTagAndProperty(self, attribView):
+		# print 'attribView=', attribViewName
+
 		for (key,value) in attribView.items():
 			if len(self.objcClassNameType(key)) > 0:
 				return (key,value);
 			pass
-		pass
+		
 		return ("","")
 
 	def objcClassNameType(self, tag):

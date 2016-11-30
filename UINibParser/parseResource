@@ -53,7 +53,11 @@ function stringByAddingPercentEscape()
 		if [[ "${character}" == "(" ]] || [[ "${character}" == ")" ]] || [[ "${character}" == "[" ]] || [[ "${character}" == "]" ]] || [[ "${character}" == '"' ]]; then
 			escapeCharacter=${escapeCharacter}"$2\\"${character}
 		else
-			escapeCharacter=${escapeCharacter}${character}
+			if [[ "${character}" == '"' ]]; then
+				escapeCharacter=${escapeCharacter}"\\"${character}
+			else
+				escapeCharacter=${escapeCharacter}${character}
+			fi
 		fi
 	done
 	

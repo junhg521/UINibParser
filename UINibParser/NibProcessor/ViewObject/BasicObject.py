@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # _*_ coding: UTF-8 _*_
 
+__author__ = 'Junhg'
+
 # create: 2016/10/22
 # version: 0.0.1
 # author: Junhg
@@ -522,11 +524,11 @@ class JHBasicObject(JHCommomObject):
 		return contentMode
 
 	def setViewProperty(self, classViewName, key, attribValue, defaultValue):
-
+		describle = ""
 		if attribValue != defaultValue and len(key):
 			describle = self.addBlackCharacter()
 			describle += self.writeDescribleSyntax(classViewName+"."+key+" = "+attribValue+";")
-			return describle
-		else:
-			return ""
+			pass
+		return describle
+		
 
