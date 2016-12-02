@@ -164,7 +164,7 @@ class JHBasicObject(JHCommomObject):
 			font = "[UIFont systemFontOfSize:"+fontDescription.get('size', '17')+"]"
 			pass
 		elif fontDescription.get('name', '') != '':
-			font = " [UIFont fontWithName:@\""+fontDescription.get('name')+"\" size:"+fontDescription.get('pointSize')+"]"
+			font = " [UIFont fontWithName:@\""+fontDescription.get('name')+"\" size:"+fontDescription.get('size', '17')+"]"
 			pass
 		else:
 			print 'fontDescription = ', fontDescription

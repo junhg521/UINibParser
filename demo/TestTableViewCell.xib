@@ -44,9 +44,6 @@
                     <constraint firstItem="Iu9-C2-2mL" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="9" id="tvx-XG-Y6U"/>
                 </constraints>
             </tableViewCellContentView>
-            <connections>
-                <outlet property="titleLabel2" destination="OoV-LK-xYF" id="oPh-uH-ehZ"/>
-            </connections>
         </tableViewCell>
     </objects>
 </document>

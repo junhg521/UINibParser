@@ -197,7 +197,13 @@ function main()
 
 	# open workspace
 	workspace=`ls ${Project_Dir%/*} | grep ".xcworkspace"`
-	open ${Project_Dir%/*}/${workspace}
+	if [[ $workspace != "" ]]; then
+		open ${Project_Dir%/*}/$workspace
+	else
+		codeproj=`ls ${Project_Dir%/*} | grep "..xcodeproj"`
+		open ${Project_Dir%/*}/$codeproj
+	fi
+	
 	
 	endTime=$((`date +%s`))
 	expressTime=`expr ${endTime} - ${startTime}`
