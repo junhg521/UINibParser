@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TestViewController">
+            <connections>
+                <outlet property="bottomView" destination="o2C-Tq-mjs" id="chs-AT-ae1"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="VQG-gN-rva"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o2C-Tq-mjs">
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="uko-4d-Ynw"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment content="11111">
+                            <attributes>
+                                <color key="NSColor" red="0.95750388687315058" green="1" blue="0.31427992668005555" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" metaFont="system" size="17"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="dfasdfdsas">
+                            <attributes>
+                                <color key="NSColor" red="1" green="0.44442677365707706" blue="0.70589291901244677" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="21" name=".AppleSystemUIFont"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="dafdasfd">
+                            <attributes>
+                                <color key="NSColor" red="1" green="0.44442677365707706" blue="0.70589291901244677" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" size="8" name=".AppleSystemUIFont"/>
+                            </attributes>
+                        </fragment>
+                        <fragment content="1111">
+                            <attributes>
+                                <color key="NSColor" red="0.24029153002500503" green="1" blue="0.42583961730351372" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" metaFont="system" size="17"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4444444444444" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d89-mR-M6E">
+                    <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2222222222" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hgB-KH-Ode">
+                    <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="333333333333333" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MbM-EM-Ec6">
+                    <color key="backgroundColor" red="0.4644442473" green="1" blue="0.25169882970000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="MbM-EM-Ec6" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="11L-Ew-npr"/>
+                <constraint firstItem="hgB-KH-Ode" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="60" id="Bo7-Wy-tOk"/>
+                <constraint firstItem="d89-mR-M6E" firstAttribute="leading" secondItem="o2C-Tq-mjs" secondAttribute="leading" id="Bzu-ZW-Z2V"/>
+                <constraint firstItem="o2C-Tq-mjs" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="60" id="aAP-Hz-Fzo"/>
+                <constraint firstItem="MbM-EM-Ec6" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="aa5-fD-WCm"/>
+                <constraint firstItem="d89-mR-M6E" firstAttribute="top" secondItem="o2C-Tq-mjs" secondAttribute="bottom" constant="44" id="jAa-Aw-2yl"/>
+                <constraint firstAttribute="trailing" secondItem="hgB-KH-Ode" secondAttribute="trailing" constant="30" id="y7g-jz-AxQ"/>
+                <constraint firstItem="o2C-Tq-mjs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="yeu-jE-jFx"/>
+            </constraints>
+            <point key="canvasLocation" x="-228" y="-147"/>
+        </view>
+    </objects>
+</document>
