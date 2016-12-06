@@ -184,7 +184,7 @@ function loadProjectDir()
 {
 	declare local relativePath=""
 	if [[ -n $resourceFileName ]]; then
-		relativePath=${resourceFileName##*/}
+		relativePath=${resourceFileName%/*}
 	elif [[ -n $resourceFileDir ]]; then
 		relativePath=$resourceFileDir
 	fi
@@ -236,9 +236,9 @@ function main()
 		
 		# echo "module_Dir=${module_Dir}"
 		All_Resource_File=`find ${module_Dir} -name "*.xib" -type f`
-		for Resource_File in $All_Resource_File; do
+		for resourceFile in $All_Resource_File; do
 			parseNibCount=`expr ${parseNibCount} + 1`
-			executeParseXib ${Resource_File}
+			executeParseXib ${resourceFile}
 		done
 
 		AllResourceFiles=(${All_Resource_File})
