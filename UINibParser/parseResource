@@ -13,13 +13,31 @@
 export LC_CTYPE=C 
 export LANG=C
 
-declare Project_Dir=`echo $PWD`
-declare Parse_Resource="NibProcessor/parseResource.py"
-declare File_Name=""
-declare File_Dir=""
+declare currentDir=`echo $PWD`
+declare projectDir=""
+declare absolutePath=${currentDir}
+declare parseResource="NibProcessor/parseResource.py"
+declare resourceFileName=""
+declare resourceFileDir=""
 declare parseObjcType="objc"
-declare parseNibCount=0
 declare needloadConfiguration=0
+
+if [[ $# -lt 1 ]]; then
+	echo "Usage: args [-o] [-s] [-f fileName] [-d fileDir]"
+    echo "-o means parse resource file adapte objc syntax, defalut adapte objc syntax"
+    echo "-s means parse resource file adapte swift syntax, you should use'-s' if you want parse resource file to switf syntax"
+    echo "-f means parese resource file name"
+    echo "-d means parse all resouce file in directory"
+    exit 1
+elif [[ $1 =~ "-*" ]]; then
+	echo "$1"
+	echo "Usage: args [-o] [-s] [-f fileName] [-d fileDir]"
+    echo "-o means parse resource file adapte objc syntax, defalut adapte objc syntax"
+    echo "-s means parse resource file adapte swift syntax, you should use'-s' if you want parse resource file to switf syntax"
+    echo "-f means parese resource file name"
+    echo "-d means parse all resouce file in directory"
+    exit 1
+fi
 
 while getopts ":osd:f:" option; do
 	case $option in
@@ -31,14 +49,19 @@ while getopts ":osd:f:" option; do
 			echo "exchange xib file to swift code is not accpted for the moment"
 			;;
 		f) 
-			File_Name=${OPTARG}
+			resourceFileName=${OPTARG}
 			;;
 		d)
-			File_Dir=${OPTARG}
+			resourceFileDir=${OPTARG}
 			;;
 		\? )
-			echo "Invalid option: -$OPTARG"
-			;;
+			echo "Usage: args [-o] [-s] [-f fileName] [-d fileDir]"
+    		echo "-o means parse resource file adapte objc syntax, defalut adapte objc syntax"
+    		echo "-s means parse resource file adapte swift syntax, you should use'-s' if you want parse resource file to switf syntax"
+    		echo "-f means parese resource file name"
+    		echo "-d means parse all resouce file in directory"
+   			exit 1
+            ;;
 	esac
 done
 
@@ -136,8 +159,7 @@ function modifyBundleInitialToCodeInitial()
 
 function deleteResourceFileFromProject()
 {
-	projectFileDir=${Project_Dir%/*}
-	projectFiles=`find ${projectFileDir} -name "*.pbxproj" -type f`
+	projectFiles=`find ${absolutePath} -name "*.pbxproj" -type f`
 	for projectFile in ${projectFiles}; do
 		sed -i "" "/$1/d" ${projectFile}
 	done
@@ -153,35 +175,63 @@ function executeParseXib()
 	modifyRegisterNibToClass ${sourceFileDir}
 	modifyNibInitialToCodeInitial ${sourceFileDir}
 	modifyBundleInitialToCodeInitial ${sourceFileDir}
-	python ${Parse_Resource} ${1} ${needloadConfiguration}
+	python ${parseResource} ${1} ${needloadConfiguration}
 	deleteResourceFileFromProject ${1##*/}
 	rm -rf ${1}
 }
 
+function loadProjectDir()
+{
+	declare local relativePath=""
+	if [[ -n $resourceFileName ]]; then
+		relativePath=${resourceFileName##*/}
+	elif [[ -n $resourceFileDir ]]; then
+		relativePath=$resourceFileDir
+	fi
+
+	declare local lookforDir=""
+	lookforDir=`ls ${currentDir}/${relativePath} | awk "/.xcodeproj|.xcworkspace/"`
+	while [[ -z ${lookforDir} && ${lookforDir} != ${currentDir} ]]; do
+		relativePath=${relativePath%/*}
+		absolutePath=${currentDir}/${relativePath}
+		lookforDir=`ls ${currentDir}/${relativePath} | awk "/.xcodeproj|.xcworkspace/"`
+	done
+
+	lookforDir=(${lookforDir})
+	if [[ ${#lookforDir[@]} -eq 2 ]]; then
+		projectDir=${absolutePath}/${lookforDir[1]}
+	elif [[ ${#lookforDir[@]} -eq 1 ]]; then
+		projectDir=${absolutePath}/${lookforDir[0]}
+	fi
+}
+
 function main()
 {
+	loadProjectDir
 	startTime=$((`date +%s`))
+	declare local parseNibCount=0
+
 	ps -ef | grep "/Applications/Xcode.app/Contents/MacOS/Xcode" | grep -v grep | awk '{print $2}' | xargs kill -9
 
 	# add execute permission for parseResource file
-	chmod +x ${Project_Dir}/${Parse_Resource}
+	chmod +x ${currentDir}/${parseResource}
 
-	if [[ ${#File_Name} -gt 0 ]]; then
-		file_extend=${File_Name##*.}
-		if [[ ${file_extend} != 'xib' ]]; then
-			echo "can't parse ${file_extend} extension name"
-			return
+	if [[ -n ${resourceFileName} ]]; then
+		resourceFileExtension=${resourceFileName##*.}
+		if [[ ${resourceFileExtension} != 'xib' ]]; then
+			echo "can't parse ${resourceFileExtension} extension name"
+			exit 1
 		fi
 
 		parseNibCount=1
-		executeParseXib ${Project_Dir}/${File_Name}
+		executeParseXib ${currentDir}/${resourceFileName}
 	else
-		length=`expr ${#File_Dir} - 1`
-		module_Dir=${Project_Dir}
-		if [[ ${File_Dir:$length:1} == '/' ]]; then
-			module_Dir=${Project_Dir}/${File_Dir:0:$length}
+		length=`expr ${#resourceFileDir} - 1`
+		module_Dir=${currentDir}
+		if [[ ${resourceFileDir:$length:1} == '/' ]]; then
+			module_Dir=${currentDir}/${resourceFileDir:0:$length}
 		else
-			module_Dir=${Project_Dir}/${File_Dir}
+			module_Dir=${currentDir}/${resourceFileDir}
 		fi
 		
 		# echo "module_Dir=${module_Dir}"
@@ -190,20 +240,16 @@ function main()
 			parseNibCount=`expr ${parseNibCount} + 1`
 			executeParseXib ${Resource_File}
 		done
+
+		AllResourceFiles=(${All_Resource_File})
+		parseNibCount=${#AllResourceFiles[@]}
 	fi
 
 	# remove py product pyc file
-	find ${Project_Dir}/NibProcessor -name "*.pyc" | xargs rm -rf
+	find ${currentDir}/NibProcessor -name "*.pyc" | xargs rm -rf
 
 	# open workspace
-	workspace=`ls ${Project_Dir%/*} | grep ".xcworkspace"`
-	if [[ $workspace != "" ]]; then
-		open ${Project_Dir%/*}/$workspace
-	else
-		codeproj=`ls ${Project_Dir%/*} | grep "..xcodeproj"`
-		open ${Project_Dir%/*}/$codeproj
-	fi
-	
+	open ${projectDir}
 	
 	endTime=$((`date +%s`))
 	expressTime=`expr ${endTime} - ${startTime}`
