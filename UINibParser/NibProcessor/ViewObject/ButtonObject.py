@@ -42,6 +42,7 @@ class JHButtonObject(JHControlObject):
 
 	def addButtonViewAttribute(self, classViewName, attribView):
 		describle = ""
+		describle += self.setViewProperty(classViewName+".titleLabel", 'font', self.getTextFont(attribView.get('fontDescription', {})), '')
 		if attribView.has_key('states'):
 			if type(attribView.get('states')) == list:
 				for controlState in attribView.get('states', []):

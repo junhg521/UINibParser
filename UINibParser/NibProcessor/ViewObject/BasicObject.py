@@ -27,7 +27,10 @@ class JHBasicObject(JHCommomObject):
 			classFrame = "CGRectMake("+frame.get('x', '0')+","+frame.get('y', "0")+","+frame.get('width', "320")+","+frame.get('height', "480")+")"
 			pass
 		else:
-			print 'frame=', frame
+			classFrame="CGRectZero"
+			if len(frame):
+				print 'frame=', frame
+				pass
 			pass
 
 		return classFrame
@@ -45,7 +48,6 @@ class JHBasicObject(JHCommomObject):
 
 		if type(color) == dict:
 			classColor = "[UIColor colorWithRed:"+color.get('red', '1')+" green:"+color.get('green', '1')+" blue:"+color.get('blue','1')+" alpha:"+color.get('alpha', '1')+"]"
-			pass
 		else:
 			print 'color=',color
 			pass

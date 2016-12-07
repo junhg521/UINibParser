@@ -56,3 +56,6 @@ class JHTableViewCellObject(JHViewObject):
 		describle += self.rightBrackets()
 
 		return describle
+
+	def addSubview(self, classViewName, classMethodName, attribView):
+		pass

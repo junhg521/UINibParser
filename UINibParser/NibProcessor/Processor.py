@@ -39,7 +39,6 @@ from ViewObject.SwitchObject import JHSwitchObject
 from ViewObject.TabBarObject import JHTabBarObject
 from ViewObject.TableViewCellObject import JHTableViewCellObject
 from ViewObject.TableViewObject import JHTableViewObject
-from ViewObject.TableViewObject import JHTableViewObject
 from ViewObject.TextFieldObject import JHTextFieldObject
 from ViewObject.TextViewObject import JHTextViewObject
 from ViewObject.ToolBarObject import JHToolBarObject
@@ -85,11 +84,11 @@ class JHBaseProcessor(object):
 		writeFileHandle.write(self.newlineCharacter()+syntax+self.newlineCharacter())
 		pass
 
-	def writeSingleBackCharacter(self, writeFileHandle):
+	def writeSingleSpace(self, writeFileHandle):
 		writeFileHandle.write(self.addBlackCharacter())
 		pass
 
-	def writeDoubleBackCharacter(self, writeFileHandle):
+	def writeDoubleSpace(self, writeFileHandle):
 		writeFileHandle.write(self.addBlackCharacter())
 		pass
 
@@ -159,7 +158,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 					self.loadAllSubViewProperty('self.view', resourceInfos[0], writeFileHandle) 
 					self.loadViewConstranit('self.view', resourceInfos[0], self.viewId, resourceInfos[1], writeFileHandle)
 					for methodName in resourceInfos[2]:
-						self.writeSingleBackCharacter(writeFileHandle)
+						self.writeSingleSpace(writeFileHandle)
 						self.writeSyntaxWithSingleLineFeed("[self "+methodName+"];", writeFileHandle)
 						pass
 					pass
@@ -225,7 +224,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 				self.writeSyntaxWithSingleLineFeed(self.leftBrackets(),writeFileHandle)
 				for subMethodNames in methodNames:
 					for subMethod in subMethodNames:
-						self.writeSingleBackCharacter(writeFileHandle)
+						self.writeSingleSpace(writeFileHandle)
 						self.writeSyntaxWithSingleLineFeed("[self "+subMethod+"];",writeFileHandle)
 						pass
 					pass
@@ -289,7 +288,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		self.loadAllSubViewProperty(classViewName, methodNames, writeFileHandle)
 		self.loadViewConstranit(classViewName, methodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
 		self.loadOutletProperty(classViewName, attribView, writeFileHandle)
-		self.writeSingleBackCharacter(writeFileHandle)
+		self.writeSingleSpace(writeFileHandle)
 		self.writeSyntaxWithSingleLineFeed("return "+classViewName+";",writeFileHandle)
 		self.writeSyntaxWithSingleLineFeed(self.rightBrackets(),writeFileHandle)
 
@@ -324,11 +323,11 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 
 		for subMethodNames in methodNames:
 			for subMethod in subMethodNames.keys():
-				self.writeSingleBackCharacter(writeFileHandle)
+				self.writeSingleSpace(writeFileHandle)
 				viewTag = self.attribViewMethodTag(subMethod)
 				classType = self.objcClassNameType(viewTag)
 				self.writeSyntaxWithSingleLineFeed(classType+" *"+subMethod+" = [self "+subMethod+"];", writeFileHandle)
-				self.writeSingleBackCharacter(writeFileHandle)
+				self.writeSingleSpace(writeFileHandle)
 				self.writeSyntaxWithSingleLineFeed("["+parentView+" addSubview:"+subMethod+"];", writeFileHandle)
 				pass
 			pass	
@@ -368,13 +367,13 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 	 		constraintProperty = self.getClassOutletProperty(self.outletViews, attribView.get('id',''))
 	 		describle = self.constraintMake(firstItemView, secodeItemView, firstAttribute, secondAttribute, multiplier, relation, constant)
 	 		if len(constraintProperty) > 0:
-	 			self.writeSingleBackCharacter(writeFileHandle)
+	 			self.writeSingleSpace(writeFileHandle)
 	 			self.writeSyntaxWithSingleLineFeed(constraintProperty+" = "+describle+";", writeFileHandle)
-	 			self.writeSingleBackCharacter(writeFileHandle)
+	 			self.writeSingleSpace(writeFileHandle)
 	 			self.writeSyntaxWithSingleLineFeed("["+parentView+" addConstraint:"+constraintProperty+"];", writeFileHandle)
 	 			pass
 	 		else:
-	 			self.writeSingleBackCharacter(writeFileHandle)
+	 			self.writeSingleSpace(writeFileHandle)
 	 			self.writeSyntaxWithSingleLineFeed("["+parentView+" addConstraint:"+describle+"];", writeFileHandle)
 	 			pass
 	 		pass
@@ -386,7 +385,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		attribViewProperty = self.attribViewTagProperty(attribView)
 		outletProperty = self.getClassOutletProperty(self.outletViews, attribViewProperty.get('id',''))
 		if len(outletProperty) > 0:
-			self.writeSingleBackCharacter(writeFileHandle)
+			self.writeSingleSpace(writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed(outletProperty+" = "+classViewName+";",writeFileHandle)
 			pass
 		pass

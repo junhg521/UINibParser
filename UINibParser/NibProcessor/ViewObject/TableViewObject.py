@@ -40,7 +40,7 @@ class JHTableViewObject(JHScrollViewObject):
 		describle = self.setViewProperty(classViewName, 'separatorStyle', self.getTableViewCellSeparatorStyle(attribViewId.get('separatorStyle', 'none')), '')
 		describle += self.setViewProperty(classViewName, 'sectionHeaderHeight', attribViewId.get('sectionHeaderHeight', '0'), '0')
 		describle += self.setViewProperty(classViewName, 'sectionFooterHeight', attribViewId.get('sectionFooterHeight', '0'), '0')
-
+		describle += self.setViewProperty(classViewName, 'rowHeight', attribViewId.get('rowHeight', '0'), '0')
 		return describle
 
 			

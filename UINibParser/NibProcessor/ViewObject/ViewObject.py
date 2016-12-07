@@ -61,7 +61,7 @@ class JHViewObject(JHBasicObject):
 			describle += self.writeDescribleSyntax(classType+"* "+classViewName+" = [["+classType+" alloc] init];")
 			pass
 		pass
-		
+
 		return describle
 
 	def loadView(self, needloadConfiguration, attribView):
@@ -106,8 +106,8 @@ class JHViewObject(JHBasicObject):
 		describle += self.setViewProperty(classViewName, 'multipleTouchEnabled', attribViewId.get('multipleTouchEnabled', 'NO'), 'NO')
 		describle += self.setViewProperty(classViewName, 'exclusiveTouch', attribViewId.get('exclusiveTouch', 'NO'), 'NO')
 		describle += self.setViewProperty(classViewName, 'autoresizesSubviews', attribViewId.get('autoresizesSubviews', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'autoresizingMask', self.getAutoresizingMask(attribViewId.get('autoresizingMask', {})), 'UIViewAutoresizingNone')
-		describle += self.setViewProperty(classViewName, 'clipsToBounds', attribViewId.get('clipsToBounds', 'NO'), 'NO')
+		describle += self.setViewProperty(classViewName, 'autoresizingMask', self.getAutoresizingMask(attribView.get('autoresizingMask', {})), 'UIViewAutoresizingNone')
+		describle += self.setViewProperty(classViewName, 'clipsToBounds', attribViewId.get('clipsToBounds', 'YES'), 'YES')
 		describle += self.setViewProperty(classViewName, 'alpha', attribViewId.get('alpha', '1.0'), '1.0')
 		describle += self.setViewProperty(classViewName, 'opaque', attribViewId.get('opaque', 'YES'), 'YES')
 		describle += self.setViewProperty(classViewName, 'clearsContextBeforeDrawing', attribViewId.get('clearsContextBeforeDrawing', 'YES'), 'YES')
@@ -119,8 +119,6 @@ class JHViewObject(JHBasicObject):
 		return describle
 
 	def addViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
-		
 		describle = self.addBasicViewAttribute(classViewName, attribView)
 		describle += self.getViewConnection(classViewName, attribView)
 		
