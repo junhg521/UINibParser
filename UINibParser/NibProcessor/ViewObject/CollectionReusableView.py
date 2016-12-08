@@ -21,18 +21,14 @@ class JHCollectionReusableView(JHViewObject):
 	def loadView(self, needloadConfiguration, attribView):
 		# print 'attribView=', attribView
 
-		describle = self.newlineCharacter()
-		describle = self.writeDescribleSyntax("- (instancetype)initWithFrame:(CGRect)frame")
+		describle = self.loadSyntaxWithDoubleLineFeed("- (instancetype)initWithFrame:(CGRect)frame")
 		describle += self.leftBrackets()
-		describle += self.addBlackCharacter()
-		describle += self.writeDescribleSyntax("if (self = [super initWithFrame:frame])")
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("if (self = [super initWithFrame:frame])")
 		describle += self.addBlackCharacter()
 		describle += self.leftBrackets()
 		describle += self.addBlackCharacter()
 		describle += JHViewObject.addBasicViewAttribute(self, "self", attribView)
-		describle += self.addBlackCharacter()
-		describle += self.addBlackCharacter()
-		describle +=self.writeDescribleSyntax("[self loadConfigCellInfo];")
+		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
 
 		return describle
 

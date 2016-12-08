@@ -26,23 +26,18 @@ class JHCollectionViewObject(JHScrollViewObject):
 		collectionFlowlayout = flowlayout.get('collectionViewFlowLayout',{})
 		
 		describle = self.addClassMethodName(classType, classMethodName)
-		describle += self.addBlackCharacter()
-		describle += self.writeDescribleSyntax("UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];")
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];")
 		if collectionFlowlayout.get('scrollDirection','horizontal') != 'horizontal':
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("layout.scrollDirection = "+self.getCollectionViewScrollDirection(collectionFlowlayout.get('scrollDirection','vertical'))+";")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout.scrollDirection = "+self.getCollectionViewScrollDirection(collectionFlowlayout.get('scrollDirection','vertical'))+";")
 			pass
 		if collectionFlowlayout.get('minimumLineSpacing','0') != '0':
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("layout.minimumLineSpacing = "+collectionFlowlayout.get('minimumLineSpacing','0')+";")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout.minimumLineSpacing = "+collectionFlowlayout.get('minimumLineSpacing','0')+";")
 			pass
 		if collectionFlowlayout.get('minimumInteritemSpacing','0') != '0':
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("layout.minimumInteritemSpacing = "+collectionFlowlayout.get('minimumInteritemSpacing','0')+";")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout.minimumInteritemSpacing = "+collectionFlowlayout.get('minimumInteritemSpacing','0')+";")
 			pass
 		if collectionFlowlayout.get('minimumInteritemSpacing','0') != '0':
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("layout.minimumInteritemSpacing = "+collectionFlowlayout.get('minimumInteritemSpacing','0')+";")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout.minimumInteritemSpacing = "+collectionFlowlayout.get('minimumInteritemSpacing','0')+";")
 			pass
 
 		collectionFlowlayoutProperty = flowlayout.get('property',{})
@@ -51,16 +46,14 @@ class JHCollectionViewObject(JHScrollViewObject):
 				for size in collectionFlowlayoutProperty.get('size',[]):
 					if size.has_key('key'):
 						sizeInfo = self.getClassSizeAndKey(size)
-						describle += self.addBlackCharacter()
-						describle += self.writeDescribleSyntax("layout."+sizeInfo[0]+" = "+sizeInfo[1]+";")
+						describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout."+sizeInfo[0]+" = "+sizeInfo[1]+";")
 						pass
 					pass
 				pass
 			elif type(collectionFlowlayoutProperty.get('size')) == dict:
 				size = collectionFlowlayoutProperty.get('size',{})
 				sizeInfo = self.getClassSizeAndKey(size)
-				describle += self.addBlackCharacter()
-				describle += self.writeDescribleSyntax("layout."+sizeInfo[0]+" = "+sizeInfo[1]+";")
+				describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout."+sizeInfo[0]+" = "+sizeInfo[1]+";")
 				pass
 			else:
 				pass
@@ -70,12 +63,10 @@ class JHCollectionViewObject(JHScrollViewObject):
 		inset = collectionFlowlayoutProperty.get('inset',{})
 		if inset.has_key('key'):
 			sectionInsetInfo = self.getClassEdgementAndKey(inset)
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("layout."+sectionInsetInfo[0]+" = "+sectionInsetInfo[1]+";")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout."+sectionInsetInfo[0]+" = "+sectionInsetInfo[1]+";")
 			pass
 			
-		describle += self.addBlackCharacter()
-		describle += self.writeDescribleSyntax(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+" collectionViewLayout:layout];")
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+" collectionViewLayout:layout];")
 		
 		return describle
 

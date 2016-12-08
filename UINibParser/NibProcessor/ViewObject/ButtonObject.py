@@ -19,11 +19,9 @@ class JHButtonObject(JHControlObject):
 		attribViewId = self.attribViewTagProperty(attribView)
 
 		classType = self.objcClassNameType(classViewName)
-		describle = self.newlineCharacter()
-		describle += self.writeDescribleSyntax("- ("+classType+" *"+")"+classMethodName)
+		describle = self.loadSyntaxWithDoubleLineFeed("- ("+classType+" *"+")"+classMethodName)
 		describle += self.leftBrackets()
-		describle += self.addBlackCharacter()
-		describle += self.writeDescribleSyntax(classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribViewId.get('buttonType', 'system'))+"];")
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribViewId.get('buttonType', 'custom'))+"];")
 		describle += self.setViewProperty(classViewName, 'frame', self.getClassFrame(attribView.get('rect',{})), '')
 		describle += self.addViewAttribute(classViewName, attribView)
 		return describle
@@ -58,18 +56,15 @@ class JHButtonObject(JHControlObject):
 		controlState = controlStates.get('state', {})
 		buttonState = self.getControlState(controlState.get('key','normal'))
 		if controlState.get('title', '') != '':
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("["+classViewName+" setTitle:@"+"\""+controlState.get('title', '').encode('utf-8') +"\""+" forState:"+buttonState+"];")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" setTitle:@"+"\""+controlState.get('title', '').encode('utf-8') +"\""+" forState:"+buttonState+"];")
 			pass
 
 		if controlState.get('backgroundImage','') != '':
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("["+classViewName+" setBackgroundImage:[UIImage imageNamed:@"+"\""+controlState.get('backgroundImage', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" setBackgroundImage:[UIImage imageNamed:@"+"\""+controlState.get('backgroundImage', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
 			pass
 
 		if controlState.get('image', '') != '':
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("["+classViewName+" setImage:[UIImage imageNamed:@"+"\""+controlState.get('image', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" setImage:[UIImage imageNamed:@"+"\""+controlState.get('image', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
 			pass
 
 		if controlStates.has_key('color'):
@@ -90,6 +85,5 @@ class JHButtonObject(JHControlObject):
 
 	def getControlColorProperty(self, classViewName, color, controlState):
 		colorTag = color.get('key', '')
-		describle = self.addBlackCharacter()
-		describle += self.writeDescribleSyntax("["+classViewName +" set"+colorTag[0].upper()+colorTag[1:]+":"+self.getClassColor(color)+" forState:"+controlState+"];")
+		describle = self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName +" set"+colorTag[0].upper()+colorTag[1:]+":"+self.getClassColor(color)+" forState:"+controlState+"];")
 		return describle

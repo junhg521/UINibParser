@@ -51,12 +51,10 @@ class JHViewObject(JHBasicObject):
 		describle = self.addClassMethodName(classType, classMethodName)
 
 		if len(self.getClassFrame(attribView.get('rect', {}))) > 0:
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+"];")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+"];")
 			pass
 		else:
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax(classType+"* "+classViewName+" = [["+classType+" alloc] init];")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] init];")
 			pass
 		pass
 		describle += self.addViewAttribute(classViewName, attribView)
@@ -103,10 +101,17 @@ class JHViewObject(JHBasicObject):
 
 	def setViewRuntimeProperty(self, classViewName, attribView):
 		describle = ""
-		classLayName = classViewName+".layer"
-
+		
 		for runtimeProperty in attribView.get('userDefinedRuntimeAttributes',[]):
 			userDefine = runtimeProperty.get('userDefinedRuntimeAttribute', {})
+			# print 'keypath=',userDefine.get('keyPath', ''), 'classViewName=',classViewName
+			if userDefine.get('keyPath', '').find('layer') == -1:
+				classLayName = classViewName+".layer"
+				pass
+			else:
+				classLayName = classViewName
+				pass
+
 			if userDefine.get('type', '') == 'number':
 				userDefineValue = ""
 				if runtimeProperty.get('integer', '') != '':
@@ -229,6 +234,35 @@ class JHViewObject(JHBasicObject):
                                                           attribute:NSLayoutAttributeTrailing \n\
                                                          multiplier:1.0 \n\
                                                            constant:0]];")
+		return describle
+
+	def loadTextAttributeString(self, classViewName, attribView):
+		describle = self.setViewProperty(classViewName, 'numberOfLines', '0', '')
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("NSMutableAttributedString *attributeContent = [[NSMutableAttributedString alloc] init];")
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("[attributeContent beginEditing];")
+		i = 0
+		for attributedString in attribView.get('attributedString',{}):
+			fragment = attributedString.get('fragment', '')
+			subContent = fragment.get('content', '').encode('utf-8')
+			length = str("[@"+"\""+subContent+"\""+" length]")
+			attributeName = "attribute"+str(i)
+
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("NSMutableAttributedString *"+attributeName+" = [[NSMutableAttributedString alloc] initWithString:@"+"\""+subContent+"\"];")
+			
+			if attributedString.has_key('font'):
+				describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+attributeName+" addAttribute:NSFontAttributeName value:"+self.getTextFont(attributedString.get('font',{}))+" range:NSMakeRange(0, "+length+")];")
+				pass
+
+			if attributedString.has_key('color'):
+				describle += loadSyntaxWithLineFeedAndSingleSpace("["+attributeName+" addAttribute:NSForegroundColorAttributeName value:"+self.getClassColor(attributedString.get('color',{}))+" range:NSMakeRange(0, "+length+")];")
+				pass
+
+			describle += loadSyntaxWithLineFeedAndSingleSpace("[attributeContent appendAttributedString:"+attributeName+"];")
+			i = i + 1
+			pass
+			
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("[attributeContent endEditing];")
+		describle += self.setViewProperty(classViewName, 'attributedText', 'attributeContent', '')
 		return describle
 
 	

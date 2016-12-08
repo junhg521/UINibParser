@@ -13,21 +13,18 @@ __author__ = 'Junhg'
 from CommonObject import JHCommomObject
 
 class JHBasicObject(JHCommomObject):
-	
-	def writeDescribleSyntax(self, syntax):
-		return syntax + self.newlineCharacter()
 
 	def loadSyntaxWithSingleLineFeed(self, syntax):
-		return syntax+self.newlineCharacter()
+		return syntax + self.newlineCharacter()
 
 	def loadSyntaxWithDoubleLineFeed(self, syntax):
-		return self.newlineCharacter()+syntax+self.newlineCharacter()
+		return self.newlineCharacter() + self.loadSyntaxWithSingleLineFeed(syntax)
 
 	def loadSyntaxWithLineFeedAndSingleSpace(self, syntax):
 		return self.addBlackCharacter() + self.loadSyntaxWithSingleLineFeed(syntax)
 
 	def loadSyntaxWithLineFeedAndDoubleSpace(self, syntax):
-		return self.addBlackCharacter() + self.addBlackCharacter() + self.loadSyntaxWithSingleLineFeed(syntax)
+		return self.addBlackCharacter() + self.loadSyntaxWithLineFeedAndSingleSpace(syntax)
 
 	def getClassFrame(self, frame):
 		classFrame = ""
@@ -175,7 +172,7 @@ class JHBasicObject(JHCommomObject):
 			font = "[UIFont systemFontOfSize:"+fontDescription.get('size', '17')+"]"
 			pass
 		elif fontDescription.get('name', '') != '':
-			font = " [UIFont fontWithName:@\""+fontDescription.get('name')+"\" size:"+fontDescription.get('size', '17')+"]"
+			font = "[UIFont fontWithName:@\""+fontDescription.get('name')+"\" size:"+fontDescription.get('pointSize', '17')+"]"
 			pass
 		else:
 			print 'fontDescription = ', fontDescription
@@ -536,10 +533,11 @@ class JHBasicObject(JHCommomObject):
 
 	def setViewProperty(self, classViewName, key, attribValue, defaultValue):
 		describle = ""
+
 		if attribValue != defaultValue and len(key):
-			describle = self.addBlackCharacter()
-			describle += self.writeDescribleSyntax(classViewName+"."+key+" = "+attribValue+";")
+			describle = self.loadSyntaxWithLineFeedAndSingleSpace(classViewName+"."+key+" = "+attribValue+";")
 			pass
+			
 		return describle
 		
 

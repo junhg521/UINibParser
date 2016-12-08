@@ -27,12 +27,13 @@ class JHTableViewCellObject(JHViewObject):
 			describle += self.loadSyntaxWithLineFeedAndDoubleSpace("self.selectionStyle = "+self.getTableViewCellSelectionStyle(attribViewId.get('selectionStyle', {}))+";")
 			pass
 
+		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadAllContentSubView];")
+		
 		if needloadConfiguration:
 			describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
 			pass
 
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadAllContentSubView];")
-		describle += self.addContentViewConstraint()
+		# describle += self.addContentViewConstraint()
 		describle += self.addBlackCharacter()
 		describle += self.rightBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("return self;")

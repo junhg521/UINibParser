@@ -52,14 +52,12 @@ class JHControlObject(JHViewObject):
 		describle = ""
 		action = connection.get('action', {})
 		if len(action):
-			describle += self.addBlackCharacter()
-			describle += self.writeDescribleSyntax("["+classViewName+" addTarget:self action:@selector("+action.get('selector','')+") forControlEvents:"+self.getControlEvent(action.get('eventType', 'touchUpInside'))+"];")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" addTarget:self action:@selector("+action.get('selector','')+") forControlEvents:"+self.getControlEvent(action.get('eventType', 'touchUpInside'))+"];")
 			pass
 
 		return describle
 
 	def setControlStateProperty(self, classViewName, setControlPropertyName, controlProperty, controlState):
-		describle = self.addBlackCharacter()
-		describle += self.writeDescribleSyntax("["+classViewName+" "+ setControlPropertyName+":"+controlProperty+" forState:"+controlState+"];")
+		describle = self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" "+ setControlPropertyName+":"+controlProperty+" forState:"+controlState+"];")
 		return describle	
 
