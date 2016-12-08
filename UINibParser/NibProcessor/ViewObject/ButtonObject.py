@@ -54,20 +54,20 @@ class JHButtonObject(JHControlObject):
 		return describle
 
 	def setControlSateInfos(self, classViewName, controlStates):
-		# print 'controlState=',controlState
+		# print 'controlStates=',controlStates
 		
 		describle = ""
 		controlState = controlStates.get('state', {})
-		buttonState = self.getControlState(controlState.get('key','normal'))
-		if controlState.get('title', '') != '':
+		buttonState = self.getControlState(controlState.get('key', 'normal'))
+		if controlState.get('title', '').encode('utf-8') != '':
 			describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" setTitle:@"+"\""+controlState.get('title', '').encode('utf-8') +"\""+" forState:"+buttonState+"];")
 			pass
 
-		if controlState.get('backgroundImage','') != '':
+		if controlState.get('backgroundImage','').encode('utf-8') != '':
 			describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" setBackgroundImage:[UIImage imageNamed:@"+"\""+controlState.get('backgroundImage', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
 			pass
 
-		if controlState.get('image', '') != '':
+		if controlState.get('image', '').encode('utf-8') != '':
 			describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+classViewName+" setImage:[UIImage imageNamed:@"+"\""+controlState.get('image', '').encode('utf-8')+"\""+"] forState:"+buttonState+"];")
 			pass
 
@@ -78,7 +78,7 @@ class JHButtonObject(JHControlObject):
 					pass
 				pass
 			elif type(controlStates.get('color')) == dict:
-				describle = self.getControlColorProperty(classViewName, controlStates.get('color', {}), buttonState)
+				describle += self.getControlColorProperty(classViewName, controlStates.get('color', {}), buttonState)
 				pass
 			else:
 				pass
