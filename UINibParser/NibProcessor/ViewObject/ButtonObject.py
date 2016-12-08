@@ -17,8 +17,12 @@ class JHButtonObject(JHControlObject):
 		# print 'attribView=', attribView
 
 		attribViewId = self.attribViewTagProperty(attribView)
-
 		classType = self.objcClassNameType(classViewName)
+		
+		if attribViewId.get('customClass', '') != '':
+			classType = attribViewId.get('customClass')
+			pass
+
 		describle = self.loadSyntaxWithDoubleLineFeed("- ("+classType+" *"+")"+classMethodName)
 		describle += self.leftBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribViewId.get('buttonType', 'custom'))+"];")

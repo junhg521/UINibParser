@@ -46,8 +46,13 @@ class JHViewObject(JHBasicObject):
 
 	def addSubview(self, classViewName, classMethodName, attribView):
 		# print 'attribView=', attribView
-
 		classType = self.objcClassNameType(classViewName)
+		attribViewId = self.attribViewTagProperty(attribView)
+		
+		if attribViewId.get('customClass', '') != '':
+			classType = attribViewId.get('customClass')
+			pass
+
 		describle = self.addClassMethodName(classType, classMethodName)
 
 		if len(self.getClassFrame(attribView.get('rect', {}))) > 0:

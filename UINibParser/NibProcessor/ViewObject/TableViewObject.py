@@ -18,7 +18,11 @@ class JHTableViewObject(JHScrollViewObject):
 
 		classType = self.objcClassNameType(classViewName)
 		attribViewId = self.attribViewTagProperty(attribView)
-
+		
+		if attribViewId.get('customClass', '') != '':
+			classType = attribViewId.get('customClass')
+			pass
+			
 		describle = self.addClassMethodName(classType, classMethodName)
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+" style:"+self.getTableViewStyle(attribViewId.get('style','UITableViewStylePlain'))+"];")
 		describle += self.addViewAttribute(classViewName, attribView)

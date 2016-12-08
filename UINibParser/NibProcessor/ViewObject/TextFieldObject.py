@@ -12,11 +12,6 @@ __author__ = 'Junhg'
 from ControlObject import JHControlObject
 
 class JHTextFieldObject(JHControlObject):
-	def __init__(self):
-		pass
-
-	def __del__(self):
-		pass
 
 	def addViewAttribute(self, classViewName, attribView):
 		# print 'attribView=', attribView

@@ -12,11 +12,6 @@ __author__ = 'Junhg'
 from ViewObject import JHViewObject
 
 class JHCollectionReusableView(JHViewObject):
-	def __init__(self):
-		pass
-
-	def __del__(self):
-		pass
 
 	def loadView(self, needloadConfiguration, attribView):
 		# print 'attribView=', attribView

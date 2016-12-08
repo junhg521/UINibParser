@@ -22,6 +22,12 @@ class JHCollectionViewObject(JHScrollViewObject):
 		# print 'attribView=',attribView
 
 		classType = self.objcClassNameType(classViewName)
+		attribViewId = self.attribViewTagProperty(attribView)
+		
+		if attribViewId.get('customClass', '') != '':
+			classType = attribViewId.get('customClass')
+			pass
+			
 		flowlayout = attribView.get('collectionViewFlowLayout',{})
 		collectionFlowlayout = flowlayout.get('collectionViewFlowLayout',{})
 		
