@@ -100,19 +100,6 @@ class JHBaseProcessor(object):
 		"tableViewCell", "imageView", "collectionView", "textView", "scrollView", "visualEffectView",
 		"webView", "glkView", "mapView", "sceneKitView", "collectionReusableView", "collectionViewCell"]
 
-	def viewObjectType(self, tag):
-		viewObject = tag
-		if tag == "tableViewCellContentView":
-			viewObject = "view"
-			pass
-		elif tag == "customswitch":
-			viewObject = "switch"
-			pass
-		else:
-			pass
-
-		return eval("JH"+viewObject[0].upper() + viewObject[1:]+"Object()")
-
 class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 
 	"set parsed resourece data written as objective-c code, and attempts to insert all \
@@ -137,6 +124,38 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		self.needloadConfiguration = int(nibParser.needloadConfiguration)
 		self.viewId = nibParser.viewId
 		pass
+
+	def attribViewInstanceName(self, attribView):
+		classViewName = self.attribViewTag(attribView)
+		attribViewProperty = self.attribViewTagProperty(attribView)
+
+		if self.parseType == 'tableViewCell' and attribViewProperty.get('key','') == 'contentView':
+			classViewName = "self.contentView"
+			pass
+		elif self.parseType == 'collectionViewCell' and attribViewProperty.get('key','') == 'contentView':
+			classViewName = "self.contentView"
+			pass
+		else:
+			pass
+		return classViewName
+
+	def viewObjectType(self, attribView):
+		classViewName = self.attribViewTag(attribView)
+		attribViewProperty = self.attribViewTagProperty(attribView)
+		viewObject = classViewName
+		if self.parseType == 'tableViewCell' and attribViewProperty.get('key','') == 'contentView':
+			viewObject = "TableViewCell"
+			pass
+		elif self.parseType == 'collectionViewCell' and attribViewProperty.get('key','') == 'contentView':
+			viewObject = "collectionViewCell"
+			pass
+		elif classViewName == "customswitch":
+			viewObject = "switch"
+			pass
+		else:
+			pass
+
+		return eval("JH"+viewObject[0].upper() + viewObject[1:]+"Object()")
 
 	def processing(self):
 		# print 'attribViews=',self.attribViews
@@ -210,31 +229,17 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		# print 'attribView=', attribView
 		# print "methodNames=",methodNames, 'subViews=', subViews
 
-		classViewName = self.attribViewTag(attribView)
-		viewObject = self.viewObjectType(classViewName)
+		viewObject = self.viewObjectType(attribView)
 		classMethodName = self.attribViewViewMethod(attribView)
 
 		if self.parseType == 'tableViewCell' or self.parseType == 'collectionViewCell':
 			self.writeSyntaxWithDoubleLineFeed("#pragma mark - lifeCycle",writeFileHandle)
-			self.writeSyntaxWithSingleLineFeed(viewObject.loadView(self.needloadConfiguration, attribView), writeFileHandle)
-
-			if len(methodNames) > 0:
-				self.writeSyntaxWithDoubleLineFeed("#pragma mark - loadContentViewSubviews",writeFileHandle)
-				self.writeSyntaxWithSingleLineFeed("- (void)loadAllContentSubView",writeFileHandle)
-				self.writeSyntaxWithSingleLineFeed(self.leftBrackets(),writeFileHandle)
-				for subMethodNames in methodNames:
-					for subMethod in subMethodNames:
-						self.writeSingleSpace(writeFileHandle)
-						self.writeSyntaxWithSingleLineFeed("[self "+subMethod+"];",writeFileHandle)
-						pass
-					pass
-				self.writeSyntaxWithSingleLineFeed(self.rightBrackets(),writeFileHandle)
-				pass
+			self.writeSyntaxWithSingleLineFeed(viewObject.loadRootViewInit(self.needloadConfiguration, attribView), writeFileHandle)
 			pass
 		elif self.parseType == 'collectionReusableView':
 			self.writeSyntaxWithSingleLineFeed(self.newlineCharacter(),writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed("#pragma mark - lifeCycle",writeFileHandle)
-			self.writeSyntaxWithSingleLineFeed(viewObject.loadView(self.needloadConfiguration, attribView), writeFileHandle)
+			self.writeSyntaxWithSingleLineFeed(viewObject.loadRootViewInit(self.needloadConfiguration, attribView), writeFileHandle)
 			self.loadAllSubViewProperty('self', methodNames, writeFileHandle)
 			if type(self.attribViewTagProperty(attribView)) == dict:
 				self.loadViewConstranit('self', methodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
@@ -246,7 +251,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		elif self.parseType == 'view':
 			self.writeSyntaxWithSingleLineFeed(self.newlineCharacter(),writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed("#pragma mark - lifeCycle",writeFileHandle)
-			self.writeSyntaxWithSingleLineFeed(viewObject.loadInitialization(self.needloadConfiguration, attribView), writeFileHandle)
+			self.writeSyntaxWithSingleLineFeed(viewObject.loadRootViewInit(self.needloadConfiguration, attribView), writeFileHandle)
 
 			self.writeSyntaxWithSingleLineFeed("#pragma mark - load contentView subviews", writeFileHandle)
 			self.writeSyntaxWithSingleLineFeed("- (void)loadAllContentSubView", writeFileHandle)
@@ -259,7 +264,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 			pass
 		else:
 			self.writeSyntaxWithDoubleLineFeed("#pragma mark - lifeCycle",writeFileHandle)
-			self.writeSyntaxWithSingleLineFeed(viewObject.loadView(self.needloadConfiguration, attribView), writeFileHandle)
+			self.writeSyntaxWithSingleLineFeed(viewObject.loadView(attribView), writeFileHandle)
 			pass
 		pass
 
@@ -284,7 +289,8 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 	def loadSubView(self, attribView, methodNames, writeFileHandle):
 		# print 'attribView=',attribView ' subMethodNames=',subMethodNames
 
-		classViewName = self.loadViewProperty(attribView, writeFileHandle)
+		classViewName = self.attribViewInstanceName(attribView)
+		self.loadViewProperty(classViewName, attribView, writeFileHandle)
 		self.loadAllSubViewProperty(classViewName, methodNames, writeFileHandle)
 		self.loadViewConstranit(classViewName, methodNames, self.attribViewTagProperty(attribView).get('id', ''), attribView.get('constraints', []), writeFileHandle)
 		self.loadOutletProperty(classViewName, attribView, writeFileHandle)
@@ -294,29 +300,17 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 
 		return self.attribViewViewMethod(attribView)
 
-	def loadViewProperty(self, attribView, writeFileHandle):
+	def loadViewProperty(self, classViewName, attribView, writeFileHandle):
 		# print 'attribView=',attribView
+		viewObject = self.viewObjectType(attribView)
 
-		classViewName = self.attribViewTag(attribView)
-		viewObject = self.viewObjectType(classViewName)
-		classMethodName = self.attribViewViewMethod(attribView)
-
-		if self.parseType == 'tableViewCell' and attribView.has_key('tableViewCellContentView'):
-			self.writeSyntaxWithSingleLineFeed(viewObject.addClassMethodName(self.objcClassNameType(classViewName), classMethodName), writeFileHandle)
-			classViewName = "self.contentView"
-			pass
-		elif self.parseType == 'collectionViewCell' and self.attribViewTagProperty(attribView).get('key','') == 'contentView':
-			self.writeSyntaxWithSingleLineFeed(viewObject.addClassMethodName(self.objcClassNameType(classViewName), classMethodName), writeFileHandle)
-			classViewName = "self.contentView"
+		if classViewName == 'self.contentView':
+			self.writeSyntaxWithSingleLineFeed(viewObject.loadView(attribView), writeFileHandle)
 			pass
 		else:
-			# print 'viewObject=',viewObject, 'classMethodName=',classMethodName
-			self.writeSyntaxWithSingleLineFeed(viewObject.addSubview(classViewName, classMethodName, attribView), writeFileHandle)
+			classMethodName = self.attribViewViewMethod(attribView)
+			self.writeSyntaxWithSingleLineFeed(viewObject.addSubview(self.attribViewTag(attribView), classMethodName, attribView), writeFileHandle)
 			pass
-
-		self.writeSyntaxWithSingleLineFeed(viewObject.addViewAttribute(classViewName, attribView), writeFileHandle)
-		pass
-		return classViewName
 
 	def loadAllSubViewProperty(self, parentView, methodNames, writeFileHandle):
 		# print 'parentView=',parentView, ' methodNames=',methodNames

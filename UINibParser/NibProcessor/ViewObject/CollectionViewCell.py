@@ -13,32 +13,27 @@ from CollectionReusableView import JHCollectionReusableView
 from ViewObject import JHViewObject
 
 class JHCollectionViewCell(JHCollectionReusableView):
-	def __init__(self):
-		pass
 
-	def __del__(self):
-		pass
-
-	def loadView(self, needloadConfiguration, attribView):
+	def loadRootViewInit(self, needloadConfiguration, attribView):
 		# print 'attribView=', attribView
-		
-		describle = self.newlineCharacter()
-		describle += self.writeDescribleSyntax("- (instancetype)initWithFrame:(CGRect)frame")
+		describle = self.loadSyntaxWithDoubleLineFeed("- (instancetype)initWithFrame:(CGRect)frame")
 		describle += self.leftBrackets()
-		describle += self.addBlackCharacter()
-		describle += self.writeDescribleSyntax("if (self = [super initWithFrame:frame])")
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("if (self = [super initWithFrame:frame])")
 		describle += self.addBlackCharacter()
 		describle += self.leftBrackets()
-		describle += self.addBlackCharacter()
 		describle += JHViewObject.addBasicViewAttribute(self, "self", attribView)
-		describle += self.addBlackCharacter()
-		describle += self.addBlackCharacter()
-		describle += self.writeDescribleSyntax("[self loadAllContentSubView];")
+		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadAllContentSubView];")
 		describle += self.addContentViewConstraint()
 		describle += self.addBlackCharacter()
 		describle += self.rightBrackets()
-		describle += self.addBlackCharacter()
-		describle += self.writeDescribleSyntax("return self;")
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("return self;")
 		describle += self.rightBrackets()
+		return describle
 
+	def loadView(self, attribView):
+		# print 'attribView=', attribView
+		describle = self.addClassMethodName("UIView", "loadAllContentSubView")
+		describle += self.setViewProperty("self.contentView", 'frame', self.getClassFrame(attribView.get('rect', {})), '')
+		describle += self.addViewAttribute("self.contentView", attribView)
+		describle += self.rightBrackets()
 		return describle

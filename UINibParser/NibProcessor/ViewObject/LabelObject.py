@@ -12,11 +12,6 @@ __author__ = 'Junhg'
 from ViewObject import JHViewObject
 
 class JHLabelObject(JHViewObject):
-	def __init__(self):
-		pass
-
-	def __del__(self):
-		pass
 
 	def addViewAttribute(self, classViewName, attribView):
 		# print 'attribView=', attribView

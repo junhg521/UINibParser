@@ -17,6 +17,18 @@ class JHBasicObject(JHCommomObject):
 	def writeDescribleSyntax(self, syntax):
 		return syntax + self.newlineCharacter()
 
+	def loadSyntaxWithSingleLineFeed(self, syntax):
+		return syntax+self.newlineCharacter()
+
+	def loadSyntaxWithDoubleLineFeed(self, syntax):
+		return self.newlineCharacter()+syntax+self.newlineCharacter()
+
+	def loadSyntaxWithLineFeedAndSingleSpace(self, syntax):
+		return self.addBlackCharacter() + self.loadSyntaxWithSingleLineFeed(syntax)
+
+	def loadSyntaxWithLineFeedAndDoubleSpace(self, syntax):
+		return self.addBlackCharacter() + self.addBlackCharacter() + self.loadSyntaxWithSingleLineFeed(syntax)
+
 	def getClassFrame(self, frame):
 		classFrame = ""
 
@@ -28,9 +40,6 @@ class JHBasicObject(JHCommomObject):
 			pass
 		else:
 			classFrame="CGRectZero"
-			if len(frame):
-				print 'frame=', frame
-				pass
 			pass
 
 		return classFrame

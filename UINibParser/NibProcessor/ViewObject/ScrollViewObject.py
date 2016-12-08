@@ -12,18 +12,12 @@ __author__ = 'Junhg'
 from ViewObject import JHViewObject
 
 class JHScrollViewObject(JHViewObject):
-	def __init__(self):
-		pass
-
-	def __del__(self):
-		pass
 
 	def addViewAttribute(self, classViewName, attribView):
 		# print 'attribView=', attribView
 
 		describle = JHViewObject.addViewAttribute(self, classViewName, attribView)
 		describle += self.addScrollViewAttribute(classViewName, attribView)
-		
 		return describle
 
 	def addScrollViewAttribute(self, classViewName, attribView):

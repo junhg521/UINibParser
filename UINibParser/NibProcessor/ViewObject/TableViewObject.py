@@ -22,7 +22,7 @@ class JHTableViewObject(JHScrollViewObject):
 		describle = self.addClassMethodName(classType, classMethodName)
 		describle += self.addBlackCharacter()
 		describle += self.writeDescribleSyntax(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+" style:"+self.getTableViewStyle(attribViewId.get('style','UITableViewStylePlain'))+"];")
-
+		describle += self.addViewAttribute(classViewName, attribView)
 		return describle
 
 	def addViewAttribute(self, classViewName, attribView):

@@ -12,12 +12,7 @@ __author__ = 'Junhg'
 from ControlObject import JHControlObject
 
 class JHButtonObject(JHControlObject):
-	def __init__(self):
-			pass
-
-	def __del__(self):
-			pass
-
+	
 	def addSubview(self, classViewName, classMethodName, attribView):
 		# print 'attribView=', attribView
 
@@ -30,7 +25,7 @@ class JHButtonObject(JHControlObject):
 		describle += self.addBlackCharacter()
 		describle += self.writeDescribleSyntax(classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribViewId.get('buttonType', 'system'))+"];")
 		describle += self.setViewProperty(classViewName, 'frame', self.getClassFrame(attribView.get('rect',{})), '')
-		
+		describle += self.addViewAttribute(classViewName, attribView)
 		return describle
 
 	def addViewAttribute(self, classViewName, attribView):
