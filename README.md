@@ -1,6 +1,6 @@
 #NibParser
+[![Build Status](https://travis-ci.org/junhg521/UINibParser.svg?branch=master)](https://travis-ci.org/junhg521/UINibParser)
 > 该文档主要描述如何使用UINibParser，它主要作用是将xib文件或storyboard文件解析成**Objective-c**代码（包含应用程序的所有属性、试图结构及属性描述、约束、修改UITableview的registerNib及UINib等）。
->
 
 ## 使用方法
 首先进入UINibParser目录，然后在终端调用如下命令
