@@ -27,8 +27,8 @@ if [[ $0 =~ './*' ]]; then
 elif [[ $0 == 'parseResource' ]]; then
 	echo "currentDir=${currentDir}"
 else
-	currentDir=${currentDir}/${0%%/*}
-	echo "currentDir=${currentDir}"
+	parseResource=${0%%/*}/${parseResource}
+	echo "parseResource=${parseResource}"
 fi
 
 if [[ $# -lt 1 ]]; then

@@ -259,10 +259,10 @@ class JHViewObject(JHBasicObject):
 				pass
 
 			if attributedString.has_key('color'):
-				describle += loadSyntaxWithLineFeedAndSingleSpace("["+attributeName+" addAttribute:NSForegroundColorAttributeName value:"+self.getClassColor(attributedString.get('color',{}))+" range:NSMakeRange(0, "+length+")];")
+				describle += self.loadSyntaxWithLineFeedAndSingleSpace("["+attributeName+" addAttribute:NSForegroundColorAttributeName value:"+self.getClassColor(attributedString.get('color',{}))+" range:NSMakeRange(0, "+length+")];")
 				pass
 
-			describle += loadSyntaxWithLineFeedAndSingleSpace("[attributeContent appendAttributedString:"+attributeName+"];")
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace("[attributeContent appendAttributedString:"+attributeName+"];")
 			i = i + 1
 			pass
 			
