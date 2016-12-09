@@ -30,7 +30,7 @@ if [[ $# -lt 1 ]]; then
     echo "-d means parse all resouce file in directory"
     exit 1
 elif [[ $1 =~ "-*" ]]; then
-	echo "$1"
+	
 	echo "Usage: args [-o] [-s] [-f fileName] [-d fileDir]"
     echo "-o means parse resource file adapte objc syntax, defalut adapte objc syntax"
     echo "-s means parse resource file adapte swift syntax, you should use'-s' if you want parse resource file to switf syntax"
@@ -187,6 +187,9 @@ function loadProjectDir()
 		relativePath=${resourceFileName%/*}
 	elif [[ -n $resourceFileDir ]]; then
 		relativePath=$resourceFileDir
+	else
+		echo "you should add \`-d\` or \`-f\` option to \`parseResource\` command"
+		exit 1
 	fi
 
 	declare local lookforDir=""
@@ -225,7 +228,7 @@ function main()
 
 		parseNibCount=1
 		executeParseXib ${currentDir}/${resourceFileName}
-	else
+	elif [[ -n ${resourceFileDir} ]]; then
 		length=`expr ${#resourceFileDir} - 1`
 		module_Dir=${currentDir}
 		if [[ ${resourceFileDir:$length:1} == '/' ]]; then
