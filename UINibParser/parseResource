@@ -22,15 +22,23 @@ declare resourceFileDir=""
 declare parseObjcType="objc"
 declare needloadConfiguration=0
 
+if [[ $0 =~ './*' ]]; then
+	echo "currentDir=${currentDir}"
+elif [[ $0 == 'parseResource' ]]; then
+	echo "currentDir=${currentDir}"
+else
+	currentDir=${currentDir}/${0%%/*}
+	echo "currentDir=${currentDir}"
+fi
+
 if [[ $# -lt 1 ]]; then
 	echo "Usage: args [-o] [-s] [-f fileName] [-d fileDir]"
     echo "-o means parse resource file adapte objc syntax, defalut adapte objc syntax"
     echo "-s means parse resource file adapte swift syntax, you should use'-s' if you want parse resource file to switf syntax"
     echo "-f means parese resource file name"
     echo "-d means parse all resouce file in directory"
-    exit 1
+    exit 1	
 elif [[ $1 =~ "-*" ]]; then
-	
 	echo "Usage: args [-o] [-s] [-f fileName] [-d fileDir]"
     echo "-o means parse resource file adapte objc syntax, defalut adapte objc syntax"
     echo "-s means parse resource file adapte swift syntax, you should use'-s' if you want parse resource file to switf syntax"
@@ -193,11 +201,14 @@ function loadProjectDir()
 	fi
 
 	declare local lookforDir=""
-	lookforDir=`ls ${currentDir}/${relativePath} | awk "/.xcodeproj|.xcworkspace/"`
-	while [[ -z ${lookforDir} && ${lookforDir} != ${currentDir} ]]; do
-		relativePath=${relativePath%/*}
-		absolutePath=${currentDir}/${relativePath}
-		lookforDir=`ls ${currentDir}/${relativePath} | awk "/.xcodeproj|.xcworkspace/"`
+	declare local absolutePath=${currentDir}/${relativePath}
+	lookforDir=`ls ${absolutePath} | awk "/.xcodeproj|.xcworkspace/"`
+	while [[ -z ${lookforDir} ]]; do
+		if [[ ${absolutePath} != ${currentDir} ]]; then
+			absolutePath=${absolutePath%/*}
+		fi
+		
+		lookforDir=`ls ${absolutePath} | awk "/.xcodeproj|.xcworkspace/"`
 	done
 
 	lookforDir=(${lookforDir})
@@ -206,6 +217,7 @@ function loadProjectDir()
 	elif [[ ${#lookforDir[@]} -eq 1 ]]; then
 		projectDir=${absolutePath}/${lookforDir[0]}
 	fi
+	# echo "projectDir=${projectDir}"
 }
 
 function main()
