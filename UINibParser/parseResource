@@ -261,7 +261,7 @@ function main()
 	fi
 
 	# remove py product pyc file
-	find ${currentDir}/NibProcessor -name "*.pyc" | xargs rm -rf
+	find ${currentDir} -name "*.pyc" | xargs rm -rf
 
 	# open workspace
 	open ${projectDir}
