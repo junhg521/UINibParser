@@ -20,7 +20,7 @@ import sys
 import os
 import commands
 
-from ViewObject.CommonObject import JHCommomObject
+from objc.CommonObject import JHCommomObject
 from Processor import JHObjcProcessor
 
 class JHBaseParser(object):

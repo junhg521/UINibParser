@@ -12,40 +12,40 @@ __author__ = 'Junhg'
 
 import os
 
-from ViewObject.CommonObject import JHCommomObject
-from ViewObject.ViewObject import JHViewObject
-from ViewObject.BasicObject import JHBasicObject
-from ViewObject.ActivityIndicatorObject import JHActivityIndicatorObject
-from ViewObject.ButtonObject import JHButtonObject
-from ViewObject.CollectionViewObject import JHCollectionViewObject
-from ViewObject.DatePickerObject import JHDatePickerObject
-from ViewObject.GLKViewObject import JHGLKViewObject
-from ViewObject.ImageViewObject import JHImageViewObject
-from ViewObject.LabelObject import JHLabelObject
-from ViewObject.SliderObject import JHSliderObject
-from ViewObject.MapViewObject import JHMapViewObject
-from ViewObject.MTKViewObject import JHMTKViewObject
-from ViewObject.NavigationObject import JHNavigationObject
-from ViewObject.PageControlObject import JHPageControlObject
-from ViewObject.PickerViewObject import JHPickerViewObject
-from ViewObject.ProgressObject import JHProgressObject
-from ViewObject.SceneKitViewObject import JHSceneKitViewObject
-from ViewObject.ScrollViewObject import JHScrollViewObject
-from ViewObject.SearchBarObject import JHSearchBarObject
-from ViewObject.SegmentedControlObject import JHSegmentedControlObject
-from ViewObject.StackObject import JHStackObject
-from ViewObject.StepperObject import JHStepperObject
-from ViewObject.SwitchObject import JHSwitchObject
-from ViewObject.TabBarObject import JHTabBarObject
-from ViewObject.TableViewCellObject import JHTableViewCellObject
-from ViewObject.TableViewObject import JHTableViewObject
-from ViewObject.TextFieldObject import JHTextFieldObject
-from ViewObject.TextViewObject import JHTextViewObject
-from ViewObject.ToolBarObject import JHToolBarObject
-from ViewObject.VisualEffectViewObject import JHVisualEffectViewObject
-from ViewObject.WebViewObject import JHWebViewObject
-from ViewObject.CollectionReusableView import JHCollectionReusableView
-from ViewObject.CollectionViewCell import JHCollectionViewCell
+from objc.CommonObject import JHCommomObject
+from objc.ViewObject import JHViewObject
+from objc.BasicObject import JHBasicObject
+from objc.ActivityIndicatorObject import JHActivityIndicatorObject
+from objc.ButtonObject import JHButtonObject
+from objc.CollectionViewObject import JHCollectionViewObject
+from objc.DatePickerObject import JHDatePickerObject
+from objc.GLKViewObject import JHGLKViewObject
+from objc.ImageViewObject import JHImageViewObject
+from objc.LabelObject import JHLabelObject
+from objc.SliderObject import JHSliderObject
+from objc.MapViewObject import JHMapViewObject
+from objc.MTKViewObject import JHMTKViewObject
+from objc.NavigationObject import JHNavigationObject
+from objc.PageControlObject import JHPageControlObject
+from objc.PickerViewObject import JHPickerViewObject
+from objc.ProgressObject import JHProgressObject
+from objc.SceneKitViewObject import JHSceneKitViewObject
+from objc.ScrollViewObject import JHScrollViewObject
+from objc.SearchBarObject import JHSearchBarObject
+from objc.SegmentedControlObject import JHSegmentedControlObject
+from objc.StackObject import JHStackObject
+from objc.StepperObject import JHStepperObject
+from objc.SwitchObject import JHSwitchObject
+from objc.TabBarObject import JHTabBarObject
+from objc.TableViewCellObject import JHTableViewCellObject
+from objc.TableViewObject import JHTableViewObject
+from objc.TextFieldObject import JHTextFieldObject
+from objc.TextViewObject import JHTextViewObject
+from objc.ToolBarObject import JHToolBarObject
+from objc.VisualEffectViewObject import JHVisualEffectViewObject
+from objc.WebViewObject import JHWebViewObject
+from objc.CollectionReusableView import JHCollectionReusableViewObject
+from objc.CollectionViewCell import JHCollectionViewCellObject
 
 class JHBaseProcessor(object):
 

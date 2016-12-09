@@ -9,10 +9,10 @@ __author__ = 'Junhg'
 # contribute:
 # 
 
-from CollectionReusableView import JHCollectionReusableView
+from CollectionReusableView import JHCollectionReusableViewObject
 from ViewObject import JHViewObject
 
-class JHCollectionViewCell(JHCollectionReusableView):
+class JHCollectionViewCellObject(JHCollectionReusableViewObject):
 
 	def loadRootViewInit(self, needloadConfiguration, attribView):
 		# print 'attribView=', attribView
@@ -35,5 +35,4 @@ class JHCollectionViewCell(JHCollectionReusableView):
 		describle = self.addClassMethodName("UIView", "loadAllContentSubView")
 		describle += self.setViewProperty("self.contentView", 'frame', self.getClassFrame(attribView.get('rect', {})), '')
 		describle += self.addViewAttribute("self.contentView", attribView)
-		describle += self.rightBrackets()
 		return describle

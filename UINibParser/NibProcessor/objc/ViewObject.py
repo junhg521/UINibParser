@@ -145,7 +145,7 @@ class JHViewObject(JHBasicObject):
 				pass
 			elif userDefine.get('type', '') == 'color':
 				userDefineValue = runtimeProperty.get('color')
-				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), self.getClassColor(userDefineValue), '')
+				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), self.getClassColor(userDefineValue)+".CGColor;", '')
 				pass
 			else:
 				describle += self.setViewProperty(classLayName, userDefine.get('keyPath', ''), userDefine.get('value', ''), '')
