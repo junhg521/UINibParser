@@ -26,7 +26,7 @@ class JHViewObject(JHBasicObject):
 		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadAllContentSubView];")
 		
 		if needloadConfiguration > 0:
-			describle += loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
+			describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
 			pass
 			
 		describle += self.addBasicViewAttribute("self", attribView)

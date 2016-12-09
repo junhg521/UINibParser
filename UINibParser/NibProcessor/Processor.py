@@ -18,7 +18,7 @@ from ViewObject.BasicObject import JHBasicObject
 from ViewObject.ActivityIndicatorObject import JHActivityIndicatorObject
 from ViewObject.ButtonObject import JHButtonObject
 from ViewObject.CollectionViewObject import JHCollectionViewObject
-from ViewObject.DataPickerObject import JHDataPickerObject
+from ViewObject.DatePickerObject import JHDatePickerObject
 from ViewObject.GLKViewObject import JHGLKViewObject
 from ViewObject.ImageViewObject import JHImageViewObject
 from ViewObject.LabelObject import JHLabelObject
