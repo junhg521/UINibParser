@@ -26,20 +26,26 @@ class JHBasicObject(JHCommomObject):
 	def loadSyntaxWithLineFeedAndDoubleSpace(self, syntax):
 		return self.addBlackCharacter() + self.loadSyntaxWithLineFeedAndSingleSpace(syntax)
 
+	def loadAllContentSubView(self):
+		return self.loadSyntaxWithLineFeedAndDoubleSpace(self.loadContentSubView())
+
+	def loadViewConfigInfos(self, needloadConfiguration):
+
+		if needloadConfiguration > 0:
+			return self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
+		else:
+			return ""
+
 	def getClassFrame(self, frame):
-		classFrame = ""
+		# print 'frame=',frame
 
 		if frame.get('key','') == 'frameInset':
-			classFrame = "CGRectMake("+frame.get('minX', '0')+","+frame.get('minY', "0")+","+frame.get('width', "320")+","+frame.get('height', "480")+")"
-			pass
+			return "CGRectMake("+frame.get('minX', '0')+","+frame.get('minY', "0")+","+frame.get('width', "320")+","+frame.get('height', "480")+")"
 		elif frame.get('key', '') == 'frame':
-			classFrame = "CGRectMake("+frame.get('x', '0')+","+frame.get('y', "0")+","+frame.get('width', "320")+","+frame.get('height', "480")+")"
-			pass
+			return "CGRectMake("+frame.get('x', '0')+","+frame.get('y', "0")+","+frame.get('width', "320")+","+frame.get('height', "480")+")"
 		else:
-			classFrame="CGRectZero"
-			pass
-
-		return classFrame
+			return "CGRectZero"
+		pass
 
 	def getClassSizeAndKey(self, size):
 		# print 'size=',size
@@ -50,36 +56,28 @@ class JHBasicObject(JHCommomObject):
 		return (edgement.get('key',''), "UIEdgeInsetsMake("+edgement.get('minX','')+","+edgement.get('minY','')+","+edgement.get('maxX','')+","+edgement.get('maxY','')+")")
 
 	def getClassColor(self, color):
-		classColor = ""
 
 		if type(color) == dict:
-			classColor = "[UIColor colorWithRed:"+color.get('red', '1')+" green:"+color.get('green', '1')+" blue:"+color.get('blue','1')+" alpha:"+color.get('alpha', '1')+"]"
+			return "[UIColor colorWithRed:"+color.get('red', '1')+" green:"+color.get('green', '1')+" blue:"+color.get('blue','1')+" alpha:"+color.get('alpha', '1')+"]"
 		else:
-			print 'color=',color
-			pass
-
-		return classColor
+			print "color=", color
+			return "[UIColor clearColor]"
+		pass
 
 	def getTableViewCellSelectionStyle(self, selectionStyle):
-		cellStyle = 'UITableViewCellSelectionStyleBlue'
 
 		if selectionStyle == 'none':
-			cellStyle = 'UITableViewCellSelectionStyleNone'
-			pass
+			return "UITableViewCellSelectionStyleNone"
 		elif selectionStyle == 'gray':
-			cellStyle = 'UITableViewCellSelectionStyleGray'
-			pass
+			return "UITableViewCellSelectionStyleGray"
 		elif selectionStyle == 'blue':
-			cellStyle = 'UITableViewCellSelectionStyleBlue'
-			pass
+			return "UITableViewCellSelectionStyleBlue"
 		elif selectionStyle == 'default':
-			cellStyle = 'UITableViewCellSelectionStyleDefault'
-			pass
+			return "UITableViewCellSelectionStyleDefault"
 		else:
 			print 'selectionStyle=',selectionStyle
-			pass
-
-		return cellStyle
+			return "UITableViewCellSelectionStyleBlue"
+		pass
 
 	def getButtonType(self, buttonType):
 		buttonObjectType = 'UIButtonTypeCustom'

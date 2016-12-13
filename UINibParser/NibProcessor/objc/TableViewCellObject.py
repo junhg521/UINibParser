@@ -14,35 +14,31 @@ from ViewObject import JHViewObject
 class JHTableViewCellObject(JHViewObject):
 
 	def loadRootViewInit(self, needloadConfiguration, attribView):
-		# print 'attribView=', attribView
+		
 		describle = self.loadSyntaxWithDoubleLineFeed("- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier")
 		describle += self.leftBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])")
 		describle += self.addBlackCharacter()
 		describle += self.leftBrackets()
-	
-		attribViewId = self.attribViewTagProperty(attribView)
-
-		if attribViewId.get('selectionStyle', {}) != 'blue':
-			describle += self.loadSyntaxWithLineFeedAndDoubleSpace("self.selectionStyle = "+self.getTableViewCellSelectionStyle(attribViewId.get('selectionStyle', {}))+";")
-			pass
-
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadAllContentSubView];")
-		
-		if needloadConfiguration:
-			describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
-			pass
-
-		# describle += self.addContentViewConstraint()
+		describle += self.addViewAttribute("self", attribView)
+		describle += self.loadAllContentSubView()
+		describle += self.loadViewConfigInfos(needloadConfiguration)
 		describle += self.addBlackCharacter()
 		describle += self.rightBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("return self;")
 		describle += self.rightBrackets()
 		return describle
 
-	def loadView(self, attribView):
+	def addViewAttribute(self, classViewName, attribView):
+		# print "attribView=",attribView
+		attribViewId = self.attribViewTagProperty(attribView)
+		describle = self.addBasicViewAttribute(classViewName, attribView)
+		describle += self.setViewProperty(classViewName, 'selectionStyle', self.getTableViewCellSelectionStyle(attribViewId.get('selectionStyle', {})), 'UITableViewCellSelectionStyleBlue')
+		return describle
+
+	def addSubViewOfContentView(self, classMethodName, attribView):
 		# print 'attribView=', attribView
-		describle = self.addClassMethodName("UIView", "loadAllContentSubView")
+		describle = self.addClassMethodName("void", "loadAllContentSubView")
 		describle += self.setViewProperty("self.contentView", 'frame', self.getClassFrame(attribView.get('rect', {})), '')
-		describle += self.addViewAttribute("self.contentView", attribView)
+		describle += self.addBasicViewAttribute("self.contentView", attribView)
 		return describle

@@ -12,13 +12,32 @@ __author__ = 'Junhg'
 __author__ = 'Junhg'
 
 class JHCommomObject(object):
-	def __init__(self):
-		pass
 
-	def __del__(self):
-		pass
+	def leftBrackets(self):
+		return "{"+self.newlineCharacter()
+		
+	def rightBrackets(self):
+		return "}"+self.newlineCharacter()
+
+	def newlineCharacter(self):
+		return "\n"
+
+	def addBlackCharacter(self):
+		return "	"
+
+	def loadContentSubView(self):
+		return "[self loadAllContentSubView];"
+
+	def defaultSystemObjectTag(self):
+		return ["view", "tableViewCellContentView", "label", "segmentedControl",
+		"button", "textField", "slider", "switch", "customswitch", "activityIndicatorView",
+		"progressView", "pageControl", "stepper", "datePicker", "pickerView", "MTKView",
+		"searchBar", "tabBar", "toolBar", "navigationBar", "stackView", "tableView", 
+		"tableViewCell", "imageView", "collectionView", "textView", "scrollView", "visualEffectView",
+		"webView", "glkView", "mapView", "sceneKitView", "collectionReusableView", "collectionViewCell"]
 
 	def judgementViewTag(self, tag):
+
 		isValidate = False
 		className = self.objcClassNameType(tag)
 		if len(className) > 0:
@@ -34,18 +53,7 @@ class JHCommomObject(object):
 			return originObj.count(destionationObj) > 0
 		else:
 			return False
-
-	def leftBrackets(self):
-		return "{"+self.newlineCharacter()
-		
-	def rightBrackets(self):
-		return "}"+self.newlineCharacter()
-
-	def newlineCharacter(self):
-		return "\n"
-
-	def addBlackCharacter(self):
-		return "	"
+		pass
 
 	# 获取属性字段Tag值
 	def attribViewTag(self, attribView):
@@ -128,7 +136,7 @@ class JHCommomObject(object):
 
 	def objcClassNameType(self, tag):
 		className = ''
-		if tag == 'view' or tag == 'tableViewCellContentView':
+		if tag == 'view' or tag == 'tableViewCellContentView' or tag == 'containerView':
 			className = 'UIView'
 			pass
 		elif tag == 'label':

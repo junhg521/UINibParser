@@ -41,6 +41,6 @@ class JHScrollViewObject(JHViewObject):
 		describle += self.setViewProperty(classViewName, 'zooming', attribViewId.get('zooming', 'YES'), 'YES')
 		describle += self.setViewProperty(classViewName, 'zoomBouncing', attribViewId.get('zoomBouncing', 'YES'), 'YES')
 		describle += self.setViewProperty(classViewName, 'scrollsToTop', attribViewId.get('scrollsToTop', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'keyboardDismissMode', self.getScrollViewKeyboardDismissMode(attribViewId.get('keyboardDismissMode', 'none')), 'none')
+		describle += self.setViewProperty(classViewName, 'keyboardDismissMode', self.getScrollViewKeyboardDismissMode(attribViewId.get('keyboardDismissMode', 'none')), 'UIScrollViewKeyboardDismissModeNone')
 
 		return describle

@@ -20,7 +20,6 @@ import sys
 import os
 import commands
 
-from objc.CommonObject import JHCommomObject
 from Processor import JHObjcProcessor
 
 class JHBaseParser(object):
@@ -41,7 +40,7 @@ class JHBaseParser(object):
 	def parse(self):
 		pass
 
-class JHXibParser(JHBaseParser, JHCommomObject):
+class JHXibParser(JHBaseParser):
 	"extract the nodes in the parsed file into attributes of JHXibParser class"
 	
 	def __init__(self, resource_file_name, needloadConfiguration):
@@ -200,9 +199,9 @@ class JHXibParser(JHBaseParser, JHCommomObject):
 				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
 				pass
 			elif element.tag == 'userDefinedRuntimeAttributes':
+				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
 				pass
 			else:
-				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
 				self.parseViewPropetyNode(attribView, element.tag, element.attrib)
 				pass
 			pass
@@ -290,12 +289,9 @@ class JHXibParser(JHBaseParser, JHCommomObject):
 		"""
 		allAttribViews = []
 		for element in resourceObjects:
-			# print 'tag=',element.tag, 'attrib=', list(element)
-			if self.judgementViewTag(element.tag):
-				attribView = self.parseViewNode(list(element))
-				attribView[element.tag] = element.attrib
-				allAttribViews.append(attribView)
-				pass
+			attribView = self.parseViewNode(list(element))
+			attribView[element.tag] = element.attrib
+			allAttribViews.append(attribView)
 			pass
 		return allAttribViews
 
@@ -376,5 +372,5 @@ if __name__ == '__main__':
 	parser = JHXibParser(sys.argv[1], sys.argv[2])
 	parser.parse()
 
-	processor = JHObjcProcessor(parser)
-	processor.processing()
+	# processor = JHObjcProcessor(parser)
+	# processor.processing()

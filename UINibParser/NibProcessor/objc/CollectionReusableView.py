@@ -13,17 +13,8 @@ from ViewObject import JHViewObject
 
 class JHCollectionReusableViewObject(JHViewObject):
 
-	def loadView(self, needloadConfiguration, attribView):
-		# print 'attribView=', attribView
+	def __init__(self):
+		pass
+	
 
-		describle = self.loadSyntaxWithDoubleLineFeed("- (instancetype)initWithFrame:(CGRect)frame")
-		describle += self.leftBrackets()
-		describle += self.loadSyntaxWithLineFeedAndSingleSpace("if (self = [super initWithFrame:frame])")
-		describle += self.addBlackCharacter()
-		describle += self.leftBrackets()
-		describle += self.addBlackCharacter()
-		describle += JHViewObject.addBasicViewAttribute(self, "self", attribView)
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
-
-		return describle
 

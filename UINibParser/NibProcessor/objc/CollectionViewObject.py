@@ -12,17 +12,12 @@ __author__ = 'Junhg'
 from ScrollViewObject import JHScrollViewObject
 
 class JHCollectionViewObject(JHScrollViewObject):
-	def __init__(self):
-		pass
 
-	def __del__(self):
-		pass
-
-	def addSubview(self, classViewName, classMethodName, attribView):
+	def addSubview(self, instanceViewName, classMethodName, attribView):
 		# print 'attribView=',attribView
-
-		classType = self.objcClassNameType(classViewName)
+		classViewName = self.attribViewTag(attribView)
 		attribViewId = self.attribViewTagProperty(attribView)
+		classType = self.objcClassNameType(self.attribViewTag(attribView))
 		
 		if attribViewId.get('customClass', '') != '':
 			classType = attribViewId.get('customClass')
@@ -73,7 +68,7 @@ class JHCollectionViewObject(JHScrollViewObject):
 			pass
 			
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+" collectionViewLayout:layout];")
-		
+		describle += self.addViewAttribute(classViewName, attribView)
 		return describle
 
 	def addViewAttribute(self, classViewName, attribView):

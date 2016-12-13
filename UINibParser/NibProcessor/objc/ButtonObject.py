@@ -13,9 +13,9 @@ from ControlObject import JHControlObject
 
 class JHButtonObject(JHControlObject):
 	
-	def addSubview(self, classViewName, classMethodName, attribView):
+	def addSubview(self, instanceViewName, classMethodName, attribView):
 		# print 'attribView=', attribView
-
+		classViewName = self.attribViewTag(attribView)
 		attribViewId = self.attribViewTagProperty(attribView)
 		classType = self.objcClassNameType(classViewName)
 		

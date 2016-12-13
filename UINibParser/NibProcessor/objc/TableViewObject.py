@@ -13,11 +13,11 @@ from ScrollViewObject import JHScrollViewObject
 
 class JHTableViewObject(JHScrollViewObject):
 
-	def addSubview(self, classViewName, classMethodName, attribView):
+	def addSubview(self, instanceViewName, classMethodName, attribView):
 		# print 'attribView=', attribView
-
-		classType = self.objcClassNameType(classViewName)
+		classViewName = self.attribViewTag(attribView)
 		attribViewId = self.attribViewTagProperty(attribView)
+		classType = self.objcClassNameType(classViewName)
 		
 		if attribViewId.get('customClass', '') != '':
 			classType = attribViewId.get('customClass')

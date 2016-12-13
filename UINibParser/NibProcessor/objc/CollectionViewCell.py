@@ -15,24 +15,24 @@ from ViewObject import JHViewObject
 class JHCollectionViewCellObject(JHCollectionReusableViewObject):
 
 	def loadRootViewInit(self, needloadConfiguration, attribView):
-		# print 'attribView=', attribView
+		
 		describle = self.loadSyntaxWithDoubleLineFeed("- (instancetype)initWithFrame:(CGRect)frame")
 		describle += self.leftBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("if (self = [super initWithFrame:frame])")
 		describle += self.addBlackCharacter()
 		describle += self.leftBrackets()
-		describle += JHViewObject.addBasicViewAttribute(self, "self", attribView)
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadAllContentSubView];")
-		describle += self.addContentViewConstraint()
+		describle += self.addBasicViewAttribute("self", attribView)
+		describle += self.loadAllContentSubView()
+		describle += self.loadViewConfigInfos(needloadConfiguration)
 		describle += self.addBlackCharacter()
 		describle += self.rightBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("return self;")
 		describle += self.rightBrackets()
 		return describle
 
-	def loadView(self, attribView):
+	def addSubViewOfContentView(self, classMethodName, attribView):
 		# print 'attribView=', attribView
-		describle = self.addClassMethodName("UIView", "loadAllContentSubView")
+		describle = self.addClassMethodName("void", "loadAllContentSubView")
 		describle += self.setViewProperty("self.contentView", 'frame', self.getClassFrame(attribView.get('rect', {})), '')
-		describle += self.addViewAttribute("self.contentView", attribView)
+		describle += self.addBasicViewAttribute("self.contentView", attribView)
 		return describle

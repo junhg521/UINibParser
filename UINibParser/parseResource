@@ -28,7 +28,7 @@ elif [[ $0 == 'parseResource' ]]; then
 	echo "currentDir=${currentDir}"
 else
 	parseResource=${0%%/*}/${parseResource}
-	echo "parseResource=${parseResource}"
+	# echo "parseResource=${parseResource}"
 fi
 
 if [[ $# -lt 1 ]]; then
@@ -168,6 +168,7 @@ function modifyBundleInitialToCodeInitial()
 function deleteResourceFileFromProject()
 {
 	projectFiles=`find ${absolutePath} -name "*.pbxproj" -type f`
+	# echo "projectFiles=${projectFiles}, fileName=$1"
 	for projectFile in ${projectFiles}; do
 		sed -i "" "/$1/d" ${projectFile}
 	done
@@ -201,13 +202,13 @@ function loadProjectDir()
 	fi
 
 	declare local lookforDir=""
-	declare local absolutePath=${currentDir}/${relativePath}
+	absolutePath=${currentDir}/${relativePath}
 	lookforDir=`ls ${absolutePath} | awk "/.xcodeproj|.xcworkspace/"`
 	while [[ -z ${lookforDir} ]]; do
 		if [[ ${absolutePath} != ${currentDir} ]]; then
 			absolutePath=${absolutePath%/*}
 		fi
-		
+		# echo "absolutePath=${absolutePath}"
 		lookforDir=`ls ${absolutePath} | awk "/.xcodeproj|.xcworkspace/"`
 	done
 
@@ -217,7 +218,7 @@ function loadProjectDir()
 	elif [[ ${#lookforDir[@]} -eq 1 ]]; then
 		projectDir=${absolutePath}/${lookforDir[0]}
 	fi
-	# echo "projectDir=${projectDir}"
+	echo "projectDir=${projectDir}"
 }
 
 function main()

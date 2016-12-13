@@ -23,13 +23,9 @@ class JHViewObject(JHBasicObject):
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("if (self = [super initWithFrame:frame])")
 		describle += self.addBlackCharacter()
 		describle += self.leftBrackets()
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadAllContentSubView];")
-		
-		if needloadConfiguration > 0:
-			describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self loadConfigCellInfo];")
-			pass
-			
 		describle += self.addBasicViewAttribute("self", attribView)
+		describle += self.loadAllContentSubView()
+		describle += self.loadViewConfigInfos(needloadConfiguration)
 		describle += self.addBlackCharacter()
 		describle += self.rightBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("return self;")
@@ -44,10 +40,19 @@ class JHViewObject(JHBasicObject):
 		describle += self.rightBrackets()
 		return describle
 
+	def addSubViewOfContentView(self, classViewName, attribView):
+
+		describle = self.addClassMethodName("void", "loadAllContentSubView")
+
+		if classViewName != "self.view":
+			describle += self.addBasicViewAttribute(classViewName, attribView)
+			pass
+		
+		return describle
+
 	def addSubview(self, classViewName, classMethodName, attribView):
-		# print 'attribView=', attribView
-		classType = self.objcClassNameType(classViewName)
 		attribViewId = self.attribViewTagProperty(attribView)
+		classType = self.objcClassNameType(self.attribViewTag(attribView))
 		
 		if attribViewId.get('customClass', '') != '':
 			classType = attribViewId.get('customClass')
@@ -55,13 +60,19 @@ class JHViewObject(JHBasicObject):
 
 		describle = self.addClassMethodName(classType, classMethodName)
 
-		if len(self.getClassFrame(attribView.get('rect', {}))) > 0:
-			describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+"];")
-			pass
-		else:
-			describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] init];")
+		if classViewName != "self.contentView":
+			frame = self.getClassFrame(attribView.get('rect', {}))
+			instancetViewName = self.attribViewTag(attribView)
+
+			if len(frame) > 0:
+				describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+instancetViewName+" = [["+classType+" alloc] initWithFrame:"+frame+"];")
+				pass
+			else:
+				describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+instancetViewName+" = [["+classType+" alloc] init];")
+				pass
 			pass
 		pass
+
 		describle += self.addViewAttribute(classViewName, attribView)
 		return describle
 
