@@ -13,28 +13,23 @@ from ControlObject import JHControlObject
 
 class JHSwitchObject(JHControlObject):
 
-	def addViewAttribute(self, classViewName, attribView):
-		# print 'attribView=',attribView
-
-		describle = JHControlObject.addViewAttribute(self, classViewName, attribView)
-		describle += self.addSwitchAttribute(classViewName, attribView)
-		
+	def addViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=',instanceProperty
+		describle = JHControlObject.addViewAttribute(self, instanceTag, instanceProperty)
+		describle += self.addSwitchAttribute(instanceTag, instanceProperty)
 		return describle
 
-	def addSwitchAttribute(self, classViewName, attribView):
-		# print 'attribView=',attribView
-
-		classViewAttrib = self.attribViewTagProperty(attribView)
+	def addSwitchAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=',instanceProperty
 		describle = ""
 
-		if classViewAttrib.get('onImage','') != "":
-			describle += self.setViewProperty(classViewName, "onImage", "[UIImage imageNamed:@"+"\""+classViewAttrib.get('onImage','')+"\""+"]", "")
+		if instanceProperty.get('onImage','') != "":
+			describle += self.setViewProperty(instanceTag, "onImage", "[UIImage imageNamed:@"+"\""+instanceProperty.get('onImage','')+"\""+"]", "")
 			pass
 
-		if classViewAttrib.get('offImage','') != "":
-			describle += self.setViewProperty(classViewName, "offImage", "[UIImage imageNamed:@"+"\""+classViewAttrib.get('offImage','')+"\""+"]", "")
+		if instanceProperty.get('offImage','') != "":
+			describle += self.setViewProperty(instanceTag, "offImage", "[UIImage imageNamed:@"+"\""+instanceProperty.get('offImage','')+"\""+"]", "")
 			pass
 
-		describle += self.setViewProperty(classViewName, "on", classViewAttrib.get('on','YES'), "YES")
-
+		describle += self.setViewProperty(instanceTag, "on", instanceProperty.get('on','YES'), "YES")
 		return describle

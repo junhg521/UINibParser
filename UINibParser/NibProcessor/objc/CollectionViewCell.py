@@ -30,9 +30,10 @@ class JHCollectionViewCellObject(JHCollectionReusableViewObject):
 		describle += self.rightBrackets()
 		return describle
 
-	def addSubViewOfContentView(self, classMethodName, attribView):
-		# print 'attribView=', attribView
-		describle = self.addClassMethodName("void", "loadAllContentSubView")
-		describle += self.setViewProperty("self.contentView", 'frame', self.getClassFrame(attribView.get('rect', {})), '')
-		describle += self.addBasicViewAttribute("self.contentView", attribView)
+	def addSubview(self, instanceTag, instanceProperty, classMethodName):
+		instanceName = self.attribViewInstanceName(instanceTag, instanceProperty)
+		classType = self.instanceClassNameType(instanceTag, instanceProperty)
+		describle = self.addClassMethodName(classType, classMethodName)
+		describle += self.setViewProperty(instanceName, 'frame', self.getClassFrame(instanceProperty.get('rect', {})), '')
+		describle += self.addBasicViewAttribute(instanceName, instanceProperty)
 		return describle

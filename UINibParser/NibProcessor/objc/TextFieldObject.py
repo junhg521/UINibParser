@@ -13,34 +13,33 @@ from ControlObject import JHControlObject
 
 class JHTextFieldObject(JHControlObject):
 
-	def addViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
+	def addViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
 		
-		describle = JHControlObject.addViewAttribute(self, classViewName, attribView)
-		describle += self.getTextFieldViewAttribute(classViewName, attribView)
+		describle = JHControlObject.addViewAttribute(self, instanceTag, instanceProperty)
+		describle += self.getTextFieldViewAttribute(instanceTag, instanceProperty)
 
 		return describle
 
-	def getTextFieldViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
+	def getTextFieldViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
 		
-		classViewAttrib = self.attribViewTagProperty(attribView)
 		describle = ""
-		if classViewAttrib.get('background','').encode('utf-8') != '':
-			describle += self.setViewProperty(classViewName, "background", "[UIImage imageNamed:@"+"\""+classViewAttrib.get('background','').encode('utf-8')+"\""+"]", "")
+		if instanceProperty.get('background','').encode('utf-8') != '':
+			describle += self.setViewProperty(instanceTag, "background", "[UIImage imageNamed:@"+"\""+instanceProperty.get('background','').encode('utf-8')+"\""+"]", "")
 			pass
 			
-		if classViewAttrib.get('disabledBackground','').encode('utf-8') != '':
-			describle += self.setViewProperty(classViewName, "disabledBackground", "[UIImage imageNamed:@"+"\""+classViewAttrib.get('disabledBackground','').encode('utf-8')+"\""+"]", "")
+		if instanceProperty.get('disabledBackground','').encode('utf-8') != '':
+			describle += self.setViewProperty(instanceTag, "disabledBackground", "[UIImage imageNamed:@"+"\""+instanceProperty.get('disabledBackground','').encode('utf-8')+"\""+"]", "")
 			pass
 
-		describle += self.setViewProperty(classViewName, "placeholder", "@"+"\""+classViewAttrib.get('placeholder','').encode('utf-8')+"\"", "")
-		describle += self.setViewProperty(classViewName, "text", "@"+"\""+classViewAttrib.get('text','').encode('utf-8')+"\"", "")
-		describle += self.setViewProperty(classViewName, "font", self.getTextFont(attribView.get('fontDescription')), "")
-		describle += self.setViewProperty(classViewName, "borderStyle", self.getTextBorderStyle(classViewAttrib.get('borderStyle', 'none')), "UITextBorderStyleNone")
-		describle += self.setViewProperty(classViewName, "clearButtonMode", self.getTextFieldViewMode(classViewAttrib.get('clearButtonMode', 'never')), "UITextFieldViewModeNever")
-		describle += self.setViewProperty(classViewName, "leftViewMode", self.getTextFieldViewMode(classViewAttrib.get('leftViewMode', 'never')), "UITextFieldViewModeNever")
-		describle += self.setViewProperty(classViewName, "rightViewMode", self.getTextFieldViewMode(classViewAttrib.get('rightViewMode', 'never')), "UITextFieldViewModeNever")
+		describle += self.setViewProperty(instanceTag, "placeholder", "@"+"\""+instanceProperty.get('placeholder','').encode('utf-8')+"\"", "")
+		describle += self.setViewProperty(instanceTag, "text", "@"+"\""+instanceProperty.get('text','').encode('utf-8')+"\"", "")
+		describle += self.setViewProperty(instanceTag, "font", self.getTextFont(instanceProperty.get('fontDescription')), "")
+		describle += self.setViewProperty(instanceTag, "borderStyle", self.getTextBorderStyle(instanceProperty.get('borderStyle', 'none')), "UITextBorderStyleNone")
+		describle += self.setViewProperty(instanceTag, "clearButtonMode", self.getTextFieldViewMode(instanceProperty.get('clearButtonMode', 'never')), "UITextFieldViewModeNever")
+		describle += self.setViewProperty(instanceTag, "leftViewMode", self.getTextFieldViewMode(instanceProperty.get('leftViewMode', 'never')), "UITextFieldViewModeNever")
+		describle += self.setViewProperty(instanceTag, "rightViewMode", self.getTextFieldViewMode(instanceProperty.get('rightViewMode', 'never')), "UITextFieldViewModeNever")
 
 		return describle
 		

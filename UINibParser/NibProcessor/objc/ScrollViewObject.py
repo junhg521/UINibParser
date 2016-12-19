@@ -13,34 +13,30 @@ from ViewObject import JHViewObject
 
 class JHScrollViewObject(JHViewObject):
 
-	def addViewAttribute(self, classViewName, attribView):
+	def addViewAttribute(self, instanceTag, instanceProperty):
 		# print 'attribView=', attribView
-
-		describle = JHViewObject.addViewAttribute(self, classViewName, attribView)
-		describle += self.addScrollViewAttribute(classViewName, attribView)
+		describle = JHViewObject.addViewAttribute(self, instanceTag, instanceProperty)
+		describle += self.addScrollViewAttribute(instanceTag, instanceProperty)
 		return describle
 
-	def addScrollViewAttribute(self, classViewName, attribView):
+	def addScrollViewAttribute(self, instanceTag, instanceProperty):
 		# print 'attribView=', attribView
-
-		attribViewId = self.attribViewTagProperty(attribView)
-		describle = self.setViewProperty(classViewName, 'directionalLockEnabled', attribViewId.get('directionalLockEnabled', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'bounces', attribViewId.get('bounces', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'alwaysBounceVertical', attribViewId.get('alwaysBounceVertical', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'alwaysBounceHorizontal', attribViewId.get('alwaysBounceHorizontal', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'pagingEnabled', attribViewId.get('pagingEnabled', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'scrollEnabled', attribViewId.get('scrollEnabled', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'showsHorizontalScrollIndicator', attribViewId.get('showsHorizontalScrollIndicator', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'showsVerticalScrollIndicator', attribViewId.get('showsVerticalScrollIndicator', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'tracking', attribViewId.get('tracking', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'dragging', attribViewId.get('dragging', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'decelerating', attribViewId.get('decelerating', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'delaysContentTouches', attribViewId.get('delaysContentTouches', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'canCancelContentTouches', attribViewId.get('canCancelContentTouches', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'bouncesZoom', attribViewId.get('bouncesZoom', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'zooming', attribViewId.get('zooming', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'zoomBouncing', attribViewId.get('zoomBouncing', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'scrollsToTop', attribViewId.get('scrollsToTop', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'keyboardDismissMode', self.getScrollViewKeyboardDismissMode(attribViewId.get('keyboardDismissMode', 'none')), 'UIScrollViewKeyboardDismissModeNone')
-
+		describle = self.setViewProperty(instanceTag, 'directionalLockEnabled', instanceProperty.get('directionalLockEnabled', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'bounces', instanceProperty.get('bounces', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'alwaysBounceVertical', instanceProperty.get('alwaysBounceVertical', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'alwaysBounceHorizontal', instanceProperty.get('alwaysBounceHorizontal', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'pagingEnabled', instanceProperty.get('pagingEnabled', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'scrollEnabled', instanceProperty.get('scrollEnabled', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'showsHorizontalScrollIndicator', instanceProperty.get('showsHorizontalScrollIndicator', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'showsVerticalScrollIndicator', instanceProperty.get('showsVerticalScrollIndicator', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'tracking', instanceProperty.get('tracking', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'dragging', instanceProperty.get('dragging', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'decelerating', instanceProperty.get('decelerating', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'delaysContentTouches', instanceProperty.get('delaysContentTouches', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'canCancelContentTouches', instanceProperty.get('canCancelContentTouches', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'bouncesZoom', instanceProperty.get('bouncesZoom', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'zooming', instanceProperty.get('zooming', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'zoomBouncing', instanceProperty.get('zoomBouncing', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'scrollsToTop', instanceProperty.get('scrollsToTop', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'keyboardDismissMode', self.getScrollViewKeyboardDismissMode(instanceProperty.get('keyboardDismissMode', 'none')), 'UIScrollViewKeyboardDismissModeNone')
 		return describle

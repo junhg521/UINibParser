@@ -12,11 +12,6 @@ __author__ = 'Junhg'
 from ViewObject import JHViewObject
 
 class JHImageViewObject(JHViewObject):
-	def __init__(self):
-		pass
-
-	def __del__(self):
-		pass
 
 	def addViewAttribute(self, classViewName, attribView):
 		# print 'attribView=', attribView
@@ -28,20 +23,18 @@ class JHImageViewObject(JHViewObject):
 
 	def addImageViewAttribute(self, classViewName, attribView):
 		# print 'attribView=', attribView
-
-		classViewAttrib = self.attribViewTagProperty(attribView)
 		describle = ""
 
-		if classViewAttrib.get('image', 'NO') != 'NO':
-			describle = self.setViewProperty(classViewName, "image", "[UIImage imageNamed:@"+"\""+classViewAttrib.get('image','').encode('utf-8')+"\""+"]", "")
+		if attribView.get('image', 'NO') != 'NO':
+			describle = self.setViewProperty(classViewName, "image", "[UIImage imageNamed:@"+"\""+attribView.get('image','').encode('utf-8')+"\""+"]", "")
 			pass
 
-		if classViewAttrib.get('highlightedImage', 'NO') != 'NO':
-			describle += self.setViewProperty(classViewName, "highlightedImage", "[UIImage imageNamed:@"+"\""+classViewAttrib.get('highlightedImage','').encode('utf-8')+"\""+"]", "")
+		if attribView.get('highlightedImage', 'NO') != 'NO':
+			describle += self.setViewProperty(classViewName, "highlightedImage", "[UIImage imageNamed:@"+"\""+attribView.get('highlightedImage','').encode('utf-8')+"\""+"]", "")
 			pass
 
-		if classViewAttrib.get('highlighted', 'NO') != 'NO':
-			describle += self.setViewProperty(classViewName, "highlighted", "[UIImage imageNamed:@"+"\""+classViewAttrib.get('highlighted','').encode('utf-8')+"\""+"]", "")
+		if attribView.get('highlighted', 'NO') != 'NO':
+			describle += self.setViewProperty(classViewName, "highlighted", "[UIImage imageNamed:@"+"\""+attribView.get('highlighted','').encode('utf-8')+"\""+"]", "")
 			pass
 			
 		return describle

@@ -22,13 +22,14 @@ declare resourceFileDir=""
 declare parseObjcType="objc"
 declare needloadConfiguration=0
 
+echo "command=$0"
 if [[ $0 =~ './*' ]]; then
 	echo "currentDir=${currentDir}"
 elif [[ $0 == 'parseResource' ]]; then
 	echo "currentDir=${currentDir}"
 else
 	parseResource=${0%%/*}/${parseResource}
-	# echo "parseResource=${parseResource}"
+	echo "parseResource=${parseResource}"
 fi
 
 if [[ $# -lt 1 ]]; then

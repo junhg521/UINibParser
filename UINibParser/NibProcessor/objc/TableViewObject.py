@@ -13,37 +13,29 @@ from ScrollViewObject import JHScrollViewObject
 
 class JHTableViewObject(JHScrollViewObject):
 
-	def addSubview(self, instanceViewName, classMethodName, attribView):
+	def addSubview(self, instanceTag, instanceProperty, classMethodName):
 		# print 'attribView=', attribView
-		classViewName = self.attribViewTag(attribView)
-		attribViewId = self.attribViewTagProperty(attribView)
-		classType = self.objcClassNameType(classViewName)
-		
-		if attribViewId.get('customClass', '') != '':
-			classType = attribViewId.get('customClass')
-			pass
-			
+		classViewName = self.attribViewInstanceName(instanceTag, instanceProperty)
+		classType = self.instanceClassNameType(instanceTag, instanceProperty)
 		describle = self.addClassMethodName(classType, classMethodName)
-		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+" style:"+self.getTableViewStyle(attribViewId.get('style','UITableViewStylePlain'))+"];")
-		describle += self.addViewAttribute(classViewName, attribView)
+		frame = self.getClassFrame(instanceProperty.get('rect', {}))
+		style = self.getTableViewStyle(instanceProperty.get('style','UITableViewStylePlain'))
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+frame+" style:"+style+"];")
+		describle += self.addViewAttribute(classViewName, instanceProperty)
 		return describle
 
-	def addViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
-
-		describle = JHScrollViewObject.addViewAttribute(self, classViewName, attribView)
-		describle += self.addTableViewAttribute(classViewName, attribView)
-
+	def addViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
+		describle = JHScrollViewObject.addViewAttribute(self, instanceTag, instanceProperty)
+		describle += self.addTableViewAttribute(instanceTag, instanceProperty)
 		return describle
 
-	def addTableViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
-
-		attribViewId = self.attribViewTagProperty(attribView)
-		describle = self.setViewProperty(classViewName, 'separatorStyle', self.getTableViewCellSeparatorStyle(attribViewId.get('separatorStyle', 'none')), '')
-		describle += self.setViewProperty(classViewName, 'sectionHeaderHeight', attribViewId.get('sectionHeaderHeight', '0'), '0')
-		describle += self.setViewProperty(classViewName, 'sectionFooterHeight', attribViewId.get('sectionFooterHeight', '0'), '0')
-		describle += self.setViewProperty(classViewName, 'rowHeight', attribViewId.get('rowHeight', '0'), '0')
+	def addTableViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
+		describle = self.setViewProperty(instanceTag, 'separatorStyle', self.getTableViewCellSeparatorStyle(instanceProperty.get('separatorStyle', 'styleSingleLine')), 'UITableViewCellSeparatorStyleSingleLine')
+		describle += self.setViewProperty(instanceTag, 'sectionHeaderHeight', instanceProperty.get('sectionHeaderHeight', '0'), '0')
+		describle += self.setViewProperty(instanceTag, 'sectionFooterHeight', instanceProperty.get('sectionFooterHeight', '0'), '0')
+		describle += self.setViewProperty(instanceTag, 'rowHeight', instanceProperty.get('rowHeight', '0'), '0')
 		return describle
 
 			

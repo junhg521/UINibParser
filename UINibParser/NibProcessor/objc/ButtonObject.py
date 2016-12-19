@@ -13,28 +13,22 @@ from ControlObject import JHControlObject
 
 class JHButtonObject(JHControlObject):
 	
-	def addSubview(self, instanceViewName, classMethodName, attribView):
+	def addSubview(self, instanceTag, instanceProperty, classMethodName):
 		# print 'attribView=', attribView
-		classViewName = self.attribViewTag(attribView)
-		attribViewId = self.attribViewTagProperty(attribView)
-		classType = self.objcClassNameType(classViewName)
-		
-		if attribViewId.get('customClass', '') != '':
-			classType = attribViewId.get('customClass')
-			pass
-
+		classViewName = self.attribViewInstanceName(instanceTag, instanceProperty)
+		classType = self.instanceClassNameType(instanceTag, instanceProperty)
 		describle = self.loadSyntaxWithDoubleLineFeed("- ("+classType+" *"+")"+classMethodName)
 		describle += self.leftBrackets()
-		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(attribViewId.get('buttonType', 'custom'))+"];")
-		describle += self.setViewProperty(classViewName, 'frame', self.getClassFrame(attribView.get('rect',{})), '')
-		describle += self.addViewAttribute(classViewName, attribView)
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [UIButton buttonWithType:"+self.getButtonType(instanceProperty.get('buttonType', 'custom'))+"];")
+		describle += self.setViewProperty(classViewName, 'frame', self.getClassFrame(instanceProperty.get('rect',{})), '')
+		describle += self.addViewAttribute(classViewName, instanceProperty)
 		return describle
 
-	def addViewAttribute(self, classViewName, attribView):
+	def addViewAttribute(self, instanceTag, instanceProperty):
 		# print 'attribView=', attribView
 
-		describle = JHControlObject.addViewAttribute(self, classViewName, attribView)
-		describle += self.addButtonViewAttribute(classViewName, attribView)
+		describle = JHControlObject.addViewAttribute(self, instanceTag, instanceProperty)
+		describle += self.addButtonViewAttribute(instanceTag, instanceProperty)
 		return describle
 
 	def addButtonViewAttribute(self, classViewName, attribView):

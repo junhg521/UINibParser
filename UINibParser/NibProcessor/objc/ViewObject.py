@@ -13,17 +13,17 @@ from BasicObject import JHBasicObject
 
 class JHViewObject(JHBasicObject):
 
-	def loadRootViewInit(self, needloadConfiguration, attribView):
+	def loadRootViewInit(self, needloadConfiguration, instanceProperty):
 		"""
 		It's mainly initialization used for single Xib File which types as (View、UItableViewCell、UICollectionViewCell)
 		"""
-		# print 'attribView=', attribView
+		# print 'instanceProperty=', instanceProperty
 		describle = self.loadSyntaxWithDoubleLineFeed("- (instancetype)initWithFrame:(CGRect)frame")
 		describle += self.leftBrackets()
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("if (self = [super initWithFrame:frame])")
 		describle += self.addBlackCharacter()
 		describle += self.leftBrackets()
-		describle += self.addBasicViewAttribute("self", attribView)
+		describle += self.addBasicViewAttribute("self", instanceProperty)
 		describle += self.loadAllContentSubView()
 		describle += self.loadViewConfigInfos(needloadConfiguration)
 		describle += self.addBlackCharacter()
@@ -32,48 +32,33 @@ class JHViewObject(JHBasicObject):
 		describle += self.rightBrackets()
 		return describle
 
-	def loadView(self, attribView):
-		# print 'attribView=', attribView
+	def loadView(self, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
 		describle = self.addClassMethodName("void", "loadView")
-		describle += self.loadSyntaxWithLineFeedAndSingleSpace("self.view = [[UIView alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+"];")
-		describle += self.addViewAttribute("self.view", attribView)
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace("self.view = [[UIView alloc] initWithFrame:"+self.getClassFrame(instanceProperty.get('rect', {}))+"];")
+		describle += self.addViewAttribute("self.view", instanceProperty)
 		describle += self.rightBrackets()
 		return describle
 
-	def addSubViewOfContentView(self, classViewName, attribView):
+	def addSubViewOfContentView(self):
+		return self.addClassMethodName("void", "loadAllContentSubView")
 
-		describle = self.addClassMethodName("void", "loadAllContentSubView")
-
-		if classViewName != "self.view":
-			describle += self.addBasicViewAttribute(classViewName, attribView)
-			pass
+	def addSubview(self, instanceTag, instanceProperty, classMethodName):
 		
-		return describle
-
-	def addSubview(self, classViewName, classMethodName, attribView):
-		attribViewId = self.attribViewTagProperty(attribView)
-		classType = self.objcClassNameType(self.attribViewTag(attribView))
-		
-		if attribViewId.get('customClass', '') != '':
-			classType = attribViewId.get('customClass')
-			pass
-
+		instanceName = self.attribViewInstanceName(instanceTag, instanceProperty)
+		classType = self.instanceClassNameType(instanceTag, instanceProperty)
 		describle = self.addClassMethodName(classType, classMethodName)
 
-		if classViewName != "self.contentView":
-			frame = self.getClassFrame(attribView.get('rect', {}))
-			instancetViewName = self.attribViewTag(attribView)
-
-			if len(frame) > 0:
-				describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+instancetViewName+" = [["+classType+" alloc] initWithFrame:"+frame+"];")
-				pass
-			else:
-				describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+instancetViewName+" = [["+classType+" alloc] init];")
-				pass
+		frame = self.getClassFrame(instanceProperty.get('rect', {}))
+		if len(frame) > 0:
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+instanceName+" = [["+classType+" alloc] initWithFrame:"+frame+"];")
+			pass
+		else:
+			describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+instanceName+" = [["+classType+" alloc] init];")
 			pass
 		pass
 
-		describle += self.addViewAttribute(classViewName, attribView)
+		describle += self.addViewAttribute(instanceName, instanceProperty)
 		return describle
 
 	def addClassMethodName(self, classType, classMethodName):
@@ -81,51 +66,50 @@ class JHViewObject(JHBasicObject):
 		describle = ""
 
 		if classType == 'void':
-			describle = self.loadSyntaxWithDoubleLineFeed("- ("+classType+")"+classMethodName)
+			describle += self.loadSyntaxWithDoubleLineFeed("- ("+classType+")"+classMethodName)
 			pass
 		else:
-			describle = self.loadSyntaxWithDoubleLineFeed("- ("+classType+" *"+")"+classMethodName)
+			describle += self.loadSyntaxWithDoubleLineFeed("- ("+classType+" *"+")"+classMethodName)
 			pass
 
 		describle += self.leftBrackets()
 		return describle
 
-	def addViewAttribute(self, classViewName, attribView):
-		describle = self.addBasicViewAttribute(classViewName, attribView)
-		describle += self.getViewConnection(classViewName, attribView)
+	def addViewAttribute(self, instanceTag, instanceProperty):
+		describle = self.addBasicViewAttribute(instanceTag, instanceProperty)
+		describle += self.getViewConnection(instanceTag, instanceProperty)
 		return describle
 
-	def addBasicViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
-		describle = self.getViewColor(classViewName, attribView)
-		attribViewId = self.attribViewTagProperty(attribView)
-		describle += self.setViewProperty(classViewName, 'canBecomeFocused', attribViewId.get('canBecomeFocused', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'multipleTouchEnabled', attribViewId.get('multipleTouchEnabled', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'exclusiveTouch', attribViewId.get('exclusiveTouch', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'autoresizesSubviews', attribViewId.get('autoresizesSubviews', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'autoresizingMask', self.getAutoresizingMask(attribView.get('autoresizingMask', {})), 'UIViewAutoresizingNone')
-		describle += self.setViewProperty(classViewName, 'clipsToBounds', attribViewId.get('clipsToBounds', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'alpha', attribViewId.get('alpha', '1.0'), '1.0')
-		describle += self.setViewProperty(classViewName, 'opaque', attribViewId.get('opaque', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'clearsContextBeforeDrawing', attribViewId.get('clearsContextBeforeDrawing', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'hidden', attribViewId.get('hidden', 'NO'), 'NO')
-		describle += self.setViewProperty(classViewName, 'contentMode', self.getContentModel(attribViewId.get('contentMode', {})), 'UIViewContentModeScaleToFill')
-		describle += self.setViewProperty(classViewName, 'translatesAutoresizingMaskIntoConstraints', attribViewId.get('translatesAutoresizingMaskIntoConstraints', 'YES'), 'YES')
-		describle += self.setViewProperty(classViewName, 'userInteractionEnabled', attribViewId.get('userInteractionEnabled', 'YES'), 'YES')
-		describle += self.setViewRuntimeProperty(classViewName, attribView)
+	def addBasicViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
+		describle = self.getViewColor(instanceTag, instanceProperty)
+		describle += self.setViewProperty(instanceTag, 'canBecomeFocused', instanceProperty.get('canBecomeFocused', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'multipleTouchEnabled', instanceProperty.get('multipleTouchEnabled', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'exclusiveTouch', instanceProperty.get('exclusiveTouch', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'autoresizesSubviews', instanceProperty.get('autoresizesSubviews', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'autoresizingMask', self.getAutoresizingMask(instanceProperty.get('autoresizingMask', {})), 'UIViewAutoresizingNone')
+		describle += self.setViewProperty(instanceTag, 'clipsToBounds', instanceProperty.get('clipsToBounds', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'alpha', instanceProperty.get('alpha', '1.0'), '1.0')
+		describle += self.setViewProperty(instanceTag, 'opaque', instanceProperty.get('opaque', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'clearsContextBeforeDrawing', instanceProperty.get('clearsContextBeforeDrawing', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'hidden', instanceProperty.get('hidden', 'NO'), 'NO')
+		describle += self.setViewProperty(instanceTag, 'contentMode', self.getContentModel(instanceProperty.get('contentMode', {})), 'UIViewContentModeScaleToFill')
+		describle += self.setViewProperty(instanceTag, 'translatesAutoresizingMaskIntoConstraints', instanceProperty.get('translatesAutoresizingMaskIntoConstraints', 'YES'), 'YES')
+		describle += self.setViewProperty(instanceTag, 'userInteractionEnabled', instanceProperty.get('userInteractionEnabled', 'YES'), 'YES')
+		describle += self.setViewRuntimeProperty(instanceTag, instanceProperty)
 		return describle
 
-	def setViewRuntimeProperty(self, classViewName, attribView):
+	def setViewRuntimeProperty(self, instanceTag, instanceProperty):
 		describle = ""
 		
-		for runtimeProperty in attribView.get('userDefinedRuntimeAttributes',[]):
+		for runtimeProperty in instanceProperty.get('userDefinedRuntimeAttributes',[]):
 			userDefine = runtimeProperty.get('userDefinedRuntimeAttribute', {})
-			# print 'keypath=',userDefine.get('keyPath', ''), 'classViewName=',classViewName
+			# print 'keypath=',userDefine.get('keyPath', ''), 'instanceTag=',instanceTag
 			if userDefine.get('keyPath', '').find('layer') == -1:
-				classLayName = classViewName+".layer"
+				classLayName = instanceTag+".layer"
 				pass
 			else:
-				classLayName = classViewName
+				classLayName = instanceTag
 				pass
 
 			if userDefine.get('type', '') == 'number':
@@ -165,99 +149,67 @@ class JHViewObject(JHBasicObject):
 
 		return describle
 
-	def getViewColor(self, classViewName, attribView):
+	def getViewColor(self, instanceTag, instanceProperty):
 		describle = ""
 
-		if attribView.has_key('color'):
-			if type(attribView.get('color')) == list:
-				for color in attribView.get('color', []):
-					describle += self.getViewColorProperty(classViewName, color)
+		if instanceProperty.has_key('color'):
+			if type(instanceProperty.get('color')) == list:
+				for color in instanceProperty.get('color', []):
+					describle += self.getViewColorProperty(instanceTag, color)
 					pass
 				pass
-			elif type(attribView.get('color')) == dict:
-				describle = self.getViewColorProperty(classViewName, attribView.get('color', {}))
+			elif type(instanceProperty.get('color')) == dict:
+				describle = self.getViewColorProperty(instanceTag, instanceProperty.get('color', {}))
 				pass
 			else:
 				pass
 		else:
-			# print 'attribView=', attribView
+			# print 'instanceProperty=', instanceProperty
 			pass
 
 		return describle
 
-	def getViewColorProperty(self, classViewName, color):
+	def getViewColorProperty(self, instanceTag, color):
 		# print 'color=', color
 		viewColor = ""
 
 		if color.get('key', '') == 'highlightedColor':
-			viewColor = self.setViewProperty(classViewName, 'highlightedTextColor', self.getClassColor(color), '')
+			viewColor = self.setViewProperty(instanceTag, 'highlightedTextColor', self.getClassColor(color), '')
 			pass
 		else:
-			viewColor = self.setViewProperty(classViewName, color.get('key', ''), self.getClassColor(color), '')
+			viewColor = self.setViewProperty(instanceTag, color.get('key', ''), self.getClassColor(color), '')
 			pass
 
 		return viewColor
 
-	def getViewConnection(self, classViewName, attribView):
+	def getViewConnection(self, instanceTag, instanceProperty):
 		describle = ""
 
-		if attribView.has_key('connections'):
-			if type(attribView.get('connections')) == list:
-				for connection in attribView.get('connections', []):
+		if instanceProperty.has_key('connections'):
+			if type(instanceProperty.get('connections')) == list:
+				for connection in instanceProperty.get('connections', []):
 					outlet = connection.get('outlet',{})
-					describle += self.setViewProperty(classViewName, outlet.get('property', ''), 'self', '')
+					describle += self.setViewProperty(instanceTag, outlet.get('property', ''), 'self', '')
 					pass
 				pass
-			elif type(attribView.get('connections')) == dict:
+			elif type(instanceProperty.get('connections')) == dict:
 				outlet = connection.get('outlet',{})
-				describle = self.setViewProperty(classViewName, outlet.get('property', ''), 'self', '')
+				describle = self.setViewProperty(instanceTag, outlet.get('property', ''), 'self', '')
 				pass
 			else:
 				pass
 		else:
-			# print 'attribView=', attribView
+			# print 'instanceProperty=', instanceProperty
 			pass
 			
 		return describle
 
-	def addContentViewConstraint(self):
-		describle = self.loadSyntaxWithLineFeedAndDoubleSpace("self.contentView.translatesAutoresizingMaskIntoConstraints = NO;")
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self addConstraint:[NSLayoutConstraint constraintWithItem:self \n\
-                                                          attribute:NSLayoutAttributeBottom \n\
-                                                          relatedBy:NSLayoutRelationEqual \n\
-                                                             toItem:self.contentView \n\
-                                                          attribute:NSLayoutAttributeBottom \n\
-                                                         multiplier:1.0 \n\
-                                                           constant:0]];")
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView \n\
-                                                          attribute:NSLayoutAttributeTop \n\
-                                                          relatedBy:NSLayoutRelationEqual \n\
-                                                             toItem:self \n\
-                                                          attribute:NSLayoutAttributeTop \n\
-                                                         multiplier:1.0 \n\
-                                                           constant:0]];")
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView \n\
-                                                          attribute:NSLayoutAttributeLeading \n\
-                                                          relatedBy:NSLayoutRelationEqual \n\
-                                                             toItem:self \n\
-                                                          attribute:NSLayoutAttributeLeading \n\
-                                                         multiplier:1.0 \n\
-                                                           constant:0]];")
-		describle += self.loadSyntaxWithLineFeedAndDoubleSpace("[self addConstraint:[NSLayoutConstraint constraintWithItem:self \n\
-                                                          attribute:NSLayoutAttributeTrailing \n\
-                                                          relatedBy:NSLayoutRelationEqual \n\
-                                                             toItem:self.contentView \n\
-                                                          attribute:NSLayoutAttributeTrailing \n\
-                                                         multiplier:1.0 \n\
-                                                           constant:0]];")
-		return describle
-
-	def loadTextAttributeString(self, classViewName, attribView):
-		describle = self.setViewProperty(classViewName, 'numberOfLines', '0', '')
+	def loadTextAttributeString(self, instanceTag, instanceProperty):
+		describle = self.setViewProperty(instanceTag, 'numberOfLines', '0', '')
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("NSMutableAttributedString *attributeContent = [[NSMutableAttributedString alloc] init];")
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("[attributeContent beginEditing];")
 		i = 0
-		for attributedString in attribView.get('attributedString',{}):
+		for attributedString in instanceProperty.get('attributedString',{}):
 			fragment = attributedString.get('fragment', '')
 			subContent = fragment.get('content', '').encode('utf-8')
 			length = str("[@"+"\""+subContent+"\""+" length]")
@@ -278,7 +230,7 @@ class JHViewObject(JHBasicObject):
 			pass
 			
 		describle += self.loadSyntaxWithLineFeedAndSingleSpace("[attributeContent endEditing];")
-		describle += self.setViewProperty(classViewName, 'attributedText', 'attributeContent', '')
+		describle += self.setViewProperty(instanceTag, 'attributedText', 'attributeContent', '')
 		return describle
 
 	

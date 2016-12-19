@@ -13,19 +13,18 @@ from ViewObject import JHViewObject
 
 class JHTextViewObject(JHViewObject):
 
-	def addViewAttribute(self, classViewName, attribView):
+	def addViewAttribute(self, instanceTag, instanceProperty):
 		# print 'attribView=', attribView
-		describle = JHViewObject.addViewAttribute(self, classViewName, attribView)
+		describle = JHViewObject.addViewAttribute(self, instanceTag, instanceProperty)
 
-		if len(attribView.get('attributedString',{})) > 0:
-			describle += self.loadTextAttributeString(classViewName, attribView)
+		if len(instanceProperty.get('attributedString',{})) > 0:
+			describle += self.loadTextAttributeString(instanceTag, instanceProperty)
 			pass
 		else:
-			attribViewId = self.attribViewTagProperty(attribView)
-			describle += self.setViewProperty(classViewName, 'text', "@\""+attribViewId.get('text', '').encode('utf-8')+"\"", '')
-			describle += self.setViewProperty(classViewName, 'font', self.getTextFont(attribView.get('fontDescription', {})), '')
+			describle += self.setViewProperty(instanceTag, 'text', "@\""+instanceProperty.get('text', '').encode('utf-8')+"\"", '')
+			describle += self.setViewProperty(instanceTag, 'font', self.getTextFont(instanceProperty.get('fontDescription', {})), '')
 			pass
 		
-		describle += self.setViewProperty(classViewName, 'textAlignment', self.getTextAlignment(attribViewId.get('textAlignment', 'left')), 'NSTextAlignmentLeft')
+		describle += self.setViewProperty(instanceTag, 'textAlignment', self.getTextAlignment(instanceProperty.get('textAlignment', 'left')), 'NSTextAlignmentLeft')
 		return describle
 		

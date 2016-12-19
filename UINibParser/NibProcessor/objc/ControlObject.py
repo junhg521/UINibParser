@@ -12,35 +12,27 @@ __author__ = 'Junhg'
 from ViewObject import JHViewObject
 
 class JHControlObject(JHViewObject):
-	def __init__(self):
-			pass
 
-	def __del__(self):
-			pass
-
-	def addViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
-
-		describle = JHViewObject.addViewAttribute(self, classViewName, attribView)
-		describle += self.addControlViewAttribute(classViewName, attribView)
-
+	def addViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
+		describle = JHViewObject.addViewAttribute(self, instanceTag, instanceProperty)
+		describle += self.addControlViewAttribute(instanceTag, instanceProperty)
 		return describle
 
-	def addControlViewAttribute(self, classViewName, attribView):
-		# print 'attribView=', attribView
+	def addControlViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=', instanceProperty
 
-		attribViewId = self.attribViewTagProperty(attribView)
-		describle = self.setViewProperty(classViewName, 'contentVerticalAlignment', self.getControlContentVerticalAlignment(attribViewId.get('contentVerticalAlignment', {})), 'UIControlContentVerticalAlignmentCenter')
-		describle += self.setViewProperty(classViewName, 'contentHorizontalAlignment', self.getControlContentHorizontalAlignment(attribViewId.get('contentHorizontalAlignment', {})),'UIControlContentHorizontalAlignmentCenter')
+		describle = self.setViewProperty(instanceTag, 'contentVerticalAlignment', self.getControlContentVerticalAlignment(instanceProperty.get('contentVerticalAlignment', {})), 'UIControlContentVerticalAlignmentCenter')
+		describle += self.setViewProperty(instanceTag, 'contentHorizontalAlignment', self.getControlContentHorizontalAlignment(instanceProperty.get('contentHorizontalAlignment', {})),'UIControlContentHorizontalAlignmentCenter')
 		
-		if attribView.has_key('connections'):
-			if type(attribView.get('connections')) == list:
-				for connection in attribView.get('connections', []):
-					describle += self.setControlConnectionInfos(classViewName, connection)
+		if instanceProperty.has_key('connections'):
+			if type(instanceProperty.get('connections')) == list:
+				for connection in instanceProperty.get('connections', []):
+					describle += self.setControlConnectionInfos(instanceTag, connection)
 					pass
 				pass
-			elif type(attribView.get('connections')) == dict:
-				describle += self.setControlConnectionInfos(classViewName, attribView.get('connections', {}))
+			elif type(instanceProperty.get('connections')) == dict:
+				describle += self.setControlConnectionInfos(instanceTag, instanceProperty.get('connections', {}))
 				pass
 			else:
 				pass

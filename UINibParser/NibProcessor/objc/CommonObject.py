@@ -14,10 +14,10 @@ __author__ = 'Junhg'
 class JHCommomObject(object):
 
 	def leftBrackets(self):
-		return "{"+self.newlineCharacter()
+		return "{" + self.newlineCharacter()
 		
 	def rightBrackets(self):
-		return "}"+self.newlineCharacter()
+		return "}" + self.newlineCharacter()
 
 	def newlineCharacter(self):
 		return "\n"
@@ -28,22 +28,8 @@ class JHCommomObject(object):
 	def loadContentSubView(self):
 		return "[self loadAllContentSubView];"
 
-	def defaultSystemObjectTag(self):
-		return ["view", "tableViewCellContentView", "label", "segmentedControl",
-		"button", "textField", "slider", "switch", "customswitch", "activityIndicatorView",
-		"progressView", "pageControl", "stepper", "datePicker", "pickerView", "MTKView",
-		"searchBar", "tabBar", "toolBar", "navigationBar", "stackView", "tableView", 
-		"tableViewCell", "imageView", "collectionView", "textView", "scrollView", "visualEffectView",
-		"webView", "glkView", "mapView", "sceneKitView", "collectionReusableView", "collectionViewCell"]
-
-	def judgementViewTag(self, tag):
-
-		isValidate = False
-		className = self.objcClassNameType(tag)
-		if len(className) > 0:
-			isValidate = True
-			pass
-		return isValidate
+	def loadContentView(self):
+		return "self.contentView"
 
 	def containObj(self, originObj, destionationObj):
 		if type(originObj) == str:
@@ -57,22 +43,29 @@ class JHCommomObject(object):
 
 	# 获取属性字段Tag值
 	def attribViewTag(self, attribView):
-		attribView = self.findAttribViewTagAndProperty(attribView)
-		if attribView[0] == 'switch':
-			return 'custom'+attribView[0]
-		else:
-			return attribView[0]
-		pass
+		return attribView.keys()[0]
 			
 	# 获取属性的tag的attrib值
 	def attribViewTagProperty(self, attribView):
-		attribView = self.findAttribViewTagAndProperty(attribView)
-		return attribView[1]
+		return attribView[self.attribViewTag(attribView)]
+
+	def attribViewInstanceName(self, instanceName, instanceProperty):
+
+		if instanceName == 'switch':
+			return 'custom' + instanceName
+		elif instanceName == "view" and instanceProperty.get('key','') == "contentView":
+			return self.loadContentView()
+		elif instanceName == "tableViewCellContentView":
+			return self.loadContentView()
+		else:
+			return instanceName
+		pass
 		
-	def attribViewViewMethod(self, attribView):
-		attribId = self.attribViewTagProperty(attribView)
-		viewId = attribId.get('id', '')
-		return self.attribViewTag(attribView)+"__"+viewId.replace('-', '_')
+	def attribViewMethodName(self, instanceTag, instanceProperty):
+		return instanceTag + "__" + self.convertPropertyId(instanceProperty)
+
+	def convertPropertyId(self, propertyId):
+		return propertyId.replace('-', '_')
 
 	def attribViewMethodPropertyId(self, viewMethodName):
 		splits = viewMethodName.split('__')
@@ -85,21 +78,23 @@ class JHCommomObject(object):
 	def attribViewMethodTag(self, viewMethodName):
 		splits = viewMethodName.split('__')
 		return splits[0]
+
+	def subViewAtIndex(self, view, index):
+		return "[" +view+ ".subviews objectAtIndex:" +index+ "]"
 	
-	def attributeSubViewNames(self, subView, methodNames, propertyId):
+	def attribSubViewNames(self, subView, methodNames, propertyId):
 
 		i=0
 		for subMethodNames in methodNames:
 			for viewMethodName in subMethodNames.keys():
-				if propertyId.replace('-', '_') == self.attribViewMethodPropertyId(viewMethodName):
-					return "["+subView+".subviews objectAtIndex:"+str(i)+"]"
-				subViewMethodNames = self.attributeSubViewNames("["+subView+".subviews objectAtIndex:"+str(i)+"]", subMethodNames[viewMethodName], propertyId)
+				if self.convertPropertyId(propertyId) == self.attribViewMethodPropertyId(viewMethodName):
+					return self.subViewAtIndex(subView, str(i))
+				subViewMethodNames = self.attribSubViewNames(self.subViewAtIndex(subView, str(i)), subMethodNames[viewMethodName], propertyId)
 				i = i + 1
 				if len(subViewMethodNames):
 					return subViewMethodNames
 				pass
 			pass
-			
 		return ""
 
 	def attribViewName(self, methodNames, propertyId):
@@ -107,14 +102,13 @@ class JHCommomObject(object):
 
 		for subMethodNames in methodNames:
 			for viewMethodName in subMethodNames.keys():
-				if propertyId.replace('-', '_') == self.attribViewMethodPropertyId(viewMethodName):
+				if self.convertPropertyId(propertyId) == self.attribViewMethodPropertyId(viewMethodName):
 					return viewMethodName
-				subViewMethodNames = self.attributeSubViewNames(viewMethodName, subMethodNames[viewMethodName], propertyId)
+				subViewMethodNames = self.attribSubViewNames(viewMethodName, subMethodNames[viewMethodName], propertyId)
 				if len(subViewMethodNames):
 					return subViewMethodNames
 				pass
 			pass
-
 		return ""
 
 	def attribViewNameId(self, viewMethodNames, propertyId):
@@ -123,20 +117,18 @@ class JHCommomObject(object):
 				return self.attribViewMethodPropertyId(viewMethodName)
 			pass
 		return ""
-		
-	def findAttribViewTagAndProperty(self, attribView):
-		# print 'attribView=', attribViewName
 
-		for (key,value) in attribView.items():
-			if len(self.objcClassNameType(key)) > 0:
-				return (key,value);
-			pass
-		
-		return ("","")
+	def instanceClassNameType(self, instanceTag, instanceProperty):
+
+		if instanceProperty.get('customClass', '') != '':
+			return instanceProperty.get('customClass')
+		else:
+			return self.objcClassNameType(instanceTag)
+		pass
 
 	def objcClassNameType(self, tag):
 		className = ''
-		if tag == 'view' or tag == 'tableViewCellContentView' or tag == 'containerView':
+		if tag == 'view' or tag == 'tableViewCellContentView' or tag == 'containerView' or tag == self.loadContentView():
 			className = 'UIView'
 			pass
 		elif tag == 'label':

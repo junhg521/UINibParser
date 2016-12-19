@@ -1,24 +1,23 @@
+
 #UINibParser
 [![Build Status](https://travis-ci.org/junhg521/UINibParser.svg?branch=master)](https://travis-ci.org/junhg521/UINibParser)
 [![apm](https://img.shields.io/apm/l/vim-mode.svg)](https://github.com/junhg521/UINibParser/blob/master/LICENSE)
+> 该文档主要描述如何使用UINibParser，它主要作用是将xib文件或storyboard文件解析成**Objective-c**代码（包含应用程序的所有属性、试图结构及属性描述、约束、修改UITableview的registerNib及UINib等）。
 
-[中文文档](https://github.com/junhg521/UINibParser/README_CN.md)
-> this document describles how to use UINibParser，it just convert xib or storyboard file into to **Objective-C/swift code**, including all the properties of instance（such as title、 color、constraint 、target and so on). also it's function is similar to [nib2objc](https://github.com/akosma/nib2objc), but it only add parsed instance and the view hierarchy instand of modify origin source file.
-
-## Usage
-put the utility in you project path, and then called this in terminal:
+## 使用方法
+首先进入UINibParser目录，然后在终端调用如下命令
 
 ```
 ./parseResource -d ../demo/
 ./parseResource -f ../demo/TestTableViewCell.xib
 ```
-it supports the following parameter calls:
+其中*parseResource*为调用的命令，在命令介绍后将会删除扩展名为xib的文件。它支持如下的参数调用
 
 ```
--d :specific directory name，it contains all files with the extion xib or storyboard and convert them
--f :specific file name, just parse the resourece data
+-d :其后跟具体的目录名，它会循环遍历目录下扩展名为xib的所有文件，并将其转化为Object-c代码
+-f :其后跟具体的文件名，只解析该具体的文件
 ```
-After the command is run, it will delete resouce files with extension **xib** or **storyboard**, This will add the output of the conversion to file with different file extions, similar to *.m, as follows: 
+调用后的其相对应的(扩展名为.m)文件中将增加如下的代码，举例所示，比如在viewDidload函数下
 
 ```
 - (void)viewDidLoad {
@@ -42,7 +41,7 @@ After the command is run, it will delete resouce files with extension **xib** or
     // Do any additional setup after loading the view from its nib.
 }
 ```
-in addition, all of the subviews of the xib file are added as follows:
+此外还增加了所有xib文件所有的子view，如下所示：
 
 ```
 #pragma mark - loadAllSubViews
@@ -71,8 +70,3 @@ in addition, all of the subviews of the xib file are added as follows:
 	return view;
 }
 ```
-##Language
-
-* xcode 7.0 
-* python 2.7.0
-* bash 3.2

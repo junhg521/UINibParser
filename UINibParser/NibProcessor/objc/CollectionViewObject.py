@@ -13,17 +13,12 @@ from ScrollViewObject import JHScrollViewObject
 
 class JHCollectionViewObject(JHScrollViewObject):
 
-	def addSubview(self, instanceViewName, classMethodName, attribView):
-		# print 'attribView=',attribView
-		classViewName = self.attribViewTag(attribView)
-		attribViewId = self.attribViewTagProperty(attribView)
-		classType = self.objcClassNameType(self.attribViewTag(attribView))
+	def addSubview(self, instanceTag, instanceProperty, classMethodName):
+		# print 'instanceProperty=',instanceProperty
+		classViewName = self.attribViewInstanceName(instanceTag, instanceProperty)
+		classType = self.instanceClassNameType(instanceTag, instanceProperty)
 		
-		if attribViewId.get('customClass', '') != '':
-			classType = attribViewId.get('customClass')
-			pass
-			
-		flowlayout = attribView.get('collectionViewFlowLayout',{})
+		flowlayout = instanceProperty.get('collectionViewFlowLayout',{})
 		collectionFlowlayout = flowlayout.get('collectionViewFlowLayout',{})
 		
 		describle = self.addClassMethodName(classType, classMethodName)
@@ -67,12 +62,12 @@ class JHCollectionViewObject(JHScrollViewObject):
 			describle += self.loadSyntaxWithLineFeedAndSingleSpace("layout."+sectionInsetInfo[0]+" = "+sectionInsetInfo[1]+";")
 			pass
 			
-		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(attribView.get('rect', {}))+" collectionViewLayout:layout];")
-		describle += self.addViewAttribute(classViewName, attribView)
+		describle += self.loadSyntaxWithLineFeedAndSingleSpace(classType+"* "+classViewName+" = [["+classType+" alloc] initWithFrame:"+self.getClassFrame(instanceProperty.get('rect', {}))+" collectionViewLayout:layout];")
+		describle += self.addViewAttribute(classViewName, instanceProperty)
 		return describle
 
-	def addViewAttribute(self, classViewName, attribView):
-		# print 'attribView=',attribView
+	def addViewAttribute(self, instanceTag, instanceProperty):
+		# print 'instanceProperty=',instanceProperty
 
-		describle = JHScrollViewObject.addViewAttribute(self, classViewName, attribView)
+		describle = JHScrollViewObject.addViewAttribute(self, instanceTag, instanceProperty)
 		return describle

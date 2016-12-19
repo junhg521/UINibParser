@@ -107,45 +107,46 @@ class JHXibParser(JHBaseParser):
 				# print 'list=', list(subElememt)
 				if subElememt.tag == 'view':
 					self.getParseClassName(subElememt.tag, subElememt.attrib)
-					attribView = self.parseViewNode(list(subElememt))
-					attribView[subElememt.tag] = subElememt.attrib
+					otherAttrib = self.parseViewNode(list(subElememt))
+					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
 					self.attribViews.append(attribView)
-					# print 'attribView=', self.attribViews
 					pass
 				elif subElememt.tag == 'placeholder':
-					if subElememt.attrib.get('placeholderIdentifier','') == 'IBFilesOwner':
-						self.getParseClassName('controller', subElememt.attrib)
-						pass
-					
+					self.getParseClassName('controller', subElememt.attrib)
 					self.parsePlaceholderObjectNode(list(subElememt))
 					pass
 				elif subElememt.tag == 'tableViewCell':
 					self.getParseClassName(subElememt.tag, subElememt.attrib)
-					attribView = self.parseTableViewCellNode(list(subElememt))
-					attribView[subElememt.tag] = subElememt.attrib
+					otherAttrib = self.parseTableViewCellNode(list(subElememt))
+					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
 					self.attribViews.append(attribView)
-					# print 'attribView=', self.attribViews
 					pass
 				elif subElememt.tag == 'collectionReusableView':
-					self.getParseClassName(subElememt.tag, subElememt.attrib)
-					attribView = self.parseViewNode(list(subElememt))
-					attribView[subElememt.tag] = subElememt.attrib
+					self.getParseClassName(subElememt.tag, subElememt.attrib) 
+					otherAttrib = self.parseViewNode(list(subElememt))
+					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
 					self.attribViews.append(attribView)
-					# print 'attribView=', self.attribViews
 					pass
 				elif subElememt.tag == 'collectionViewCell':
 					self.getParseClassName(subElememt.tag, subElememt.attrib)
-					attribView = self.parseCollectionViewCellNode(list(subElememt), subElememt.attrib.get('id',''))
-					attribView[subElememt.tag] = subElememt.attrib
+					otherAttrib = self.parseCollectionViewCellNode(list(subElememt), subElememt.attrib.get('id',''))
+					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
 					self.attribViews.append(attribView)
-					# print 'attribView=', self.attribViews
 					pass
 				else:
 					# Temporarily not found the type in the xib file and directly filter out
 					pass
 			pass
 		# print 'className=', self.className
+		# print "attribView=", self.attribViews
 		pass
+
+	def loadParseAttribute(self, elementTag, elementAttrib, elementOtherAttrib):
+		attribView = {}
+		attrib = elementAttrib
+		attrib.update(elementOtherAttrib)
+		attribView[elementTag] = attrib
+		return attribView
 
 	def getParseClassName(self, attribTag, attribValue):
 		""" set parse type and class name
@@ -153,6 +154,11 @@ class JHXibParser(JHBaseParser):
 			attribTag:resolve the type of node, there are controller、view、collectionReusableView、tableViewCell、collectionViewCell five types
 			attribValue:attibute of node
 		"""
+		if attribValue.has_key('placeholderIdentifier'):
+			if attribValue.get('placeholderIdentifier','') != 'IBFilesOwner':
+				return
+			pass
+		
 		if len(attribValue.get('customClass', '')):
 			self.parseType = attribTag
 			self.className = attribValue.get('customClass', '')
@@ -186,9 +192,8 @@ class JHXibParser(JHBaseParser):
 		for element in resourecObjects:
 			if element.tag == 'tableViewCellContentView':
 				subAttribViews = []
-				contentViewAttribute = {}
-				contentViewAttribute[element.tag] = element.attrib
-				contentViewAttribute.update(self.parseViewNode(list(element)))
+				otherAttrib = self.parseViewNode(list(element))
+				contentViewAttribute = self.loadParseAttribute(element.tag, element.attrib, otherAttrib)
 				subAttribViews.append(contentViewAttribute)
 				attribView['subviews'] = subAttribViews
 				pass
@@ -215,22 +220,22 @@ class JHXibParser(JHBaseParser):
 			parentId: value of `collectionViewCell` node
 		"""
 		attribView = {}
-		contentView = {}
+		constraints = {}
+		otherAttrib = {}
+		otherElementTag = ""
+		otherElementIb = {}
 		for element in resourecObjects:
 			if element.tag == 'view':
 				element.attrib['id'] = parentId
-				contentView[element.tag] = element.attrib
-				contentView.update(self.parseViewNode(list(element)))
-				
-				subAttribViews = []
-				subAttribViews.append(contentView)
-				attribView['subviews'] = subAttribViews
+				otherAttrib.update(self.parseViewNode(list(element)))
+				otherElementTag = element.tag
+				otherElementIb = element.attrib
 				pass
 			elif element.tag == 'connections':
 				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
 				pass
 			elif element.tag == 'constraints':
-				contentView['constraints'] = self.parseViewListPropertyNode(list(element))
+				constraints = self.parseViewListPropertyNode(list(element))
 				pass
 			elif element.tag == 'userDefinedRuntimeAttributes':
 				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
@@ -239,6 +244,11 @@ class JHXibParser(JHBaseParser):
 				self.parseViewPropetyNode(attribView, element.tag, element.attrib)
 				pass
 			pass
+		otherAttrib['constraints'] = constraints
+		subAttribViews = []
+		subAttribViews.append(self.loadParseAttribute(otherElementTag, otherElementIb, otherAttrib))
+		attribView['subviews'] = subAttribViews
+				
 		return attribView
 
 	def parseViewNode(self, resourecViewObject):
@@ -289,8 +299,8 @@ class JHXibParser(JHBaseParser):
 		"""
 		allAttribViews = []
 		for element in resourceObjects:
-			attribView = self.parseViewNode(list(element))
-			attribView[element.tag] = element.attrib
+			otherAttrib = self.parseViewNode(list(element))
+			attribView = self.loadParseAttribute(element.tag, element.attrib, otherAttrib)
 			allAttribViews.append(attribView)
 			pass
 		return allAttribViews
@@ -372,5 +382,5 @@ if __name__ == '__main__':
 	parser = JHXibParser(sys.argv[1], sys.argv[2])
 	parser.parse()
 
-	# processor = JHObjcProcessor(parser)
-	# processor.processing()
+	processor = JHObjcProcessor(parser)
+	processor.processing()
