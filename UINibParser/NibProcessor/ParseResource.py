@@ -24,6 +24,8 @@ from Processor import JHObjcProcessor
 
 class JHBaseParser(object):
 	"define the attributes and interfaces required to parse a commom resource file"
+
+	__slots__ = ('resourceFileName', 'className')
 	
 	def __init__(self, resource_file_name):
 		""" use the constructor to initialize the parser properties
@@ -105,25 +107,20 @@ class JHXibParser(JHBaseParser):
 		for element in resourecObjects:
 			for subElememt in element:
 				# print 'list=', list(subElememt)
-				if subElememt.tag == 'view':
-					self.getParseClassName(subElememt.tag, subElememt.attrib)
-					otherAttrib = self.parseViewNode(list(subElememt))
-					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
-					self.attribViews.append(attribView)
-					pass
-				elif subElememt.tag == 'placeholder':
-					self.getParseClassName('controller', subElememt.attrib)
+				if subElememt.tag == 'placeholder':
 					self.parsePlaceholderObjectNode(list(subElememt))
+					if subElememt.attrib.get('placeholderIdentifier','') == 'IBFilesOwner':
+						if len(self.viewId):
+							self.getParseClassName('controller', subElememt.attrib)
+							pass
+						else:
+							self.getParseClassName('view', subElememt.attrib)
+							pass
+						pass
 					pass
 				elif subElememt.tag == 'tableViewCell':
 					self.getParseClassName(subElememt.tag, subElememt.attrib)
 					otherAttrib = self.parseTableViewCellNode(list(subElememt))
-					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
-					self.attribViews.append(attribView)
-					pass
-				elif subElememt.tag == 'collectionReusableView':
-					self.getParseClassName(subElememt.tag, subElememt.attrib) 
-					otherAttrib = self.parseViewNode(list(subElememt))
 					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
 					self.attribViews.append(attribView)
 					pass
@@ -134,7 +131,10 @@ class JHXibParser(JHBaseParser):
 					self.attribViews.append(attribView)
 					pass
 				else:
-					# Temporarily not found the type in the xib file and directly filter out
+					self.getParseClassName(subElememt.tag, subElememt.attrib)
+					otherAttrib = self.parseViewNode(list(subElememt))
+					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
+					self.attribViews.append(attribView)
 					pass
 			pass
 		# print 'className=', self.className
@@ -148,20 +148,22 @@ class JHXibParser(JHBaseParser):
 		attribView[elementTag] = attrib
 		return attribView
 
-	def getParseClassName(self, attribTag, attribValue):
+	def getParseClassName(self, attribTag, attribView):
 		""" set parse type and class name
 		arg:
 			attribTag:resolve the type of node, there are controller、view、collectionReusableView、tableViewCell、collectionViewCell five types
-			attribValue:attibute of node
+			attribView:attibute of node
 		"""
-		if attribValue.has_key('placeholderIdentifier'):
-			if attribValue.get('placeholderIdentifier','') != 'IBFilesOwner':
-				return
-			pass
-		
-		if len(attribValue.get('customClass', '')):
-			self.parseType = attribTag
-			self.className = attribValue.get('customClass', '')
+		if len(attribView.get('customClass', '')):
+			customClass = attribView.get('customClass', '')
+			if len(self.className) == 0:
+				self.parseType = attribTag
+				self.className = attribView.get('customClass', '')
+				pass
+			elif self.className == customClass:
+				self.parseType = attribTag
+			else:
+				pass
 			pass
 		pass
 
@@ -172,14 +174,16 @@ class JHXibParser(JHBaseParser):
 		for element in resourecObjects:
 			for subElement in list(element):
 				if subElement.tag == 'outlet':
-					if subElement.attrib.get('property', '') == 'view':
-						self.viewId = subElement.attrib.get('destination', '')
-						pass
+					self.rootViewID(subElement.attrib)
 					self.outletViews.append(subElement.attrib)
 				pass
-
 			pass
 		# print 'outletViews=', self.outletViews
+		pass
+
+	def rootViewID(self, attribView):
+		if attribView.get('property', '') == 'view':
+			self.viewId = attribView.get('destination', '')
 		pass
 
 	def parseTableViewCellNode(self, resourecObjects):
@@ -378,9 +382,9 @@ class JHXibParser(JHBaseParser):
 # exec
 
 if __name__ == '__main__':
-	
 	parser = JHXibParser(sys.argv[1], sys.argv[2])
 	parser.parse()
 
 	processor = JHObjcProcessor(parser)
-	processor.processing()
+	sys.exit(processor.processing())
+	

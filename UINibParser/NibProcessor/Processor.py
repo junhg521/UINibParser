@@ -136,7 +136,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 
 	def processing(self):
 		# print 'attribViews=',self.attribViews
-	
+		exceptionFlag = 0
 		try:
 			readFileHandle = self.readClassFile()
 			writeFileHandle = self.readTempClassFile()
@@ -162,6 +162,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		except Exception as e:
 			print "crashed when parser " + self.classResourceFileDir()
 			os.remove(self.classTempFileDir())
+			exceptionFlag = 1
 			raise
 		else:
 			print "finish parsor " + self.classResourceFileDir()
@@ -171,6 +172,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 			readFileHandle.close()
 			writeFileHandle.close()
 			pass
+		return exceptionFlag
 
 	def loadAllResourceView(self, attribViews, writeFileHandle):
 		# print "attribViews=",attribViews

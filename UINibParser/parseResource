@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # create: 2016/10/16
-# version: 0.0.1
+# version: 0.1.0
 # author: Junhg
 # contribute:
 # 
@@ -22,10 +22,7 @@ declare resourceFileDir=""
 declare parseObjcType="objc"
 declare needloadConfiguration=0
 
-echo "command=$0"
-if [[ $0 =~ './*' ]]; then
-	echo "currentDir=${currentDir}"
-elif [[ $0 == 'parseResource' ]]; then
+if [[ $0 == 'parseResource' ]]; then
 	echo "currentDir=${currentDir}"
 else
 	parseResource=${0%%/*}/${parseResource}
@@ -186,6 +183,12 @@ function executeParseXib()
 	modifyNibInitialToCodeInitial ${sourceFileDir}
 	modifyBundleInitialToCodeInitial ${sourceFileDir}
 	python ${parseResource} ${1} ${needloadConfiguration}
+
+	if [[ $? == 1 ]]; then
+		echo "you has happend a crash when pares resourece file"
+		exit
+	fi
+
 	deleteResourceFileFromProject ${1##*/}
 	rm -rf ${1}
 }
@@ -254,7 +257,7 @@ function main()
 		# echo "module_Dir=${module_Dir}"
 		All_Resource_File=`find ${module_Dir} -name "*.xib" -type f`
 		for resourceFile in $All_Resource_File; do
-			parseNibCount=`expr ${parseNibCount} + 1`
+			# echo "resourceFile=${resourceFile}"
 			executeParseXib ${resourceFile}
 		done
 
