@@ -65,14 +65,18 @@ class JHCommomObject(object):
 		return instanceTag + "__" + self.convertPropertyId(instanceProperty)
 
 	def convertPropertyId(self, propertyId):
-		return propertyId.replace('-', '_')
+		if len(propertyId):
+			return propertyId.replace('-', '_')
+		else:
+			return "contentView"
+		pass
 
 	def attribViewMethodPropertyId(self, viewMethodName):
 		splits = viewMethodName.split('__')
 		if len(splits) > 1:
 			return splits[1]
 		else:
-			return ""
+			return "contentView"
 		pass
 
 	def attribViewMethodTag(self, viewMethodName):
@@ -98,13 +102,19 @@ class JHCommomObject(object):
 		return ""
 
 	def attribViewName(self, methodNames, propertyId):
-		# print 'viewMethodNames=',viewMethodNames, 'propertyId=',propertyId
 
 		for subMethodNames in methodNames:
 			for viewMethodName in subMethodNames.keys():
+				parentName = self.attribViewMethodPropertyId(viewMethodName)
+				if parentName == "contentView":
+					parentName = "self.contentView"
+				else:
+					parentName = viewMethodName
+
 				if self.convertPropertyId(propertyId) == self.attribViewMethodPropertyId(viewMethodName):
-					return viewMethodName
-				subViewMethodNames = self.attribSubViewNames(viewMethodName, subMethodNames[viewMethodName], propertyId)
+					return parentName
+
+				subViewMethodNames = self.attribSubViewNames(parentName, subMethodNames[viewMethodName], propertyId)
 				if len(subViewMethodNames):
 					return subViewMethodNames
 				pass

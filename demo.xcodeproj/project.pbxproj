@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BF50488E1E0BADBC0000993F /* TestCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF50488C1E0BADBC0000993F /* TestCollectionViewController.m */; };
+		BF50488F1E0BADBC0000993F /* TestCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF50488D1E0BADBC0000993F /* TestCollectionViewController.xib */; };
+		BF5048931E0BAE1E0000993F /* TestCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BF5048911E0BAE1E0000993F /* TestCollectionViewCell.m */; };
+		BF5048941E0BAE1E0000993F /* TestCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF5048921E0BAE1E0000993F /* TestCollectionViewCell.xib */; };
 		BF80E89B1DC324FA003090D7 /* TestUIImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF80E8991DC324FA003090D7 /* TestUIImageViewController.m */; };
 		BF80E89C1DC324FA003090D7 /* TestUIImageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = BF80E89A1DC324FA003090D7 /* TestUIImageViewController.xib */; };
 		BF80E8A01DC334CB003090D7 /* TestTestFieldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF80E89E1DC334CB003090D7 /* TestTestFieldViewController.m */; };
@@ -42,6 +46,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		BF50488B1E0BADBC0000993F /* TestCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestCollectionViewController.h; sourceTree = "<group>"; };
+		BF50488C1E0BADBC0000993F /* TestCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestCollectionViewController.m; sourceTree = "<group>"; };
+		BF50488D1E0BADBC0000993F /* TestCollectionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestCollectionViewController.xib; sourceTree = "<group>"; };
+		BF5048901E0BAE1E0000993F /* TestCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestCollectionViewCell.h; sourceTree = "<group>"; };
+		BF5048911E0BAE1E0000993F /* TestCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestCollectionViewCell.m; sourceTree = "<group>"; };
+		BF5048921E0BAE1E0000993F /* TestCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestCollectionViewCell.xib; sourceTree = "<group>"; };
 		BF80E8981DC324FA003090D7 /* TestUIImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUIImageViewController.h; sourceTree = "<group>"; };
 		BF80E8991DC324FA003090D7 /* TestUIImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUIImageViewController.m; sourceTree = "<group>"; };
 		BF80E89A1DC324FA003090D7 /* TestUIImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestUIImageViewController.xib; sourceTree = "<group>"; };
@@ -151,6 +161,12 @@
 				BFD13B221DC8684C00F02621 /* TestTableViewCell.h */,
 				BFD13B231DC8684C00F02621 /* TestTableViewCell.m */,
 				BFD13B241DC8684C00F02621 /* TestTableViewCell.xib */,
+				BF50488B1E0BADBC0000993F /* TestCollectionViewController.h */,
+				BF50488C1E0BADBC0000993F /* TestCollectionViewController.m */,
+				BF50488D1E0BADBC0000993F /* TestCollectionViewController.xib */,
+				BF5048901E0BAE1E0000993F /* TestCollectionViewCell.h */,
+				BF5048911E0BAE1E0000993F /* TestCollectionViewCell.m */,
+				BF5048921E0BAE1E0000993F /* TestCollectionViewCell.xib */,
 			);
 			path = demo;
 			sourceTree = "<group>";
@@ -257,9 +273,11 @@
 			files = (
 				BFD542301DC1D7780080614D /* TestUIViewViewController.xib in Resources */,
 				BFFCE2BB1DAF84B4004D3542 /* LaunchScreen.storyboard in Resources */,
+				BF5048941E0BAE1E0000993F /* TestCollectionViewCell.xib in Resources */,
 				BF9E84501DC1FED600B8EEFE /* TestUIButtonViewController.xib in Resources */,
 				BFD13B261DC8684C00F02621 /* TestTableViewCell.xib in Resources */,
 				BFD13B211DC8683000F02621 /* TestTableViewController.xib in Resources */,
+				BF50488F1E0BADBC0000993F /* TestCollectionViewController.xib in Resources */,
 				BF80E8A11DC334CB003090D7 /* TestTestFieldViewController.xib in Resources */,
 				BFFCE2B81DAF84B4004D3542 /* Assets.xcassets in Resources */,
 				BFFB2F621DC18D0C008EA8A3 /* TestUILabelViewController.xib in Resources */,
@@ -284,8 +302,10 @@
 			files = (
 				BFD5422F1DC1D7780080614D /* TestUIViewViewController.m in Sources */,
 				BFD542331DC1DE7F0080614D /* TCustomSegmentScroll.m in Sources */,
+				BF5048931E0BAE1E0000993F /* TestCollectionViewCell.m in Sources */,
 				BFFCE2B31DAF84B4004D3542 /* ViewController.m in Sources */,
 				BF80E8A01DC334CB003090D7 /* TestTestFieldViewController.m in Sources */,
+				BF50488E1E0BADBC0000993F /* TestCollectionViewController.m in Sources */,
 				BF9E844F1DC1FED600B8EEFE /* TestUIButtonViewController.m in Sources */,
 				BFD13B251DC8684C00F02621 /* TestTableViewCell.m in Sources */,
 				BFFCE2B01DAF84B4004D3542 /* AppDelegate.m in Sources */,

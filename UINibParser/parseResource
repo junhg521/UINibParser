@@ -10,7 +10,7 @@
 # 1. 将工程中的资源文件中的资源信息加载到实现文件中
 # 2. 删除所有的xib文件，优化工程的代码大小
 
-export LC_CTYPE=C 
+export LC_CTYPE=C
 export LANG=C
 
 declare currentDir=`echo $PWD`

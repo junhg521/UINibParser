@@ -38,8 +38,12 @@ class JHBaseParser(object):
 		"""
 		self.resourceFileName = resource_file_name
 		self.className = ""
+		pass
 
 	def parse(self):
+		""" define a common parse nib method, subClass can rewrite this method to parse
+		a specific file.
+		"""
 		pass
 
 class JHXibParser(JHBaseParser):
@@ -58,6 +62,7 @@ class JHXibParser(JHBaseParser):
 			needloadConfiguration:indicates whether an alternate function for awakeFromNib neends to be loaded
 			parseType:xib file type, default value is controller
 			viewId: it's controller main view identify
+			resources: related information of image
 		"""
 		JHBaseParser.__init__(self, resource_file_name)
 		self.outletViews = []
@@ -66,6 +71,7 @@ class JHXibParser(JHBaseParser):
 		self.needloadConfiguration = needloadConfiguration
 		self.parseType = "controller"
 		self.viewId = ""
+		self.resources = []
 		pass
 
 	def parse(self):
@@ -117,18 +123,6 @@ class JHXibParser(JHBaseParser):
 							self.getParseClassName('view', subElememt.attrib)
 							pass
 						pass
-					pass
-				elif subElememt.tag == 'tableViewCell':
-					self.getParseClassName(subElememt.tag, subElememt.attrib)
-					otherAttrib = self.parseTableViewCellNode(list(subElememt))
-					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
-					self.attribViews.append(attribView)
-					pass
-				elif subElememt.tag == 'collectionViewCell':
-					self.getParseClassName(subElememt.tag, subElememt.attrib)
-					otherAttrib = self.parseCollectionViewCellNode(list(subElememt), subElememt.attrib.get('id',''))
-					attribView = self.loadParseAttribute(subElememt.tag, subElememt.attrib, otherAttrib)
-					self.attribViews.append(attribView)
 					pass
 				else:
 					self.getParseClassName(subElememt.tag, subElememt.attrib)
@@ -186,75 +180,6 @@ class JHXibParser(JHBaseParser):
 			self.viewId = attribView.get('destination', '')
 		pass
 
-	def parseTableViewCellNode(self, resourecObjects):
-		""" parses data of `tableViewCell` node under `objects` node and assigned to `attribViews` 
-		property of `JHXibParser` class
-		args:
-			resourecObjects: all nodes of `tableViewCell` node
-		"""
-		attribView = {}
-		for element in resourecObjects:
-			if element.tag == 'tableViewCellContentView':
-				subAttribViews = []
-				otherAttrib = self.parseViewNode(list(element))
-				contentViewAttribute = self.loadParseAttribute(element.tag, element.attrib, otherAttrib)
-				subAttribViews.append(contentViewAttribute)
-				attribView['subviews'] = subAttribViews
-				pass
-			elif element.tag == 'connections':
-				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
-				pass
-			elif element.tag == 'constraints':
-				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
-				pass
-			elif element.tag == 'userDefinedRuntimeAttributes':
-				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
-				pass
-			else:
-				self.parseViewPropetyNode(attribView, element.tag, element.attrib)
-				pass
-			pass
-		return attribView
-
-	def parseCollectionViewCellNode(self, resourecObjects, parentId):
-		""" parses data of `collectionViewCell` node under `objects` node and assigned to `attribViews` 
-		property of `JHXibParser` class
-		args:
-			resourecObjects: all nodes of `collectionViewCell` node
-			parentId: value of `collectionViewCell` node
-		"""
-		attribView = {}
-		constraints = {}
-		otherAttrib = {}
-		otherElementTag = ""
-		otherElementIb = {}
-		for element in resourecObjects:
-			if element.tag == 'view':
-				element.attrib['id'] = parentId
-				otherAttrib.update(self.parseViewNode(list(element)))
-				otherElementTag = element.tag
-				otherElementIb = element.attrib
-				pass
-			elif element.tag == 'connections':
-				attribView[element.tag] = self.parseViewListPropertyNode(list(element))
-				pass
-			elif element.tag == 'constraints':
-				constraints = self.parseViewListPropertyNode(list(element))
-				pass
-			elif element.tag == 'userDefinedRuntimeAttributes':
-				attribView[element.tag] = self.parseViewListContainObjectPropertyNode(list(element))
-				pass
-			else:
-				self.parseViewPropetyNode(attribView, element.tag, element.attrib)
-				pass
-			pass
-		otherAttrib['constraints'] = constraints
-		subAttribViews = []
-		subAttribViews.append(self.loadParseAttribute(otherElementTag, otherElementIb, otherAttrib))
-		attribView['subviews'] = subAttribViews
-				
-		return attribView
-
 	def parseViewNode(self, resourecViewObject):
 		""" parses data of `tableViewCell` node under `objects` node and assigned to `attribViews` 
 		property of `JHXibParser` class
@@ -263,7 +188,14 @@ class JHXibParser(JHBaseParser):
 		"""
 		attribView = {}
 		for element in resourecViewObject:
-			if element.tag == 'subviews':
+			if element.tag == 'tableViewCellContentView' or (element.tag == "view" and element.attrib.get('key', '') == "contentView"):
+				contentViewSubAttribute = self.parseViewNode(list(element))
+				contentViewAttribute = self.loadParseAttribute(element.tag, element.attrib, contentViewSubAttribute)
+				subAttribViews = []
+				subAttribViews.append(contentViewAttribute)
+				attribView['subviews'] = subAttribViews
+				pass
+			elif element.tag == 'subviews':
 				attribView[element.tag] = self.parseSubViewsNode(list(element))
 				# print 'subviews =', attribView[element.tag]
 				pass

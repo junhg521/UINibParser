@@ -33,13 +33,12 @@
     
     [self.view addSubview:self.scrollSegmentControl];
     
-    BOOL isNibFile = NO;
-    [self.controllers addObject:[self loadTestViewController:@"TestUILabelViewController" isNibFile:isNibFile]];
-    [self.controllers addObject:[self loadTestViewController:@"TestUIViewViewController" isNibFile:isNibFile]];
-    [self.controllers addObject:[self loadTestViewController:@"TestUIButtonViewController" isNibFile:isNibFile]];
-    [self.controllers addObject:[self loadTestViewController:@"TestUIImageViewController" isNibFile:isNibFile]];
-    [self.controllers addObject:[self loadTestViewController:@"TestTestFieldViewController" isNibFile:isNibFile]];
-    [self.controllers addObject:[self loadTestViewController:@"TestTableViewController" isNibFile:isNibFile]];
+    [self.controllers addObject:[self loadTestViewController:@"TestUILabelViewController"]];
+    [self.controllers addObject:[self loadTestViewController:@"TestUIViewViewController"]];
+    [self.controllers addObject:[self loadTestViewController:@"TestUIButtonViewController"]];
+    [self.controllers addObject:[self loadTestViewController:@"TestUIImageViewController"]];
+    [self.controllers addObject:[self loadTestViewController:@"TestTestFieldViewController"]];
+    [self.controllers addObject:[self loadTestViewController:@"TestTableViewController"]];
     
     
     [self addTestController:[self.controllers objectAtIndex:0]];
@@ -67,7 +66,12 @@
 - (TCustomSegmentScroll *)scrollSegmentControl
 {
     if (!_scrollSegmentControl) {
-        _scrollSegmentControl = [[TCustomSegmentScroll alloc] initWithTitles:@[@"UILabel脚本测试",@"UIView脚本测试",@"UIButton脚本测试",@"UIImage脚本测试",@"UITestField脚本测试",@"table脚本测试"]
+        _scrollSegmentControl = [[TCustomSegmentScroll alloc] initWithTitles:@[@"UILabel解析",
+                                                                               @"UIView解析",
+                                                                               @"UIButton解析",
+                                                                               @"UIImage解析",
+                                                                               @"UITestField解析",
+                                                                               @"UITable解析"]
                                                                      delegate:self
                                                                 displaySeparator:NO];
         [_scrollSegmentControl setBottomLineColor: [UIColor greenColor]];
@@ -108,16 +112,10 @@
     [controller removeFromParentViewController];
 }
 
-- (UIViewController *)loadTestViewController:(NSString *)className isNibFile:(BOOL)isNibFile
+- (UIViewController *)loadTestViewController:(NSString *)className
 {
-    if (isNibFile) {
-        UIViewController *controller = [[NSClassFromString(className) alloc] initWithNibName:nil bundle:nil];
-        return controller;
-    }
-    else {
-        UIViewController *controller = [[NSClassFromString(className) alloc] init];
-        return controller;
-    }
+    UIViewController *controller = [[NSClassFromString(className) alloc] initWithNibName:nil bundle:nil];
+    return controller;
 }
 
 @end

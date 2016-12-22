@@ -119,7 +119,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 		
 		if instanceName == "containerView":
 			return eval("JHViewObject()")
-		elif instanceName == "tableViewCellContentView":
+		elif instanceName == "tableViewCellContentView" and instanceProperty.get('key','') == "contentView":
 			return eval("JHTableViewCellObject()")
 		elif instanceName == "customswitch":
 			return eval("JHSwitchObject()")
@@ -253,6 +253,7 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 			pass
 		elif self.parseType == "collectionViewCell":
 			self.loadContentSubViewMethod(methodNames, writeFileHandle)
+			self.loadViewConstranit("self.contentView", methodNames, instanceProperty, writeFileHandle)
 			pass
 		else:
 			if self.parseType == "controller":
@@ -344,20 +345,24 @@ class JHObjcProcessor(JHBaseProcessor, JHCommomObject):
 	 		constant = constraintProperty.get('constant', '0')
 	 		relation = constraintProperty.get('relation', 'equal')
 
-	 		firstItemView = self.attribViewName(methodNames, firstItem)
-	 		secodeItemView = self.attribViewName(methodNames, secondItem)
+	 		firstItemView = ""
+	 		secodeItemView = ""
 	 		if instanceProperty.get('id', '') == secondItem:
+	 			firstItemView = self.attribViewName(methodNames, firstItem)
 	 			secodeItemView = parentView
 	 			pass
-
-	 		if len(firstItem) == 0 and len(secondItem) > 0:
+	 		elif len(firstItem) == 0 and len(secondItem) > 0:
 	 			firstItemView = parentView
+	 			secodeItemView = self.attribViewName(methodNames, secondItem)
 	 			pass
-
-	 		if len(secondItem) == 0:
+	 		elif len(secondItem) == 0:
 	 			firstItemView = parentView
 	 			secodeItemView = "nil"
 	 			secondAttribute = "notAnAttribute"
+	 			pass
+	 		else:
+	 			firstItemView = self.attribViewName(methodNames, firstItem)
+	 			secodeItemView = self.attribViewName(methodNames, secondItem)
 	 			pass
 
 	 		constraintProperty = self.loadOutletProperty(self.outletViews, constraintProperty.get('id',''))
